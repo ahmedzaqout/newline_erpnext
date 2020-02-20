@@ -1,0 +1,33 @@
+
+<tr ondragover="allowDrop(event)" data-employee="{{name}}" class="{{designation}}">
+	<td class="emp" style="" >	
+		<table>
+			<tr>
+				<td class="emp_img">
+					{% if (image) { %}
+						<img src="{{ image }}" alt="{{employee_name }}">
+					{% } %}
+				</td>
+				<td class="emp_name">
+					{% if (employee_name) { %}
+						{{employee_name}}
+					{% } %} 
+				</dt>
+			</tr>
+		</table>		
+	</td>
+
+	{{ss}}
+
+	{% if (period >0 ) { %}
+		<td colspan="{{period}}" ondrop="drop_handler(event)" data-id={{start}} id="{{name}}{{start}}">	
+			<div draggable="true"   ondragstart="drag(event);" class="ui-widget-content" style="background-color:{% if (color) { %}
+				{{color}} 	{% }else{ %} #776d6d {% } %} ;height: 30px;resize:auto;" id ="draggable{{name}}" >
+			</div> 
+		</td>
+	{% } else { %}
+		<td colspan="1" ondrop="drop_handler(event)" data-id="1" id="{{name}}1"></td>
+	{% } %}
+
+	{{remain}}
+</tr>

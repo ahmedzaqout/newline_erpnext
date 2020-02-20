@@ -1,0 +1,340 @@
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+# License: GNU General Public License v3. See license.txt
+
+from __future__ import unicode_literals
+import frappe
+
+from frappe.utils import getdate, nowdate,get_time, time_diff,time_diff_in_seconds,get_datetime,cint
+from frappe import _, msgprint
+from frappe.model.document import Document
+from erpnext.hr.utils import set_employee_name
+import datetime, calendar
+from calendar import monthrange
+from time import mktime
+from datetime import datetime
+from frappe.utils import now, global_date_format, format_time,format_datetime
+
+
+
+class Attendance(Document):
+	def validate_duplicate_record(self):
+		res = frappe.db.sql("""select name from `tabAttendance` where employee = %s and attendance_date = %s
+			and name != %s and docstatus = 1""",
+			(self.employee, self.attendance_date, self.name))
+		if res:
+			frappe.throw(_("Attendance for employee {0} is already marked").format(self.employee))
+
+		set_employee_name(self)
+
+	def check_leave_record(self):
+		leave_record = frappe.db.sql("""select leave_type, half_day from `tabLeave Application`
+			where employee = %s and %s between from_date and to_date and status = 'Approved'
+			and docstatus = 1""", (self.employee, self.attendance_date), as_dict=True)
+		if leave_record:
+			if leave_record[0].half_day:
+				self.status = 'Half Day'
+				frappe.msgprint(_("Employee {0} on Half day on {1}").format(self.employee, self.attendance_date))
+			else:
+				self.status = 'On Leave'
+				self.leave_type = leave_record[0].leave_type
+				frappe.msgprint(_("Employee {0} on Leave on {1}").format(self.employee, self.attendance_date))
+		if self.status == "On Leave" and not leave_record:
+			frappe.throw(_("No leave record found for employee {0} for {1}").format(self.employee, self.attendance_date))
+
+	def validate_attendance_date(self):
+
+		date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+
+		if getdate(self.attendance_date) > getdate(nowdate()):
+			frappe.throw(_("Attendance can not be marked for future dates"))
+		elif date_of_joining and getdate(self.attendance_date) < getdate(date_of_joining):
+			frappe.throw(_("Attendance date can not be less than employee's joining date"))
+
+		#if self.departure_time != '00:00:0':
+		#	if get_time(self.attendance_time) >= get_time(self.departure_time):
+		#		frappe.throw(_("Attendance Time can not be more than Departure time"))
+
+		#if self.departure_time:
+		#	exit_per = frappe.db.get_value("Exit permission", {'employee':self.employee,'permission_type':'Exit with return','permission_date':self.attendance_date}, "to_date")
+		#	if not exit_per:
+		#		frappe.throw(_("Not Allowed! Exit with return permission date does not exist"));
+
+		if str(self.attendance_time) == str(self.departure_time):
+			frappe.throw(_("Attendance Time can not be equal Departure time"))
+
+		######Edited By Maysaa
+
+		holiday_list = frappe.db.get_value("Employee", self.employee, "holiday_list")
+		if holiday_list:
+			#holidays = frappe.get_list("Holiday",fields=["holiday_date"], filters={'parent':holiday_list}, as_list=1)
+			holidays = frappe.get_all("Holiday", fields=["holiday_date"],filters={'parent':holiday_list})
+			from_time = frappe.db.sql("SELECT CONVERT( %s ,datetime(6))",format_datetime(str(self.attendance_time)) )[0]
+			to_time = frappe.db.sql("SELECT CONVERT( %s ,datetime(6))",format_datetimestr(str(self.departure_time)) )[0]
+
+			for holiday in holidays:
+				if holiday.holiday_date == getdate(self.attendance_date):
+					overtime = frappe.new_doc('Timesheet')
+					overtime.update({
+						'name':self.employee_name,
+						'employee':self.employee,
+						'start_date': getdate(nowdate()),
+						'to_date': getdate(nowdate()),
+						'time_logs': [{
+							'activity_type':'Auto overtime in holiday date',
+							'from_time': '14:18:28.000000',
+							'to_time': '18:18:28.000000'
+								}],
+						'type':'Normal',
+						'docstatus': 0,
+						'workflow_state':'Pending Request'
+					})
+					overtime.save(ignore_permissions=True)
+
+
+		attendance_day = calendar.day_name[getdate(self.attendance_date).weekday()];
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
+
+		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "end_work")
+		#if get_time(self.departure_time) > get_time(employee_end_time):
+		#	frappe.throw(_("Attendance Departure can not be more than employee's end time shift"))
+		if not employee_end_time:
+			frappe.throw(_("Start Time Work Shift does not exist for that day"))
+		if get_time(self.attendance_time) > get_time(employee_end_time):
+			frappe.throw(_("Attendance time can not be more than employee's end time shift"))
+			
+		employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "start_work")
+		morning_delay_minutes = frappe.db.get_value("HR Settings", None, "morning_delay")
+
+
+		if employee_start_time and self.attendance_time:
+			if get_time(self.attendance_time) > get_time(employee_start_time):
+				diff_time = frappe.db.sql("select format(((TIME_TO_SEC('%s')-TIME_TO_SEC('%s'))/60),0)" %(str(self.attendance_time), str(employee_start_time)))
+
+				if float(diff_time[0][0]) > float(morning_delay_minutes) and self.docstatus==1:
+
+					doc = frappe.new_doc('Exit permission')
+					doc.update({
+						'employee':self.employee,
+						'permission_date': getdate(nowdate()),
+						'from_date': get_time(employee_start_time),
+						'to_date': get_time(self.attendance_time),
+						'reason': _("Late System Auto Entry"),
+						'permission_type': "Morning Late",
+						'docstatus': 0,
+						'workflow_state':'Pending Request'
+					})
+					doc.save(ignore_permissions=True)
+
+				if float(diff_time[0][0]) <=1 and self.docstatus==1:
+
+					doc = frappe.new_doc('Exit permission')
+					doc.update({
+						'employee':self.employee,
+						'permission_date': getdate(nowdate()),
+						'from_date': get_time(employee_start_time),
+						'to_date': get_time(self.attendance_time),
+						'reason': _("Late System Auto Entry"),
+						'permission_type': "Morning Late",
+						'docstatus': 1,
+						'workflow_state':'Final Approval'
+					})
+					doc.save(ignore_permissions=True)
+
+			else: 
+				frappe.throw(_("Attendance Time can not be less than employee's start time shift"))
+	
+		else: 
+			frappe.throw(_("Start Time Work Shift does not exist for that day"))
+
+	def validate_employee(self):
+		emp = frappe.db.sql("select name from `tabEmployee` where name = %s and status = 'Active'",
+		 	self.employee)
+		if not emp:
+			frappe.throw(_("Employee {0} is not active or does not exist").format(self.employee))
+
+	def validate(self):
+		if self.attendance_type == 'Attendance':
+			self.departure_time = '0'
+
+		from erpnext.controllers.status_updater import validate_status
+		validate_status(self.status, ["Present", "Absent", "On Leave", "Half Day"])
+		self.validate_attendance_date()
+		self.validate_duplicate_record()
+		self.check_leave_record()
+
+	def api_post(self,data):
+		message=""
+		mylist= ""
+		try:
+			mylist = frappe.get_doc(data).insert().as_dict()
+		except Exception as e:
+			message = str(e)
+
+		if message: 
+			code = 403
+		else: code = 200
+
+		return {"status":{"success":"sucess","code":code,"message":message},"list":mylist}
+
+
+@frappe.whitelist()
+def attendance_hrs():
+	#return frappe.local.session.data.csrf_token
+	return frappe.db.sql("select round(TIMESTAMPDIFF(MINUTE,attendance_time,CURRENT_TIME())/60,2) as total_hours from `tabAttendance` where attendance_date =CURDATE() and docstatus!=2 ")
+
+@frappe.whitelist(allow_guest=True)
+def check_attendance():
+	employees = frappe.get_all("Employee", fields=["name","work_shift","employee_name"],filters={'status':'Active'})
+	today= getdate(nowdate())
+	for emp in employees:
+		attendance_time = frappe.db.get_value("Attendance", {"employee":emp.name,"attendance_date":today}, "attendance_time")
+		departure_time = frappe.db.get_value("Attendance", {"employee":emp.name,"attendance_date":today}, "departure_time")
+		print departure_time		
+		if not attendance_time and not departure_time:
+			atten = frappe.new_doc('Attendance')
+			atten.update({'name':emp.employee_name,'employee_name':emp.employee_name,'employee':emp.name,'docstatus': 0,'workflow_state':'Pending Request','status':'Absent'})
+			atten.flags.ignore_validate=True
+			atten.save(ignore_permissions=True)
+
+		elif  attendance_time:
+			if attendance_time and not departure_time:
+				atten = frappe.new_doc('Attendance')
+				atten.update({'name':emp.employee_name,'employee_name':emp.employee_name,'employee':emp.name,"attendance_type":"Departure","departure_time":get_time(nowdate()),'docstatus': 0,'workflow_state':'Pending Request'})
+				atten.flags.ignore_validate=True
+				atten.save(ignore_permissions=True)
+
+
+@frappe.whitelist(allow_guest=True)
+def new_overtime():
+	overtime = frappe.new_doc('Timesheet')
+	overtime.update({
+		'name':self.employee_name,
+		'employee':self.employee,
+		'start_date': getdate(nowdate()),
+		'time_logs': [{
+		'activity_type':'Auto overtime in holiday date',
+		'from_time':datetime.fromtimestamp(mktime(get_time(self.attendance_time))),
+		'to_time':self.departure_time}],
+		'type':'Normal',
+		'docstatus': 0,
+		'workflow_state':'Pending Request'
+			})
+	overtime.save(ignore_permissions=True)
+
+
+
+		
+
+###################################################### For Control Panel ##################################################################
+#Edited By Maysaa
+@frappe.whitelist(allow_guest=True)
+def get_total_hrs(employee,date):
+	#date= nowdate()
+	total_hrs= 0
+	total_hours  = frappe.db.sql("select round(TIMESTAMPDIFF(MINUTE,attendance_time,departure_time)/60,2) as total_hours from tabAttendance where docstatus = 1 and employee=%s and month(attendance_date)=month(%s) and year(attendance_date)= year(%s) order by employee, attendance_date" , (employee,date,date), as_dict=1)
+
+	for i in range(len(total_hours)):
+		total_hrs = total_hrs + int(total_hours[i].total_hours)
+	return total_hrs
+
+
+@frappe.whitelist(allow_guest=True)
+def get_overtime_hrs(employee,date):
+	date= nowdate()
+	total_hrs= 0
+	overtime_hours  = frappe.db.sql("select round(total_hours,2) as overtime_hours from tabTimesheet where docstatus = 1 and employee=%s and month(start_date)=month(%s) and year(start_date)= year(%s) order by employee, start_date" , (employee,date,date), as_dict=1)
+
+	for i in range(len(overtime_hours)):
+		total_hrs = total_hrs + int(overtime_hours[i].overtime_hours)
+	return total_hrs
+
+
+@frappe.whitelist(allow_guest=True)
+def all_emp_total_hrs():
+	date= nowdate()
+	total_hrs= 0
+	total_hours  = frappe.db.sql("select round(TIMESTAMPDIFF(MINUTE,attendance_time,departure_time)/60,2) as total_hours from tabAttendance where docstatus = 1  and attendance_date <= %s order by employee, attendance_date" , date, as_dict=1)
+
+	for i in range(len(total_hours)):
+		total_hrs = total_hrs + int(total_hours[i].total_hours)
+	return total_hrs
+
+
+@frappe.whitelist(allow_guest=True)
+def emp_orders(employee):
+	date= nowdate()
+	last_orders  = frappe.db.sql("SELECT * FROM (select name,docstatus,employee, 'Timesheet' as type from `tabTimesheet` union all select name,docstatus,employee, 'Leave Application' as type from `tabLeave Application` union all select name,docstatus,employee, 'Attendance' as type from `tabAttendance` union all select name,docstatus,employee, 'Exit permission' as type from `tabExit permission` union all select name,docstatus,employee, 'Employee Edit Time' as type from `tabEmployee Edit Time` union all select name,docstatus,employee, 'Employee Loan Application' as type from `tabEmployee Loan Application`) as u where employee=%s ORDER BY docstatus asc LIMIT 10" , employee, as_dict=1)
+	return last_orders
+
+
+@frappe.whitelist(allow_guest=True)
+def all_emp_orders():
+	date= nowdate()
+	last_orders  = frappe.db.sql("SELECT u.name,u.docstatus,u.employee, u.type,e.employee_name, date(u.ddate) as ddate FROM (select name,docstatus,employee, 'Timesheet' as type, creation as ddate from `tabTimesheet` union all select name,docstatus,employee, 'Leave Application' as type, creation as ddate from `tabLeave Application` union all select name,docstatus,employee, 'Attendance' as type, creation as ddate from `tabAttendance` union all select name,docstatus,employee, 'Exit permission' as type, creation as ddate from `tabExit permission` union all select name,docstatus,employee, 'Employee Edit Time' as type, creation as ddate from `tabEmployee Edit Time` union all select name,docstatus,employee, 'Employee Loan Application' as type, creation as ddate from `tabEmployee Loan Application`) as u join tabEmployee as e on u.employee=e.name ORDER BY ddate asc LIMIT 10" , as_dict=1)
+	return last_orders
+
+
+@frappe.whitelist(allow_guest=True)
+def employment_type_percentage():
+	arr=[]
+	employment_type = frappe.db.sql("select name from `tabEmployment Type`",as_dict=1)
+	for i in range(len(employment_type)):
+		percentage = frappe.db.sql("""select round((count(*)*100),2) as percentage from tabEmployee where employment_type=%s""" ,employment_type[i].name, as_dict=1)
+		arr.append([employment_type[i].name, percentage[0].percentage])
+	return arr
+
+@frappe.whitelist(allow_guest=True)
+def leave_type_percentage(user):
+	arr=[]
+	leave_type = frappe.db.sql("select name from `tabLeave Type`",as_dict=1)
+	for i in range(len(leave_type)):
+		percentage = frappe.db.sql("""select round((count(*)*100),2) as percentage from `tabLeave Application` as t1 join `tabEmployee` as t2 on t1.employee= t2.name where t2.user_id=%s and t1.leave_type=%s""" ,(user,leave_type[i].name), as_dict=1)
+		arr.append([leave_type[i].name, percentage[0].percentage])
+	return arr
+
+@frappe.whitelist(allow_guest=True)
+def all_leave_type_percentage():
+	arr=[]
+	leave_type = frappe.db.sql("select name from `tabLeave Type`",as_dict=1)
+	for i in range(len(leave_type)):
+		percentage = frappe.db.sql("""select round((count(*)/10),2) as percentage from `tabLeave Application` where leave_type=%s""" ,leave_type[i].name, as_dict=1)
+		arr.append([leave_type[i].name, percentage[0].percentage])
+	return arr
+
+@frappe.whitelist(allow_guest=True)
+def employee_total():
+	arr=[]
+	years = ['2018', '2019', '2020', '2021', '2022', '2023', '2024']
+	for i in range(len(years)):
+		total = frappe.db.sql("""select count(*) as total  from `tabEmployee` where year(date_of_joining)=%s""" ,years[i], as_dict=1)
+		arr.append(total[0].total)
+	return arr
+		
+
+@frappe.whitelist(allow_guest=True)
+def monthly_emp_total_hrs():
+	#month=  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,12]
+	now = datetime.datetime.now()
+	month_range= monthrange(cint(now.year), now.month)[1]
+	arr=[None] * month_range
+
+	total_hours  = frappe.db.sql("select ifnull(sum(round(TIMESTAMPDIFF(MINUTE,attendance_time,departure_time)/60,2)),0) as total_hours,ifnull(day(attendance_date),0) as day from tabAttendance where docstatus = 1  and month(attendance_date) = month(now()) and year(attendance_date) = year(now()) group by day" , as_dict=1)
+	return total_hours
+
+	for j in range(month_range):
+		if j <len(total_hours):
+			#arr[total_hours[j].day:total_hours[j].day] =total_hours[j].total_hours
+			arr[total_hours[j].day]= total_hours[j].total_hours
+		else: 
+			arr[j]=0
+	return arr
+	
+
+
+
+@frappe.whitelist(allow_guest=True)
+def mytest():
+	return frappe.db.sql("SELECT CONVERT( %s ,datetime(6))",str(format_datetime('15:49:46.000000')) )#frappe.get_doc("DocType", "User")
+			
+
+

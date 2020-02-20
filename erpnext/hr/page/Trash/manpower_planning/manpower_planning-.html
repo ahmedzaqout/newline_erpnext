@@ -1,0 +1,76 @@
+<!-- Row -->
+									<div class="table-wrap">
+										<div class="table-responsive">
+											<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0">
+												<thead>
+													<tr>
+													  <th>{{__("Employee Name")}}</th>
+													  <th>{{__("Joining Date")}}</th>
+													  <th>{{__("Designation")}}</th>
+													  <th>{{__("Category")}}</th>
+													  <th>{{__("Grade Category")}}</th>
+													  <th>{{__("Experience")}}</th>
+													  <th>{{__("Basic Salary")}}</th>
+													  <th>{{__("Hour Cost")}}</th>
+													  <th>{{__("Work Hour")}}</th>
+													  <th>{{__("Premium nature work")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Premiums")}}</th>
+													  <th>{{__("Discounts")}}</th>
+													  <th>{{__("Savings")}}</th>
+													  <th>{{__("Total")}}</th>
+													</tr>
+												</thead>
+												<tbody>
+									{% for dep in departments %}
+												<tr> 
+									<th colspan="25">{{__(dep.name)}}</th>
+												</tr>
+												{% for emp in data %}
+													{% if dep.name == emp.department %}
+													<tr>
+												<td>
+												{% if (emp.image) { %}
+						<img style="height: 65px;width:65px;border-radius: 50%;" src="{{ emp.image }}">
+												{% } %}
+												{{ emp.ar_fname }}</td>
+												<td>{{ emp.date_of_joining }}</td>
+												<td>{{ emp.designation }}</td>
+												<td tabindex="1">{{ emp.grade_category }}</td>
+										         	<td tabindex="1">{{ emp.grade }}</td>
+											        <td tabindex="1">{{ emp.experience_years }}</td>
+											        <td tabindex="1">{{ emp.basic_salary }}</td>
+												<td tabindex="1">{{ emp.hour_cost }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+												<td tabindex="1">{{ emp.name }}</td>
+													</tr>
+													{% endif %}
+												{% endfor%}
+										{% endfor%}
+													</tbody>
+													
+											</table>
+										</div>
+									</div>
+
+						
+				<!-- /Row -->

@@ -1,0 +1,156 @@
+
+<!-- Row -->
+				<div class="row">
+					<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-12">
+			        <div class="table-responsive" >
+            <table class="table table-bordered">
+                <tbody>
+                        <td rowspan="2">{{__("Degree") }}</td>
+                        <td rowspan="2">{{__("Job Number") }}</td>
+                        <td rowspan="2">{{__("Designation") }}</td>
+                        <td rowspan="2">{{__("Job") }}</td>
+                        <td colspan="20">{{__("Annual Bonus") }} </td>
+                        <td rowspan="2">{{__("Years") }}</td>
+                    </tr>
+                    <tr>
+			{% for (var i=1; i<= 20; i++) { %}
+                        <td>{{i}}</td>
+			{% } %}
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>{{job_nums[0]}}</td>
+                        <td>{{designation[0]}}</td>
+                        <td>{{__("High planning and supervision Jobs")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td>{{sal[a]}}</td>
+			{% } %}
+                        <td>شهادة الماجستير و 10 سنوات خبرة عمل</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">2</td>
+                        <td>{{job_nums[1]}}</td>
+                        <td>{{designation[1]}}</td>
+                        <td rowspan="3">{{__("High planning and supervision Jobs")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="3">{{sal2[a]}}</td>
+			{% } %}
+                        <td rowspan="3">شهادة الماجستير و6 سنوات خبرة عمل شهادة البكالوريوس و7 سنوات خبرة عمل</td>
+                    </tr>
+		{% for (var d=2; d<= 3; d++) { %}
+                    <tr>
+                        <td>{{job_nums[d]}}</td>
+                        <td>{{designation[d]}}</td>
+                    </tr>
+		{% } %}
+                    <tr>
+                        <td rowspan="7">3</td>
+                        <td>{{job_nums[4]}}</td>
+                        <td>{{designation[4]}}</td>
+                        <td rowspan="7">{{__("High administration Jobs")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="7">{{sal3[a]}}</td>
+			{% } %}
+                        <td rowspan="7">شهادة الماجستير و 5 سنوات خبرة عمل شهادة البكالوريوس و6 سنوات خبرة عمل</td>
+                        
+                    </tr>
+		{% for (var j=5; j<= 10; j++) { %}
+                    <tr>
+                        <td>{{job_nums[j]}}</td>
+                        <td>{{designation[j]}}</td>
+                    </tr>
+		{% } %}
+
+                    <tr>
+                        <td rowspan="11">4</td>
+                        <td>{{job_nums[11]}}</td>
+                        <td>{{designation[11]}}</td>
+                        <td rowspan="11">{{__("Specialized job")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="11">{{sal4[a]}}</td>
+			{% } %}
+
+                        <td rowspan="11">شهادة الماجستير و 4 سنوات خبرة عمل شهادة البكالوريوس و5 سنوات خبرة عمل</td>
+                    </tr>
+		{% for (var j=12; j<= 21; j++) { %}
+                    <tr>
+                        <td>{{job_nums[j]}}</td>
+                        <td>{{designation[j]}}</td>
+                    </tr>
+		{% } %}
+                    <tr>
+                        <td rowspan="4">5</td>
+                        <td>{{job_nums[22]}}</td>
+                        <td>{{designation[22]}}</td>
+                        <td rowspan="4">{{__("Specialized job")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="4">{{sal5[a]}}</td>
+			{% } %}
+                        <td rowspan="4">شهادة البكالوريوس و4 سنوات خبرة عمل</td>
+                    </tr>
+		{% for (var j=23; j<= 25; j++) { %}
+                    <tr>
+                        <td>{{job_nums[j]}}</td>
+                        <td>{{designation[j]}}</td>
+                    </tr>
+		{% } %}
+                    <tr>
+                        <td rowspan="2">6</td>
+                        <td>{{job_nums[26]}}</td>
+                        <td>{{designation[26]}}</td>
+                        <td rowspan="2">{{__("Specialized job")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="2">{{sal6[a]}}</td>
+			{% } %}
+                        <td rowspan="2">شهادة البكالوريوس و3 سنوات خبرة عمل</td>
+
+                    </tr>
+                    <tr>
+                        <td>{{job_nums[27]}}</td>
+                        <td>{{designation[27]}}</td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="2">7</td>
+                        <td>{{job_nums[28]}}</td>
+                        <td>{{designation[28]}}</td>
+                        <td rowspan="2">{{__("Specialized job")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="2">{{sal7[a]}}</td>
+			{% } %}
+                        <td rowspan="2">شهادة البكالوريوس وسنتين خبرة عمل</td>
+                    </tr>
+                    <tr>
+                        <td>{{job_nums[29]}}</td>
+                        <td>{{designation[29]}}</td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="3">8</td>
+                        <td>{{job_nums[30]}}</td>
+                        <td>{{designation[30]}}</td>
+                        <td rowspan="3">{{__("Support specialized job")}}</td>
+			{% for (var a=0; a< 20; a++) { %}
+                        <td rowspan="3">{{sal8[a]}}</td>
+			{% } %}
+                        <td rowspan="3">شهادة الثانوية العامة</td>
+                    </tr>
+		{% for (var j=31; j<= 32; j++) { %}
+                    <tr>
+                        <td>{{job_nums[j]}}</td>
+                        <td>{{designation[j]}}</td>
+                    </tr>
+		{% } %}
+                </tbody>
+            </table>
+
+					</div>
+						
+				</div>
+				<!-- /Row -->
+
+
+
+

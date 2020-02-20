@@ -1,0 +1,20 @@
+{
+ "content": null, 
+ "creation": "2018-07-17 12:34:18.027031", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "icon": "fa fa-user", 
+ "idx": 0, 
+ "modified": "2018-07-19 12:12:27.197398", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "employee-information", 
+ "owner": "Administrator", 
+ "page_name": "Employee Information", 
+ "roles": [], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Employee Information"
+}

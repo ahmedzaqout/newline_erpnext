@@ -1,0 +1,25 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2019-07-04 13:40:42.548165", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "\u062a\u0631\u0648\u064a\u0633\u0629 \u0646\u064a\u0648\u0644\u0627\u064a\u0646", 
+ "modified": "2019-07-04 14:01:52.012148", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "Interview Result", 
+ "owner": "Administrator", 
+ "query": "a SELECT query. Note result is not paged (all data is sent in one go).To format columns, give column labels in the query.\n[Label]:[Field Type]/[Options]:[Width]", 
+ "ref_doctype": "Interviewer Result", 
+ "report_name": "Interview Result", 
+ "report_type": "Script Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

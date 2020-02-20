@@ -1,0 +1,22 @@
+<div class="module-body">
+
+{% for (var i=0; i < data.length; i++) { var section = data[i]; %}
+
+{% if ( section.label == __("Constants") ) { %}
+	<div class="col-sm-6 module-section-column">
+		<div class="h4 section-head">{{ section.label }}</div>
+		<div class="section-body">
+		{% for(var j=0; j<section.items.length; j++) { %} 
+			<div style="min-height: 22px; margin-top: 8px;">
+			<a class="module-section-link small" data-type="{{ section.items[j].type }}"
+						href="#{{ section.items[j].route }}" style="{{ section.items[j].style }}">
+						{{ section.items[j].label || __(section.items[j].name) }}
+			</a>
+
+			</div>
+		{% } %}
+		</div>
+	</div>
+{% } %}
+	{% } %}
+</div>

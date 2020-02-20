@@ -1,0 +1,25 @@
+{
+ "content": null, 
+ "creation": "2018-03-28 14:22:52.325161", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-03-28 14:22:52.325161", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "work-shifts", 
+ "owner": "Administrator", 
+ "page_name": "Work Shifts", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 1
+}

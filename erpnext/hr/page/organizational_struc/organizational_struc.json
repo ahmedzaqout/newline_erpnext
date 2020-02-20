@@ -1,0 +1,28 @@
+{
+ "content": null, 
+ "creation": "2018-05-04 20:27:31.310796", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-05-04 20:27:31.310796", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "organizational-struc", 
+ "owner": "Administrator", 
+ "page_name": "Organizational Structure", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0
+}

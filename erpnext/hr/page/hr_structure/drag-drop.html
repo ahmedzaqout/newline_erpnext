@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+  	<title>Organization Chart</title>
+  	<link rel="icon" href="img/logo.png">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/font-awesome.min.css">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/jquery.orgchart.css">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/style.css">
+  	
+  
+	<style type="text/css">	
+		body,html{
+		  background-color: #fff !important;
+		}
+		#chart-container .orgchart{
+		  background-color: #fafbfc !important;
+		}
+		#chart-container .orgchart .node ,
+		#chart-container .orgchart .node .content{
+		  background-color: #fff !important;  
+		}
+		#chart-container {
+		  height: 100%;
+		  border: none;
+		  top: 0px;
+		  right: 0px;
+		  width: 100%;
+		  /* overflow-y: hidden; */
+		}
+
+		.orgchart {
+		  background: #fff0;
+		}
+
+		.orgchart .second-menu-icon {
+		  transition: opacity .5s;
+		  opacity: 0;
+		  right: -5px;
+		  top: -5px;
+		  z-index: 2;
+		  color: rgba(68, 157, 68, 0.5);
+		  font-size: 18px;
+		  position: absolute;
+		}
+
+		.orgchart .second-menu-icon:hover {
+		  color: #449d44;
+		}
+		.orgchart .node.focused,
+		.orgchart .node:hover{
+			-webkit-box-shadow: 0 0 0 3px rgba(228, 226, 207, 0.5);
+			box-shadow: 0 0 0 3px rgba(228, 226, 207, 0.5);
+		}
+		.orgchart .node:hover .second-menu-icon {
+		  opacity: 1;
+		}
+		.orgchart .node:hover {
+    		   background-color: rgba(228, 226, 207, 0.5);
+		}
+		.orgchart .node.focused {
+    		   background-color: rgba(228, 226, 207, 0.5);
+		}
+
+		.orgchart .node .second-menu {
+		  display: none;
+		  position: absolute;
+		  top: 0;
+		  right: -70px;
+		  border-radius: 35px;
+		  box-shadow: 0 0 10px 1px #999;
+		  background-color: #fff;
+		  z-index: 1;
+		}
+
+		.orgchart .node .second-menu .avatar {
+		  width: 60px;
+		  height: 60px;
+		  border-radius: 30px;
+		  float: right;
+		  margin: 5px;
+		}
+		body.frappe-rtl .orgchart .node .second-menu .avatar {
+		  float: left;			
+		}
+
+		#edit-panel {
+		  display:none !important;
+		  position: absolute;
+		  /* position: relative; */
+		  /* left: 10px; */
+		  left: 20px;
+		  border-radius: 10px;
+		  float: left;
+		  /* margin-top: -33%; */
+		  /* margin-top: -575px; */
+		  top: 5%;
+		  background-color: #41b2de;
+		  padding: 15px;
+		  cursor: all-scroll;
+		}
+
+		#edit-panel .btn-inputs {
+		  font-size: 24px;
+		}
+
+		#edit-panel.edit-state>:not(#chart-state-panel) {
+		  display: none;
+		}
+
+		#edit-panel label {
+		  font-weight: bold;
+		}
+
+		#edit-panel.edit-parent-node .selected-node-group {
+		  display: none;
+		}
+
+		#chart-state-panel,
+		#selected-node,
+		#btn-remove-input {
+		  margin-right: 20px;
+		}
+
+		#edit-panel button {
+		  color: #333;
+		  background-color: #fff;
+		  display: inline-block;
+		  padding: 6px 12px;
+		  margin-bottom: 0;
+		  line-height: 1.42857143;
+		  text-align: center;
+		  white-space: nowrap;
+		  vertical-align: middle;
+		  -ms-touch-action: manipulation;
+		  touch-action: manipulation;
+		  cursor: pointer;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		  background-image: none;
+		  border: 1px solid #ccc;
+		  border-radius: 4px;
+		}
+
+		#edit-panel.edit-parent-node button:not(#btn-add-nodes) {
+		  display: none;
+		}
+
+		#edit-panel button:hover,
+		.edit-panel button:focus,
+		.edit-panel button:active {
+		  border-color: #eea236;
+		  box-shadow: 0 0 10px #eea236;
+		}
+
+		#new-nodelist {
+		  display: inline-block;
+		  list-style: none;
+		  margin-top: -2px;
+		  padding: 0;
+		  vertical-align: text-top;
+		}
+
+		#new-nodelist>* {
+		  padding-bottom: 4px;
+		}
+
+		.btn-inputs {
+		  vertical-align: sub;
+		}
+
+		#edit-panel.edit-parent-node .btn-inputs {
+		  display: none;
+		}
+
+		.btn-inputs:hover {
+		  -webkit-text-shadow: 0 0 4px #fff;
+		  text-shadow: 0 0 4px #fff;
+		}
+
+		#btn-add-nodes {
+		  margin-right: 20px;
+		}
+		body.frappe-rtl #btn-add-nodes {
+		  margin-left: 20px;			
+		}
+
+		.orgchart .node .content {
+		  height: 22px;
+		}
+
+		.orgchart .node .content {
+		  border: 1px solid rgba(6, 139, 160, 0.8);
+		}
+
+		.orgchart .node .title {
+		  background-color: rgba(18, 159, 214, 0.8);
+		}
+
+		.orgchart .lines .downLine {
+		  background-color: #999999bf;
+		}
+
+		.orgchart .lines .rightLine {
+		  border-left: 0px solid #999999bf;
+		}
+		body.frappe-rtl .orgchart .lines .rightLine {
+		  border-right: 0px solid #999999bf;
+		}
+
+		.orgchart .lines .leftLine {
+		  border-left: 0px solid #999999bf;
+		}
+		.orgchart .lines .topLine{
+			border-top: 2px solid #999999bf;
+		}
+
+		.orgchart .lines:nth-child(3) td {
+		  height: 0px;
+		}
+
+		.edge verticalEdge topEdge fa {
+		  display: none;
+		}
+
+		.orgchart .node .verticalEdge {
+		  display: none;
+		}
+
+		.orgchart .node .horizontalEdge {
+		  display: none;
+		}
+
+		.orgchart .node .content {
+		  height: 83px;
+		}
+		/*msh*/
+		.orgchart .node {
+		  width: 170px;
+		}
+
+		.orgchart .node .title {
+		  font-weight: normal;
+		  height: 44px;
+		  line-height: 19px;
+		  overflow: inherit;
+		  text-overflow: initial;
+		  white-space: normal;
+		  vertical-align: middle;
+		  display: table-cell;
+		  width: 170px;
+		}
+
+		.orgchart .node .title .symbol {
+		  display: none !important;
+		}
+
+		.orgchart .node .content {
+		  overflow: inherit;
+		  text-overflow: initial;
+		  white-space: normal;
+		}
+
+		.orgchart .node .content .avatar,
+		.orgchart .node .content .avatar-frame {
+		  width: 65px !important;
+		  height: 65px !important;
+		  margin-top: 5px;
+		  margin-bottom: 5px;
+		  border-radius: 100% !important;
+		}
+
+		#edit-panel .control-group {
+		  margin-bottom: 10px;
+		}
+
+		#edit-panel .control-group label {
+		  display: block;
+		  color: #fff;
+		  font-weight: normal;
+		}
+
+		#edit-panel .control-group input[type="text"] {
+		  width: 100%;
+		  margin-right: 0;
+		  border-radius: 4px;
+		  border: none;
+		  height: 28px;
+		  padding-right: 8px
+		}
+
+		#chart-state-panel,
+		#selected-node,
+		#btn-remove-input {
+		  margin-right: 0px !important;
+		}
+
+		#edit-panel button {
+		  color: #0098a3;
+		  padding: 7px 25px;
+		  text-transform: capitalize;
+		  border-radius: 2px;
+		  outline: none;
+		  box-shadow: none;
+		  border: none;
+		  -webkit-transition: all 0.3s ease;
+		  -moz-transition: all 0.3s ease;
+		  transition: all 0.3s ease;
+		  margin-left: 0px;
+		  border-radius: 60px;
+		  background: #fff;
+		  border: solid 1px #fff;
+		  -webkit-box-shadow: none;
+		  box-shadow: none;
+		}
+
+		#edit-panel button:hover {
+		  color: #fff;
+		  background-color: transparent;
+		  border: solid 1px #fff;
+		}
+
+		.new-nodelist-actions {
+		  text-align: left;
+		  margin-top: -5px;
+		}
+
+		.new-nodelist-actions i {
+		  color: #656464 !important;
+		  font-size: 20px !important;
+		}
+
+		/* ***************** */
+		.orgchart .node{
+
+		  border: 1px solid #e8e8e8;
+		 /* border-top: 5px solid #93b85a;*/
+		  border-radius: 5px;
+		  padding: 0;
+		  margin: 5px 5px 0px
+		}
+		
+		.orgchart .node .title{
+		  width: 200px;
+		  height: 32px;
+		  background-color: #f4f8ee;
+		  color: #404040;
+		  text-align: initial;
+		  padding-right: 7px;
+		  padding-left: 7px;
+		  border: 1px solid #fff;
+ 		  border-top: 5px solid #f19813;
+		}
+
+		.orgchart .node .content{
+		  border: none;
+		  padding: 5px;
+		}
+		.orgchart .node .content > div{
+		  float: left;
+		  margin-left: 5px;
+		  margin-right: 5px;
+		}
+		body.frappe-rtl .orgchart .node .content > div{
+		  float: right;			
+		}
+		.orgchart .node .content > div .standard-image,
+		.orgchart .node .content > div .avatar{
+		  width: 48px;
+		  height: 48px;
+		  border-radius: 50%;
+		}
+		.orgchart .node .content span{
+		  	margin-top: 10px;
+		  	display: block;
+			text-align: initial;
+		}
+
+		.orgchart .lines:nth-child(3) td,
+		body.frappe-rtl .orgchart .lines:nth-child(3) td{
+			height: 20px;
+		}
+		.orgchart .lines .rightLine{
+			border-right: 1px solid #999999bf;
+		}
+		body.frappe-rtl .orgchart .lines .rightLine{
+			border-left: 1px solid #999999bf;
+    		border-right: 0;
+		}
+		.orgchart .lines .leftLine{
+			border-left: 1px solid #999999bf;
+		}
+		body.frappe-rtl .orgchart .lines .leftLine{
+			border-right: 1px solid #999999bf;
+    		border-left: 0;
+		}
+
+
+		/* colors */
+		/* red */
+		.orgchart .node.red{
+			border-top-color: #c34444;
+		}
+		.orgchart .node.red .title{
+			background-color: rgba(195, 68, 68, 0.1);
+		}
+		/* green */
+		.orgchart .node.green{
+			border-top-color: #93b85a;
+		}
+		.orgchart .node.green .title{
+			background-color: rgba(147, 184, 90, 0.1);
+		}
+		/* blue */
+		.orgchart .node.blue{
+			border-top-color: #68c2de;
+		}
+		.orgchart .node.blue .title{
+			background-color: rgba(104, 194, 222, 0.1);
+		}
+		/* yallow */
+		.orgchart .node.yallow{
+			border-top-color: #ebb92e;
+		}
+		.orgchart .node.yallow .title{
+			background-color: rgba(235, 185, 46, 0.1);
+		}
+		/* pink */
+		.orgchart .node.pink{
+			border-top-color: #d46e89;
+		}
+		.orgchart .node.pink .title{
+			background-color: rgba(212, 110, 137, 0.1);
+		}
+
+    		.orgchart .dep .title {    border-top: 5px solid #c34444 ;  }
+    		.orgchart .head .title {    border-top: 5px solid #68c2de;  }
+    		.orgchart .branch .title {    border-top: 5px solid #b90eac;  }
+    		.orgchart .mang .title {    border-top: 5px solid #ebb92e;  }
+    		.orgchart .circl .title {    border-top: 5px solid #93b85a ;  }
+    		.orgchart .emp .title {    border-top: 5px solid #d46e89;  }
+
+	</style>
+</head>
+<body>
+  	<div id="chart-container"></div>
+	<div id="edit-panel">
+		<div class="control-group">
+		    <span id="chart-state-panel" class="radio-panel"></span>
+		    <!-- <label class="selected-node-group">التصنيف:</label> -->
+		    <input type="text" id="selected-node" class="selected-node-group" placeholder="التصنيف">
+		</div>
+		<div class="control-group">
+		    <!-- <label>الفرع:</label> -->
+		    <ul id="new-nodelist">
+		     	<li><input type="text" class="new-node" placeholder="التصنيف الفرع"></li>
+		    </ul>
+		    <div class="new-nodelist-actions">
+			    <i class="fa fa-minus-circle btn-inputs text-danger" id="btn-remove-input"></i>		    	
+			    <i class="fa fa-plus-circle btn-inputs text-success" id="btn-add-input"></i>
+		    </div>
+		    <span id="node-type-panel" class="radio-panel"></span>
+		</div>
+		<div class="text-center" style="margin-top: 20px;">
+	    	<button type="button" id="btn-delete-nodes">حذف</button>
+		    <button type="button" id="btn-add-nodes">إضافة</button>
+		</div>
+	    <!-- <button type="button" id="btn-reset">Reset</button> -->
+  	</div>
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.min.js"></script>
+
+	<script type="text/javascript" src="/assets/frappe/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/lib/summernote/summernote.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/frappe/format.js"></script>
+	<script type="text/javascript" src="/assets/js/control.min.js"></script>
+
+
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.orgchart.js"></script>
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/html2canvas.min.js"></script>
+
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+</body>
+</html>

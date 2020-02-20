@@ -1,0 +1,29 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2017-01-10 17:36:58.153863", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 2, 
+ "is_standard": "Yes", 
+ "modified": "2019-10-20 12:21:53.445973", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "Leave Report", 
+ "owner": "Administrator", 
+ "ref_doctype": "Work Shift", 
+ "report_name": "Leave Report", 
+ "report_type": "Script Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "HR Manager"
+  }
+ ]
+}

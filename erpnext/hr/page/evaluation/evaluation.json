@@ -1,0 +1,28 @@
+{
+ "content": null, 
+ "creation": "2019-04-01 18:09:29.806256", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2019-04-01 18:09:29.806256", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "evaluation", 
+ "owner": "Administrator", 
+ "page_name": "Evaluation", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0
+}

@@ -1,0 +1,26 @@
+{
+ "attach_print": 0, 
+ "condition": "doc.status==\"Accepted\"", 
+ "creation": "2019-05-15 02:59:37.216578", 
+ "days_in_advance": 0, 
+ "docstatus": 0, 
+ "doctype": "Email Alert", 
+ "document_type": "Offer Letter", 
+ "enabled": 1, 
+ "event": "Submit", 
+ "idx": 0, 
+ "is_standard": 0, 
+ "message": "<p>{{ _(\"Hello\") }},\n\n</p>\n<p>{{_(\"New Offer letter for the job \")}} {{doc.job_title}} </p>\n\n<p>{{_(\"There is a new offer letter for the applicant \")}}{{doc.job_applicant}} </p>\n\n<p>{{ _(\"Please visit it by the link here: \") }}{{ frappe.utils.get_link_to_form(\"Offer Letter\", doc.name) }}</p>\n", 
+ "modified": "2019-05-15 03:04:35.407168", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "Offer Letter Notify", 
+ "owner": "Administrator", 
+ "recipients": [
+  {
+   "email_by_document_field": "employee_emails", 
+   "email_by_role": "HR Manager"
+  }
+ ], 
+ "subject": "Offer Letter for {{ doc.job_applicant }}"
+}

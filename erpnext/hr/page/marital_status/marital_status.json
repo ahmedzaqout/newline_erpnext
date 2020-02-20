@@ -1,0 +1,23 @@
+{
+ "content": null, 
+ "creation": "2018-06-21 15:32:34.380641", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-07-17 11:18:34.786831", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "marital-status", 
+ "owner": "Administrator", 
+ "page_name": "Marital Status", 
+ "roles": [
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Marital Status Chart"
+}

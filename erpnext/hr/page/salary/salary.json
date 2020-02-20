@@ -1,0 +1,29 @@
+{
+ "content": null, 
+ "creation": "2018-10-10 16:00:49.048445", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-10-10 16:10:31.556860", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "salary", 
+ "owner": "Administrator", 
+ "page_name": "Salary", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": ""
+}

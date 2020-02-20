@@ -1,0 +1,70 @@
+{% extends "templates/web.html" %}
+
+{% block breadcrumbs %}
+<div style="direction:rtl;width:100%;">
+	{% include "templates/includes/breadcrumbs.html" %}
+</div>
+{% endblock %}
+
+
+
+{% block header %}
+<div style="direction:rtl;width:100%;">
+<img src="/files/p2Wo300.png" style="width:150px;margin: 20px;"/>
+<h1 style="margin-right: 30px;margin-bottom: 20px;">{{ designation }}</h1>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<div style="direction:rtl;width:100%;">
+{%- if gen_info -%}
+<b style="margin-top:10px">نبذة عن الجمعية</b>
+<div class="row" style="margin-right:10px;margin-top:10px">{{ gen_info }}</div>
+{% endif %}
+{%- if designation -%}
+<div style="margin-top:10px"><b>المسمى الوظيفي: </b>
+{{ designation }} ( {{branch}} - {{department}} )</div>
+{% endif %}
+{%- if dut_res -%}
+<b class="row" style="margin-top:10px">الواجبات والمسؤوليات</b>
+{%for m in dut_res %}
+<div class="row" style="margin-right:10px"> {{m['idx']}}- {{m['duties_and_responsibilities']}} , {{m['performance_indicators']}} </div>
+{%endfor%}
+{% endif %}
+{%- if small_text_21 -%}
+<b class="row" style="margin-top:10px">المؤهلات الأكاديمية المطلوبة وسنوات الخبرة</b>
+<div class="row" style="margin-right:10px">{{ small_text_21 }}</div>
+{% endif %}
+
+{%- if small_text_19 -%}
+<b class="row" style="margin-top:10px">المهارات المطلوبة </b>
+<div class="row" style="margin-right:10px">{{ small_text_19 }}</div>
+{% endif %}
+<div class ="row" style="margin-top: 10px;
+    font-size: 16px;
+    font-family: Tahoma, Helvetica, sans-serif;
+    font-weight: 700;
+    text-align: justify;"> 
+على من ي/تجد في نفسه/ها الكفاءة المطلوبة، ارسال السيرة الذاتية ورسالة تغطية وتحفيز على الايميل {{ address }}
+</div>
+<div class ="row" style="margin-top: 10px;
+    font-size: 16px;
+    font-family: Tahoma, Helvetica, sans-serif;
+    font-weight: 700;
+    text-align: justify;"> 
+
+سيتم التواصل فقط مع الأشخاص المؤهلين للمقابلة الشخصية.
+</div>
+<div class ="row" style="margin-top: 10px;
+    font-size: 16px;
+    font-family: Tahoma, Helvetica, sans-serif;
+    font-weight: 700;
+    text-align: justify;"> 
+علماً بأن آخر موعد لتقديم الطلبات هو يوم {{ expiration_date }}
+</div>
+<p style='margin-top: 30px'>
+	<a class='btn btn-primary' href='/job_application?new=1&job_title={{ doc.name }}'>
+	{{ _("تعبئة الطلب") }}    </a>
+</p>
+</div>
+{% endblock %}
