@@ -20,11 +20,26 @@ frappe.ui.form.on('Employee Ending Service  Details', {
 			}
 	},
 	relieving_date: function(frm){
-	    	if (frm.doc.relieving_date)
-			frappe.call({
-				method:'update_emp_status',
-				doc:frm.doc,
-				args:{'status':'Left'}	
+		if (frm.doc.relieving_date){
+		frappe.confirm(
+			__('This action will stop the employee. Are you sure you want to continue?'),
+			function() {
+				frappe.call({
+					method:'update_emp_status',
+					doc:frm.doc,
+					args:{'status':'Left'}	
+				});
+			},
+    		function(){
+        		show_alert(__('Employee has been stoped'))
+   			}
+			)
+		}
+	},
+	type:function(frm){
+		if (frm.doc.type == 'End of the decade')
+			frappe.model.get_value('Employee Employment Detail', cur_frm.doc.employee,'scheduled_confirmation_date',function(r) {
+				frm.set_value('date_of_joining',r.date_of_joining);
 			});
 
 	},

@@ -31,7 +31,20 @@ frappe.query_reports["Exit permissions"] = {
 			}
 
 
+		}, 
+		{
+			"fieldname":"department",
+			"label": __("Department"),
+			"fieldtype": "Link",
+			"options": "Department"
 		},
+		{
+			"fieldname":"supervisor",
+			"label": __("Supervisor"),
+			"fieldtype": "Link",
+			"options": "Employee"
+		},
+
 	
 		{
 			"fieldname":"permission_type",

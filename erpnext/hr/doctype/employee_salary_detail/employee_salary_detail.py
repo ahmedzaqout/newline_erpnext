@@ -5,7 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate,cstr
 from frappe import _
 
 class EmployeeSalaryDetail(Document):
@@ -49,7 +49,7 @@ class EmployeeSalaryDetail(Document):
 		
 		from erpnext.hr.doctype.payroll_entry.payroll_entry import get_end_date
 		if self.payroll_frequency:
-			end_date = get_end_date(str(joining_date), self.payroll_frequency)['end_date']
+			end_date = get_end_date(cstr(joining_date), self.payroll_frequency)['end_date']
 
 		doc = frappe.new_doc('Salary Structure')
 		doc.update({
@@ -142,9 +142,23 @@ class EmployeeSalaryDetail(Document):
 			
 
 
+	def get_salary_remaining(self):
+		return frappe.get_all("Salary Slip", fields=["month","start_date","name","salary_ratio","remaining_salary","basic_salary"],filters={'employee':self.employee,'salary_ratio':("!=", 0)})
 
+	def get_emp_warnings(self):
+		return frappe.get_all("Warning Information", fields=["warning_date","penalty","penalty_type","warning_type","discount_hour","discount_period_type","employee_violation"],filters={'employee':self.employee})
 			
-
+	def update_salary_history(self,last_salary,basic_salary):
+		doc = frappe.new_doc('Salary Change History')
+		doc.update({
+			#'name':_('Salary Structure')+'_'+ employee_name,
+			'employee':self.employee,
+			'last_salary':last_salary,
+			'new_salary':basic_salary,
+			'change_date':getdate(nowdate()),
+			'user': frappe.session.user
+			})
+		doc.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
 def employee_child(employee):

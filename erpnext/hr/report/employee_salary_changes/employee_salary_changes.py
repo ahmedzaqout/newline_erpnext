@@ -6,6 +6,7 @@ import frappe
 from frappe import msgprint, _
 
 def execute(filters=None):
+	data=[]
 	if not filters: filters = {}
 	conditions, filters = get_conditions(filters)
 	columns = get_columns(filters)

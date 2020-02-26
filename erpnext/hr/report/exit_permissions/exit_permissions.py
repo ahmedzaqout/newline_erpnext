@@ -17,7 +17,7 @@ def execute(filters=None):
 
 	data = []
 	for perm in sorted(perm_map):
-		row =[perm.employee_name,perm.permission_type,perm.permission_date,perm.from_date,perm.to_date,perm.total,perm.reason]
+		row =[perm.employee_name,perm.supervisor,perm.department,perm.permission_type,perm.permission_date,perm.from_date,perm.to_date,perm.total,perm.reason]
 		data.append(row)
 
 	return columns, data
@@ -25,6 +25,8 @@ def execute(filters=None):
 def get_columns(filters):
 	columns = [
 		 {"label":_("Employee Name") ,"width":140,"fieldtype": "Data"},
+		 {"label":_("Supervisor") ,"width":140,"fieldtype": "Data"},
+		 {"label":_("Department") ,"width":140,"fieldtype": "Data"},
 		 {"label":_("Permission Type") ,"width":120,"fieldtype": "Data"},
 		 {"label":_("Permission Date") ,"width":100,"fieldtype": "Date"},
 		 {"label":_("From") ,"width":90,"fieldtype": "Time"},
@@ -39,23 +41,25 @@ def get_columns(filters):
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += " and employee = %(employee)s"
-	if filters.get("from_date"): conditions += " and permission_date >= %(from_date)s"
-	if filters.get("to_date"): conditions += " and permission_date <= %(to_date)s"
-	if filters.get("permission_type"): conditions += " and permission_type = %(permission_type)s"
+	if filters.get("employee"): conditions += " and ex.employee = %(employee)s"
+	if filters.get("supervisor"): conditions += " and emp.supervisor = %(supervisor)s"
+	if filters.get("department"): conditions += " and emp.department = %(department)s"
+	if filters.get("from_date"): conditions += " and ex.permission_date >= %(from_date)s"
+	if filters.get("to_date"): conditions += " and ex.permission_date <= %(to_date)s"
+	if filters.get("permission_type"): conditions += " and ex.permission_type = %(permission_type)s"
 	if filters.get("status") =='Open': 
-		conditions += " and docstatus = 0"
+		conditions += " and ex.docstatus = 0"
 	elif filters.get("status") =='Approved': 
-		conditions += " and docstatus = 1"
+		conditions += " and ex.docstatus = 1"
 	elif filters.get("status") =='Rejected': 
-		conditions += " and docstatus = 2"
+		conditions += " and ex.docstatus = 2"
 
 	return conditions, filters
 
 def get_exit_permission_details(conditions, filters):
-	perm_map  = frappe.db.sql("""select employee_name,permission_type,permission_date,from_date,to_date,reason,status, GREATEST(round(TIMESTAMPDIFF(MINUTE,from_date,to_date)/60,2),0) as total from `tabExit permission` where docstatus <2 %s order by employee,permission_date """ %
+	perm_map  = frappe.db.sql("""select emp.supervisor,emp.supervisor_name,emp.department, ex.employee, ex.employee_name,ex.permission_type,ex.permission_date,ex.from_date,ex.to_date,ex.reason,ex.status, GREATEST(round(TIMESTAMPDIFF(MINUTE,ex.from_date,ex.to_date)/60,2),0) as total from `tabExit permission` as ex left join `tabEmployee Employment Detail` as emp on ex.employee= emp.employee where ex.docstatus <2 %s order by ex.employee,ex.permission_date """ %
 		conditions, filters, as_dict=1)
-
+	
 	return perm_map
 
 

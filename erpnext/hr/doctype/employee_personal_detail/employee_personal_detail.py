@@ -36,7 +36,7 @@ class EmployeePersonalDetail(Document):
 		for j in [self.en_fname,self.en_sname,self.en_tname,self.en_family_name]:
 			validate_only_english(j)     
 
-		if not self.identity_no.isdigit():
+		if self.identity_no and not self.identity_no.isdigit():
 			throw(_("{0} Bad entry in identity no"),self.identity_no) 
 
 	def validate_duplicate_user_id(self):

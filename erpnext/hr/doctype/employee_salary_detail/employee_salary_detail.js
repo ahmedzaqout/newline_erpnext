@@ -12,6 +12,8 @@ frappe.ui.form.on('Employee Salary Detail', {
 	onload: function(frm) {
 		last_salary= frm.doc.basic_salary;
 
+
+
 		if (cur_frm.is_new() && !cur_frm.doc.employee){
 			cur_frm.set_df_property('employee', 'read_only', 0);
 			cur_frm.refresh_field('employee');
@@ -35,6 +37,10 @@ frappe.ui.form.on('Employee Salary Detail', {
 				}
 			}
 		});
+
+		frm.events.salary_remaining(frm);
+		frm.events.get_emp_warnings(frm);
+
 	},
 
 	refresh: function(frm) {	
@@ -86,6 +92,14 @@ frappe.ui.form.on('Employee Salary Detail', {
 			frm.set_value("basic_salary_modified_date",frappe.datetime.nowdate());
 			frm.set_value("last_salary",last_salary);
 			cur_frm.refresh_fields('basic_salary_modified_date','last_salary');
+			frappe.call({
+				method:'update_salary_history',
+				doc:frm.doc,
+				args:{
+					'last_salary':last_salary,
+					'new_salary':frm.doc.basic_salary
+					}	
+			});
 
 	},
 
@@ -99,6 +113,8 @@ frappe.ui.form.on('Employee Salary Detail', {
 			frm.events.calc_basic_salary(frm);
 			frm.events.get_earnings(frm);
 			frm.events.get_deductions(frm);
+			frm.events.salary_remaining(frm);
+
 			}
 			 });
 
@@ -110,6 +126,10 @@ frappe.ui.form.on('Employee Salary Detail', {
 	experience_years: function(frm) {
 		if(!frm.doc.experience_years) frm.set_value("grade_category","");
 		frm.events.calc_basic_salary(frm);
+	},
+	discount_salary_from_leaves:function(frm) {
+		if (frm.get_value('discount_salary_from_overtime_hours') ==1)
+				frm.set_value('discount_salary_from_overtime_hours',0);
 	},
 
 	user_data: function(frm) { 
@@ -262,6 +282,49 @@ frappe.ui.form.on('Employee Salary Detail', {
 		})
 },
 
+
+	salary_remaining:function(frm) {
+		frappe.call({
+			method:'get_salary_remaining',
+			doc:frm.doc,
+			callback:function (r) {
+				var salary_remaining = $.map(frm.doc.salary_remaining_table, function(d) { return d.remaining_salary });
+				for (var i=0; i< r.message.length; i++) {
+					var row = frappe.model.add_child(frm.doc, frm.fields_dict.salary_remaining_table.df.options, frm.fields_dict.salary_remaining_table.df.fieldname);
+						row.month = r.message[i].month;
+						row.salary_slip = r.message[i].name;
+						row.remaining_salary = r.message[i].remaining_salary;
+						row.salary_ratio = r.message[i].salary_ratio;
+						row.salary = r.message[i].basic_salary;
+					}
+				frm.refresh_field('salary_remaining_table');
+
+				}
+		});
+},
+
+
+	get_emp_warnings:function(frm) {
+		frappe.call({
+			method:'get_emp_warnings',
+			doc:frm.doc,
+			callback:function (r) {
+				var warnings = $.map(frm.doc.warnings, function(d) { return d.employee_violation });
+				for (var i=0; i< r.message.length; i++) {
+					var row = frappe.model.add_child(frm.doc, frm.fields_dict.warnings.df.options, frm.fields_dict.warnings.df.fieldname);
+						row.employee_violation = r.message[i].employee_violation;
+						row.penalty = r.message[i].penalty;
+						row.penalty_type = r.message[i].penalty_type;
+						row.warning_date = r.message[i].warning_date;
+						row.discount_hour = r.message[i].discount_hour;
+						row.warning_type = r.message[i].warning_type;
+						//discount_period_type
+					}
+				frm.refresh_field('warnings');
+
+				}
+		});
+},
 
  	calc_basic_salary: function(frm) {
 		if (frm.doc.grade && frm.doc.experience_years)
