@@ -48,7 +48,7 @@ class EmployeeEndingServiceDetails(Document):
 	def calculate_end_service_amount(self):
 		service_years = self.get_service_years()
 		basic_salary ,day_salary= frappe.db.get_value('Employee Salary Detail',self.employee,['basic_salary','day_salary'])
-
+		amount = 0.0
 		if self.type =='Resignation':
 			taken_leaves = self.get_leaves_taken()
 			amount = service_years * basic_salary +(taken_leaves* day_salary)

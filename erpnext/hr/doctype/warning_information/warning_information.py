@@ -5,13 +5,31 @@
 from __future__ import unicode_literals
 import frappe , erpnext
 from frappe.model.document import Document
-from frappe.utils import now_datetime,add_days,nowdate
+from frappe.utils import now_datetime,add_days,nowdate, cstr,getdate
 from frappe import _
 
 class WarningInformation(Document):
 	def on_submit(self):
 		if self.warning_type =='Email':
 			send_email(self.employee ,self.description, _('Employee Task Late Warning')) 
+
+		if self.penalty_type == 'Separation':
+			end_service_type == 'Separation'
+		elif self.penalty_type == 'Stop working with no salary':
+			end_service_type == 'Separation'
+
+			doc = frappe.get_doc('Employee Ending Service  Details',{"employee":self.employee})
+			if doc:
+				doc.update({
+					'type':end_service_type,
+					'reason_of_separation':self.separation_reasons,
+					'warning_date' : self.warning_date,
+					'relieving_date' : self.warning_date
+				})
+				#doc.flags.ignore_validate = True
+				#doc.flags.ignore_links = True
+				doc.save(ignore_permissions=True)
+
 		#if self.warning_type == 'Discount' :
 		#	shift_hrs = get_emp_work_shift(self.employee)
 		#	if self.penalty >= shift_hrs:

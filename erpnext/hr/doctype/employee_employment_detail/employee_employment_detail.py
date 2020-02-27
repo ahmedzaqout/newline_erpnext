@@ -11,20 +11,21 @@ from frappe.utils import getdate
 
 class EmployeeEmploymentDetail(Document):
 	def validate(self):
-		if self.designation:
-			emp_doc = frappe.get_doc('Employee',self.employee)
-			emp_doc.designation = self.designation
-			emp_doc.save(ignore_permissions=True)
+		try:
+			if self.designation:
+				emp_doc = frappe.get_doc('Employee',self.employee)
+				emp_doc.designation = self.designation
+				emp_doc.save(ignore_permissions=True)
 
-		if self.supervisor:
-			try:
+			if self.supervisor:
 				self.add_manager_staff()
-			except:
-				pass
 
-		self.deactivate_employee()
-		self.update_emp_work_shift()
-		self.update_emp_work_history()
+
+			self.deactivate_employee()
+			self.update_emp_work_shift()
+			self.update_emp_work_history()
+		except:
+			pass
 
 	def update_emp_work_shift(self):
 		if getdate(self.shift_change_date) != getdate(frappe.db.get_value('Employee Employment Detail',self.name,'shift_change_date')):
