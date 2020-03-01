@@ -14,9 +14,9 @@ class WarningInformation(Document):
 			send_email(self.employee ,self.description, _('Employee Task Late Warning')) 
 
 		if self.penalty_type == 'Separation':
-			end_service_type == 'Separation'
+			end_service_type = 'Separation'
 		elif self.penalty_type == 'Stop working with no salary':
-			end_service_type == 'Separation'
+			end_service_type = 'Separation'
 
 			doc = frappe.get_doc('Employee Ending Service  Details',{"employee":self.employee})
 			if doc:
@@ -98,8 +98,21 @@ def get_penalty_name(times):
 		penalty = 'penalty_second_time'
 	elif times==2:
 		penalty = 'penalty_third_time'
-	elif times>=3:
+	elif times==3:
 		penalty = 'penalty_forth_time'
+	elif times==4:
+		penalty = 'penalty_fifth_time'
+	elif times==5:
+		penalty = 'penalty_sixth_time'
+	elif times==6:
+		penalty = 'penalty_seventh_time'
+	elif times==7:
+		penalty = 'penalty_eighth_time'
+	elif times==8:
+		penalty = 'penalty_ninth_time'
+	elif times>=9:
+		penalty = 'penalty_tenth_time'
+
 	return penalty
 
 

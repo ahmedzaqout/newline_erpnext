@@ -557,10 +557,17 @@ def get_data():
 				#	"name": "Salary Register",
 				#	"doctype": "Salary Slip"
 				#},
+				#{
+				#	"type": "report",
+				#	"is_query_report": True,
+				#	"name": "Monthly Attendance Sheet",
+				#	"doctype": "Attendance"
+				#},
+				
 				{
 					"type": "report",
 					"is_query_report": True,
-					"name": "Monthly Attendance Sheet",
+					"name": "Attendance Summary Pal",
 					"doctype": "Attendance"
 				},
 				{

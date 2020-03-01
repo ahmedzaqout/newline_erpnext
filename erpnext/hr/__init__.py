@@ -73,6 +73,7 @@ def notify_manpower_jobopening_date():
 			enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args)
 		else:
 			msgprint(_("{0}: Employee email not found, hence email not sent").format(d.name))
+
 def hide_expired_job_opening():
 
 	today =datetime.today().strftime("%Y-%m-%d")
@@ -158,7 +159,8 @@ def notify_trial_employee():
 				else:
 					msgprint(_("{0}: Employee email not found, hence email not sent").format(doc.user_id))
 
-# Notify Manager if employee endedd 6 months -Nawa Company-
+
+# Notify Manager if employee endedd 6 months -Nawa Company- by Maysaa
 def notify_6month_employee():
 	if frappe.defaults.get_user_default("Company") != 'Nawa':
 		print str(False)
@@ -216,7 +218,7 @@ def notify_for_evaluation():
 		enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args2)				
 
 
-		
+#To be continue by Maysaa		
 def delete_cancled_records():
 	return True
 
@@ -232,6 +234,7 @@ def employee_shift(work_shift):
 			count += 1
 	return count
 
+
 @frappe.whitelist(allow_guest=True)
 def add_PNW_SComponent():
 	salary_component = frappe.new_doc("Salary Component")
@@ -244,6 +247,7 @@ def add_PNW_SComponent():
 	return "done"
 
 
+
 @frappe.whitelist()
 def get_compensatory(employee=None, start_date=None, end_date=None):
 	compensatory_total_hours = 0.0
@@ -252,6 +256,18 @@ def get_compensatory(employee=None, start_date=None, end_date=None):
 		for t in timesheets:
 			compensatory_total_hours += t.total_hours
 	return compensatory_total_hours
+
+@frappe.whitelist()
+def get_overtime_hrs(employee=None, start_date=None, end_date=None):
+	overtime_total_hours = 0.0
+	overtime_count = 0.0
+	timesheets = frappe.db.sql("select sum( td.hours ) as total_hours,t.docstatus,employee,date(from_time) as ddate,type from tabTimesheet as t join `tabTimesheet Detail` as td on t.name=td.parent and t.docstatus=1 and date(from_time) BETWEEN %(start_date)s AND DATE_ADD(%(end_date)s,INTERVAL 1 day)  group by employee,type having employee=%(employee)s and type !='compensatory' ", {'employee': employee, 'start_date': start_date, 'end_date': end_date}, as_dict=1)
+	if timesheets :
+		for t in timesheets:
+			if t.total_hours >0:
+				overtime_total_hours += t.total_hours
+				overtime_count +=1
+	return overtime_total_hours, overtime_count
 
 @frappe.whitelist()
 def get_permissions(employee=None, start_date=None, end_date=None):

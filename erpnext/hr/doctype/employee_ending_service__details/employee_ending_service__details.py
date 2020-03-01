@@ -14,6 +14,8 @@ from frappe.utils import getdate, nowdate, date_diff,cstr, flt
 
 class EmployeeEndingServiceDetails(Document):
 	def validate(self):
+		if not self.employee:
+			frappe.msgprint(__("Data Required!"))
 		if self.type and not self.relieving_date:
 			frappe.throw(_("Please enter relieving date."))
 		elif self.type and self.relieving_date:

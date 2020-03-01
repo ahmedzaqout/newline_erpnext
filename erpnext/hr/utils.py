@@ -39,6 +39,7 @@ def notify_manpower_planning_date():
 				frappe.msgprint(_("Email sent to {0}").format(contact))
 			except frappe.OutgoingEmailError:
 				pass 
+				
 @frappe.whitelist()
 def validate_only_arabic(ar_field):
 	rule = re.compile(ur'(^[ء-ي  -]+$)')
