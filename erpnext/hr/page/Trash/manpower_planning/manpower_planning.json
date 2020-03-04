@@ -1,0 +1,25 @@
+{
+ "content": null, 
+ "creation": "2018-04-22 08:36:43.899208", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-04-22 08:36:43.899208", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "manpower-planning", 
+ "owner": "Administrator", 
+ "page_name": "Manpower Planning", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 1
+}

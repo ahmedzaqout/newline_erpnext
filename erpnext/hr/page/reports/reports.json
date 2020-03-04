@@ -1,0 +1,28 @@
+{
+ "content": null, 
+ "creation": "2018-07-19 10:29:17.237070", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-07-19 10:29:17.237070", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "reports", 
+ "owner": "Administrator", 
+ "page_name": "Reports", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0
+}

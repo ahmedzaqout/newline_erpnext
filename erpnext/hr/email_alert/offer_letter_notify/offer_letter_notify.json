@@ -1,0 +1,26 @@
+{
+ "attach_print": 0, 
+ "condition": "doc.status==\"Accepted\"", 
+ "creation": "2019-05-15 02:59:37.216578", 
+ "days_in_advance": 0, 
+ "docstatus": 0, 
+ "doctype": "Email Alert", 
+ "document_type": "Offer Letter", 
+ "enabled": 0, 
+ "event": "Submit", 
+ "idx": 0, 
+ "is_standard": 0, 
+ "message": "<div class=\"row\" style=\"direction: rtl;margin: 5px; padding: 5px;\"><div><div>التاريخ: {{doc.job_title}}</div><br><div>الى السيد/{{doc.job_title}} المحترم</div><div>تحية طيبة وبعد،،</div><br><div>الموضوع: رسالة عرض عمل</div><div>بالاشارة الى الموضوع أعلاه، نفيدكم علماً بأنه تم اختياركم للعمل في جمعية نوى للثقافة والفنون، وحسب المعطيات التالية:</div></div><br><table><tr>  <td>1</td>   <td>المسمى الوظيفي</td>   <td>nn</td> </tr>  <tr>    <td>2</td>   <td>المستوى الوظيفي والدرجة</td>    <td></td>  </tr>  <tr>   <td>3</td>    <td>مكان العمل</td>    <td></td>  </tr> <tr>    <td>4</td>    <td>مدة العقد</td>   <td></td> </tr>  <tr>   <td>5</td>   <td>تاريخ بدأ العمل</td>   <td></td> </tr> <tr>   <td>6</td>    <td>الراتب الأساسي</td>   <td></td>  </tr> <tr>   <td>7</td>    <td>الاجازات</td>   <td></td>  </tr></table><br><br><div><div>وفي حال موافقتكم على العرض أعلاه، يرجى اعلامنا بما يفيد ذلك في موعد أقصاه {{doc.job_title}} وعبر  {{doc.job_title}}.</div><br><br><div style=\"align-content: center;\">وتفضلوا بقبول فائق الاحترام</div><br><div>المدير/ة التنفيذي/ة</div><div>جمعية نوى للثقافة والفنون</div><br></div>", 
+ "modified": "2019-05-15 03:04:35.407168", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "Offer Letter Notify", 
+ "owner": "Administrator", 
+ "recipients": [
+  {
+   "email_by_document_field": "employee_emails", 
+   "email_by_role": "HR Manager"
+  }
+ ], 
+ "subject": "Offer Letter for {{ doc.job_applicant }}"
+}

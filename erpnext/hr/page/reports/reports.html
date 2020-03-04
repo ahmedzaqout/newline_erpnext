@@ -1,0 +1,30 @@
+<!-- <div class="module-body"> -->
+<div class="reports_list_page">
+{% for (var i=0; i < data.length; i++) { var section = data[i]; %}
+
+{% if ( section.label == __("Reports") ) { %}
+	<div class="row">
+		<!-- <div class="col-sm-6 module-section-column"> -->
+			<!-- <div class="h4 section-head">{{ section.label }}</div> -->
+			<!-- <div class="section-body"> -->
+			{% for(var j=0; j< section.items.length; j++) { %} 
+				<div class="col-lg-3 col-md-4 col-sm-6 ">
+					<div class="report_item">
+						<!-- <div style="min-height: 22px; margin-top: 8px;"> -->
+							<a class="module-section-link small" data-type="{{ section.items[j].type }}"
+										href="#{{ section.items[j].route }}" style="{{ section.items[j].style }}">
+										{{ section.items[j].label || __(section.items[j].name) }}
+							</a>
+
+						<!-- </div> -->
+					</div>
+				</div>
+			{% } %}
+	</div>
+{% } %}
+	{% } %}
+</div>
+
+
+
+

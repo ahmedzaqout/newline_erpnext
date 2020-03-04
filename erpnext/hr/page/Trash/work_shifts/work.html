@@ -1,0 +1,20 @@
+<tr>
+	<td class="emp" data-designation="{{designation}}">
+		<a class="absence" onclick="getDesignation(this);">	
+			<table>
+				<tr>
+					<td class="emp_img">
+						{% if (image) { %}		
+							<img src="{{ image }}" alt="{{employee_name }}"/>
+						{% } %}
+					</td>
+					<td class="emp_name">
+						{% if (employee_name) { %}
+							{{employee_name}}
+						{% } %} 
+					</dt>
+				</tr>
+			</table>
+		</a>
+	</td>	
+</tr>

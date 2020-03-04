@@ -1,0 +1,224 @@
+
+<div  class="tab-struct custom-tab-2 mt-40">
+<ul role="tablist" class="nav nav-tabs" id="myTabs_15">
+
+<li class="active" role="presentation"><a aria-expanded="true"  data-toggle="tab" role="tab" id="home_tab_1" href="#tab1">{{__("Employee Edit Time") }}</a></li>
+
+
+<li role="presentation" class=""><a aria-expanded="false"  data-toggle="tab" role="tab" id="home_tab_2" href="#tab2">{{__("Timesheet") }}</a></li>
+
+
+<li role="presentation" class=""><a aria-expanded="false"  data-toggle="tab" role="tab" id="home_tab_3" href="#tab3">{{__("Exit permission") }}</a></li>
+
+<li role="presentation" class=""><a  data-toggle="tab" id="home_tab_4" role="tab" href="#tab4" aria-expanded="false">{{__("Leave Application") }}</a></li>
+
+											
+</ul>
+						
+
+<div class="tab-content" id="myTabContent_15">
+
+	<div  id="tab1" class="tab-pane fade active in" role="tabpanel">
+
+<!-- Row -->
+<div class="row">
+<div class="col-sm-12">
+
+<div class="table-wrap">
+<style type="text/css" media="all">
+										
+</style>
+<div class="table-responsive">
+<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0" style="cursor: pointer;">
+<thead>
+													
+	<tr>
+ 		 <th>{{__("Date") }}</th>
+		 <th>{{__("Attendance Time") }}</th>
+		 <th>{{__("Departure Time") }}</th>
+		 <th>{{__("Status") }}</th>
+	</tr>
+</thead>
+<tbody>
+	{% for order in edit_time_orders %}
+	<tr>
+		<td >{{order.attendance_date}}</td>
+		<td >{{order.attendance_time}}</td>
+		<td >{{order.departure_time}}</td>
+	{% if order.docstatus ==0 %}
+		<td >{{__("Pending Request") }}</td>
+	{% endif %}
+	{% if order.docstatus ==1 %}
+		<td >{{__("Initial Approval") }}</td>
+	{% endif %}
+
+
+	</tr>
+	{% endfor%}
+
+</table>
+</div>
+</div>
+</div>
+						
+</div>
+<!-- /Row -->
+	</div>
+
+
+
+	<div  id="tab2" class="tab-pane fade" role="tabpanel">
+
+<!-- Row -->
+<div class="row">
+<div class="col-sm-12">
+
+<div class="table-wrap">
+<style type="text/css" media="all">
+										
+</style>
+<div class="table-responsive">
+<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0" style="cursor: pointer;">
+<thead>
+													
+	<tr>
+ 		 <th>{{__("Start Date") }}</th>
+		 <th>{{__("End Date") }}</th>
+		 <th>{{__("Type") }}</th>
+		 <th>{{__("Total Working Hours") }}</th>
+		 <th>{{__("Status") }}</th>
+
+
+	</tr>
+</thead>
+<tbody>
+	{% for order in timesheet %}
+	<tr>
+		<td >{{order.start_date}}</td>
+		<td >{{order.end_date}}</td>
+		<td >{{__(order.type)}}</td>
+		<td >{{order.total_hours}}</td>
+	{% if order.docstatus ==0 %}
+		<td >{{__("Pending Request") }}</td>
+	{% endif %}
+	{% if order.docstatus ==1 %}
+		<td >{{__("Initial Approval") }}</td>
+	{% endif %}
+	</tr>
+	{% endfor%}
+
+</table>
+</div>
+</div>
+</div>
+						
+</div>
+<!-- /Row -->
+	</div>
+
+
+	<div  id="tab3" class="tab-pane fade" role="tabpanel">
+
+<!-- Row -->
+<div class="row">
+<div class="col-sm-12">
+
+<div class="table-wrap">
+<style type="text/css" media="all">
+										
+</style>
+<div class="table-responsive">
+<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0" style="cursor: pointer;">
+<thead>
+													
+	<tr>
+		 <th>{{__("Permission Date") }}</th>
+		 <th>{{__("Permission Type") }}</th>
+ 		 <th>{{__("From Date") }}</th>
+		 <th>{{__("To Date") }}</th>
+		 <th>{{__("Status") }}</th>
+		 <th>{{__("Reason") }}            </th>
+	</tr>
+</thead>
+<tbody>
+	{% for order in permission_orders %}
+	<tr>
+		<td >{{order.permission_date}}</td>
+		<td >{{__(order.permission_type)}}</td>
+		<td >{{order.from_date}}</td>
+		<td >{{order.to_date}}</td>
+	{% if order.docstatus ==0 %}
+		<td >{{__("Pending Request") }}</td>
+	{% endif %}
+	{% if order.docstatus ==1 %}
+		<td >{{__("Initial Approval") }}</td>
+	{% endif %}
+		<td >{{__(order.reason)}}</td>
+	</tr>
+	{% endfor%}
+
+</table>
+</div>
+</div>
+</div>
+						
+</div>
+<!-- /Row -->
+	</div>
+											
+
+	<div  id="tab4" class="tab-pane fade" role="tabpanel">
+
+<!-- Row -->
+<div class="row">
+<div class="col-sm-12">
+
+<div class="table-wrap">
+<style type="text/css" media="all">
+										
+</style>
+<div class="table-responsive">
+<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0" style="cursor: pointer;">
+<thead>
+													
+	<tr>
+ 		 <th>{{__("From Date") }}</th>
+ 		 <th>{{__("To Date") }}</th>
+		 <th>{{__("Leave Type") }}</th>
+ 		 <th>{{__("Total Leave Days") }}</th>
+ 		 <th>{{__("Leave Balance") }}</th>
+		 <th>{{__("Status") }}</th>
+		 <th>{{__("Reason") }}              </th>
+	</tr>
+
+</thead>
+<tbody>
+	{% for order in leave_orders %}
+	<tr>
+		<td >{{order.from_date}}</td>
+		<td >{{order.to_date}}</td>
+		<td >{{__(order.leave_type)}}</td>
+		<td >{{order.total_leave_days}}</td>
+		<td >{{order.leave_balance}}</td>
+	{% if order.docstatus ==0 %}
+		<td >{{__("Pending Request") }}</td>
+	{% endif %}
+	{% if order.docstatus ==1 %}
+		<td >{{__("Initial Approval") }}</td>
+	{% endif %}
+		<td >{{__(order.reason)}}</td>
+	</tr>
+	{% endfor%}
+
+</table>
+</div>
+</div>
+</div>
+						
+</div>
+<!-- /Row -->
+	</div>
+
+
+</div>
+</div>

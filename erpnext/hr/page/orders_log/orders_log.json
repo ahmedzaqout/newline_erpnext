@@ -1,0 +1,33 @@
+{
+ "content": null, 
+ "creation": "2018-07-14 14:02:03.211405", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "icon": "octicon octicon-report", 
+ "idx": 0, 
+ "modified": "2018-07-14 15:19:56.441738", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "orders-log", 
+ "owner": "Administrator", 
+ "page_name": "Orders Log", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Administrator"
+  }, 
+  {
+   "role": "Employee"
+  }, 
+  {
+   "role": "HR User"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "Orders Log"
+}

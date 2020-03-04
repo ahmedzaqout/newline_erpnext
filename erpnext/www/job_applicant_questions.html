@@ -1,0 +1,232 @@
+{% extends "templates/web.html" %}
+
+
+{% block page_content %}
+<!-- {{ for_test }} -->
+
+		   <style>
+        @import url('https://fonts.googleapis.com/css?family=Tajawal:400,700&display=swap&subset=arabic');
+        * {
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .quiz-wrapp {
+            padding: 20px 0
+        }
+
+        .names {
+            padding: 15px;
+            border: 1px solid #dedede;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-hed h3 {
+            text-align: center;
+            color: blueviolet;
+            font-size: 36px;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        fieldset {
+            padding: 20px;
+            border: 1px solid #e3e3e3;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        fieldset legend {
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 0
+        }
+
+        fieldset legend span {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+            margin-bottom: -17px;
+            cursor: pointer;
+        }
+
+        fieldset .form-check-label span {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+        }
+
+        fieldset .form-check-label span img,
+        fieldset legend span img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+    </style>
+   
+    <div class="container" style="direction:rtl;margin-right: -25px !important;margin-left: -43px !important;    padding-right: 50px;" >
+        <div class="quiz-wrapp">
+		{% if quiz %}
+            <header class="quiz-hed">
+                <h3>لتتمكن من التقديم للوظيفة يجب الإجابة على الأسئلة التالية بشكل صحيح ضمن الوقت المحدد </h3>
+                <div class="names">
+                    <div class="row align-items-center">
+                        <div class="col-lg-4">
+                            <div class="form-inline">
+                                <label for="inlineFormInputName2">الإسم</label>
+                                <input type="text" class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" value= "{{app}}" placeholder="{{job_applicant}}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-right">
+                            <p>التاريخ: 15-3-2001</p>
+                        </div>
+  <div class="col-lg-4 text-right">
+                           <div id="countdownExample">
+    <div class="values"></div>
+</div>
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+	<form method="post" action="#" id="interview"/>
+	<input type="hidden" name="job_title" value="{{job_title}}"/>
+	<input type="hidden" name="job_applicant" value="{{job_applicant}}"/>
+	{% for q in questions %}
+
+            <fieldset>
+                <legend>{{q['question']}}
+<span data-toggle="modal" data-target=".bs-example-modal-lg"> 
+                      {%if q['image']%}  <img src="{{q['image']}}"  class="img" data-toggle="tooltip" data-placement="top" title="تكبير" />
+                   {% endif %}
+                </legend>
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="inlineFormCheck11" value='1' name="{{q['name']}}">
+                            <label class="form-check-label" for="inlineFormCheck11">
+                       {{q['answer1']}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="inlineFormCheck22"  value='2' name="{{q['name']}}">
+                            <label class="form-check-label" for="inlineFormCheck22">
+                      {{q['answer2']}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="inlineFormCheck33"  value='3' name="{{q['name']}}">
+                            <label class="form-check-label" for="inlineFormCheck33">
+                          {{q['answer3']}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="inlineFormCheck44"  value='4' name="{{q['name']}}">
+                            <label class="form-check-label" for="inlineFormCheck44">
+
+                                   {{q['answer4']}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+	{% endfor %}
+          
+            
+            <div class="text-right">
+                <button type="button" name="" id="save-btn" class="btn btn-primary">حفظ وتسليم</button>
+            </div>
+</form>
+{% else %}
+Thank you for applying.
+
+{% endif %}
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" id="mod" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <img src="" class="img-responsive center-block" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer@1.1.1/src/easytimer.min.js"></script>
+	<script>{% include "templates/script.js" %}</script>
+
+<script>
+   /* $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        })*/
+	$('.img').on('click', function(){
+		me =this;
+		console.log("SDS");
+		  $('#mod img').attr("src", $(this).attr("src"));
+
+
+		});
+
+
+	var timer = new Timer();
+	timer.start({countdown: true, startValues: {minutes: {% if quiz_time %}{{quiz_time}} {% else %}15{% endif %},seconds: 0}});
+	$('#countdownExample .values').html(timer.getTimeValues().toString());
+	timer.addEventListener('secondsUpdated', function (e) {
+	    $('#countdownExample .values').html(timer.getTimeValues().toString());
+	});
+	timer.addEventListener('targetAchieved', function (e) {
+	    $('#countdownExample .values').html('لقد انتهى الوقت');
+	var m = $("#save-btn");
+	$(m).css("disabled","true");
+	$(m).html('<i class="fa fa-circle-o" aria-hidden="true"></i>');
+
+	data1={}
+	var data = $("#interview").serializeArray();
+		console.log(data);
+	for (i=0;i<data.length;i++){
+		console.log(data[i]['name']);
+		data1[data[i]['name']]=data[i]['value'];
+	}
+	console.log(data1);
+	frappe.call({
+		type: "POST",
+		args: data1,
+		method: 'erpnext.hr.doctype.job_applicant.job_applicant.test_interview',
+		freeze: true,
+		 async: false,
+		callback: function(r){
+			if(r.message){
+				if (r.message.status ="success")
+				$('.quiz-wrapp').html("لقد تم قبول طلبك ضمن الطلبات المقدمة لاجتيازك الاختبار بنجاح");
+				else{
+				if (r.message.status ="repaited")
+				$('.quiz-wrapp').html("لقد قدمت الاختبار من قبل, لا يمكن تقديمه مرة أخرى");
+				else{
+				$('.quiz-wrapp').html("لم يتم قبول طلبك لأنك لم تجتاز الاختبار");				
+						}
+					}
+			}
+			}
+		});
+
+	});
+	
+
+    </script>
+
+{% endblock %}
+
+
+{% block sidebar %}{% endblock %}

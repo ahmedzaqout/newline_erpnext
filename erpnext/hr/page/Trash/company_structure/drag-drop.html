@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+  	<title>Organization Chart</title>
+  	<link rel="icon" href="img/logo.png">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/font-awesome.min.css">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/jquery.orgchart.css">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/style.css">
+  	
+  
+	<style type="text/css">
+		#chart-container { 
+			height: 600px; 
+			border: none; 
+			/*top: -24px;*/
+			top: 0px;
+			right: 0px;
+			width: 100%;
+		}
+	    .orgchart { background: #fff0; }
+
+	    .orgchart .second-menu-icon {
+	      transition: opacity .5s;
+	      opacity: 0;
+	      right: -5px;
+	      top: -5px;
+	      z-index: 2;
+	      color: rgba(68, 157, 68, 0.5);
+	      font-size: 18px;
+	      position: absolute;
+	    }
+	    .orgchart .second-menu-icon:hover { color: #449d44; }
+	    .orgchart .node:hover .second-menu-icon { opacity: 1; }
+	    .orgchart .node .second-menu {
+	      display: none;
+	      position: absolute;
+	      top: 0;
+	      right: -70px;
+	      border-radius: 35px;
+	      box-shadow: 0 0 10px 1px #999;
+	      background-color: #fff;
+	      z-index: 1;
+	    }
+	    .orgchart .node .second-menu .avatar {
+	      width: 60px;
+	      height: 60px;
+	      border-radius: 30px;
+	      float: left;
+	      margin: 5px;
+	    }
+		#edit-panel {
+		    position: relative;
+		    left: 10px;
+		    border-radius: 10px;
+		    float: left;
+		    margin-top: -575px;
+		    /*background-color: #e8e8e8;*/
+		    background-color: #41b2de;
+		    /*padding: 6px;*/
+		    padding: 15px;
+		    cursor: all-scroll;
+	    }
+	    #edit-panel .btn-inputs { font-size: 24px; }
+	    #edit-panel.edit-state>:not(#chart-state-panel) { display: none; }
+	    #edit-panel label { font-weight: bold; }
+	    #edit-panel.edit-parent-node .selected-node-group { display: none; }
+	    #chart-state-panel, #selected-node, #btn-remove-input { margin-right: 20px; }
+	    #edit-panel button {
+	      color: #333;
+	      background-color: #fff;
+	      display: inline-block;
+	      padding: 6px 12px;
+	      margin-bottom: 0;
+	      line-height: 1.42857143;
+	      text-align: center;
+	      white-space: nowrap;
+	      vertical-align: middle;
+	      -ms-touch-action: manipulation;
+	      touch-action: manipulation;
+	      cursor: pointer;
+	      -webkit-user-select: none;
+	      -moz-user-select: none;
+	      -ms-user-select: none;
+	      user-select: none;
+	      background-image: none;
+	      border: 1px solid #ccc;
+	      border-radius: 4px;
+	    }
+		#edit-panel.edit-parent-node button:not(#btn-add-nodes) { display: none; }
+		    #edit-panel button:hover,.edit-panel button:focus,.edit-panel button:active {
+		      border-color: #eea236;
+		      box-shadow:  0 0 10px #eea236;
+		    }
+		    #new-nodelist {
+		      /*display: inline-block;*/
+		      display: block;
+		      list-style:none;
+		      margin-top: -2px;
+		      padding: 0;
+		      vertical-align: text-top;
+		    }
+		   #new-nodelist>* { padding-bottom: 4px; }
+		 .btn-inputs { vertical-align: sub; }
+		    #edit-panel.edit-parent-node .btn-inputs { display: none; }
+		    .btn-inputs:hover { text-shadow: 0 0 4px #fff; }
+		    #btn-add-nodes { margin-left: 20px; }
+		.orgchart .node .content{
+		    height: 22px;
+		}
+
+		.orgchart .node .content{
+
+		    border: 1px solid rgba(6, 139, 160, 0.8);
+		}
+
+		.orgchart .node .title{
+
+		    background-color: rgba(18, 159, 214, 0.8);
+		}
+
+		.orgchart .lines .downLine{
+		background-color: rgb(29, 152, 164);}
+
+
+		.orgchart .lines .rightLine {
+		    border-right: 0px solid rgba(29, 152, 164);
+		}
+
+		.orgchart .lines .leftLine {
+		    border-left: 0px solid rgba(29, 152, 164);}
+
+
+		.orgchart .lines:nth-child(3) td {
+		    height:0px;
+		}
+
+		.edge verticalEdge topEdge fa{
+		display:none;}
+		.orgchart .node .verticalEdge{
+		display:none;}
+
+		.orgchart .node .horizontalEdge{
+		display:none;}
+
+		.orgchart .node .content {
+		    height: 83px;
+		}
+		/*msh*/
+		.orgchart .node{
+			width: 170px;
+		}
+		.orgchart .node .title{
+		    font-weight: normal;
+		    height: 44px;
+		    line-height: 19px;
+		    overflow: inherit;
+		    text-overflow: initial;
+		    white-space: normal;
+		    vertical-align: middle;
+		    display: table-cell;
+		    width: 170px;
+		}
+		.orgchart .node .title .symbol{
+			display: none !important;
+		}
+		.orgchart .node .content{
+			overflow: inherit;
+		    text-overflow: initial;
+		    white-space: normal;
+		}
+		.orgchart .node .content .avatar,
+		.orgchart .node .content .avatar-frame{
+			width: 48px !important;
+	      	height: 48px !important;
+	      	margin-top: 5px;
+	      	margin-bottom: 5px;
+	      	border-radius: 100% !important;
+	      	/*border: 1px solid #ddd !important;*/
+		}
+		
+		#edit-panel .control-group{
+			margin-bottom: 10px;
+		}
+		#edit-panel .control-group label{
+			display: block;
+			color: #fff;
+			font-weight: normal;
+		}
+		#edit-panel .control-group input[type="text"]{
+			width: 100%;
+			margin-right: 0;
+			border-radius: 4px;
+			border: none;
+			height: 28px;
+			padding-right: 8px
+		}
+		#chart-state-panel, #selected-node, #btn-remove-input { margin-right: 0px !important; }
+		#edit-panel button { 
+			/*color: #fff;*/
+			color: #0098a3;
+		    padding: 7px 25px;
+		    text-transform: capitalize;
+		    border-radius: 2px;
+		    outline: none;
+		    box-shadow: none;
+		    border: none;
+		    -webkit-transition: all 0.3s ease;
+		    -moz-transition: all 0.3s ease;
+		    transition: all 0.3s ease;
+			margin-left: 0px; 
+			border-radius: 60px;
+			background: #fff;
+    		border: solid 1px #fff;
+    		-webkit-box-shadow: none;
+    		box-shadow: none;
+		}
+		#edit-panel button:hover {
+			color: #fff;
+		    background-color: transparent;
+    		border: solid 1px #fff; 
+    	}
+    	.new-nodelist-actions{
+    		text-align: left;
+    		margin-top: -5px;
+    	}
+    	.new-nodelist-actions i{
+    		color: #656464 !important;
+    		font-size: 20px !important;
+    	}
+	</style>
+</head>
+<body>
+  	<div id="chart-container"></div>
+	<div id="edit-panel">
+		<div class="control-group">
+		    <span id="chart-state-panel" class="radio-panel"></span>
+		    <!-- <label class="selected-node-group">التصنيف:</label> -->
+		    <input type="text" id="selected-node" class="selected-node-group" placeholder="التصنيف">
+		</div>
+		<div class="control-group">
+		    <!-- <label>الفرع:</label> -->
+		    <ul id="new-nodelist">
+		     	<li><input type="text" class="new-node" placeholder="التصنيف الفرع"></li>
+		    </ul>
+		    <div class="new-nodelist-actions">
+			    <i class="fa fa-minus-circle btn-inputs text-danger" id="btn-remove-input"></i>		    	
+			    <i class="fa fa-plus-circle btn-inputs text-success" id="btn-add-input"></i>
+		    </div>
+		    <span id="node-type-panel" class="radio-panel"></span>
+		</div>
+		<div class="text-center" style="margin-top: 20px;">
+	    	<button type="button" id="btn-delete-nodes">حذف</button>
+		    <button type="button" id="btn-add-nodes">إضافة</button>
+		</div>
+	    <!-- <button type="button" id="btn-reset">Reset</button> -->
+  	</div>
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/lib/summernote/summernote.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/frappe/format.js"></script>
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.orgchart.js"></script>
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/html2canvas.min.js"></script>
+
+	
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+	    setTimeout(function(){
+	    	$("#edit-panel").draggable();
+	 	}, 3000);
+	});
+	</script>
+
+
+</body>
+</html>

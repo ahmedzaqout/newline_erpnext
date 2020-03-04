@@ -1,0 +1,25 @@
+{
+ "content": null, 
+ "creation": "2019-05-10 02:45:43.383538", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2019-05-10 02:45:43.383538", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "nawa-payroll-report", 
+ "owner": "Administrator", 
+ "page_name": "Nawa Payroll Report", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 1
+}

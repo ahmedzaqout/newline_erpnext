@@ -1,0 +1,26 @@
+{
+ "content": null, 
+ "creation": "2018-03-27 01:24:21.382509", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-03-27 01:24:38.701642", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "payroll-report", 
+ "owner": "Administrator", 
+ "page_name": "Payroll Report", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 1, 
+ "title": ""
+}

@@ -1,0 +1,55 @@
+.bgYallow{
+	background-color: #f7ce99;
+}
+.bgGreen{
+	background-color: #4aa23c;
+}
+.bgGreenLight{
+	background-color: #6ca963;
+}
+.bgRed{
+	background-color: #f33923;
+}
+.bgWarning{
+	background-color: #f8b32d;
+}
+.bgBlue{
+	background-color: #00B2C1;
+}
+.bgBlueLight{
+	background-color: #57b7d9;
+}
+.bgPurple{
+	background-color: #1698a3;
+}
+.input_class{
+    width: 99%;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 11px 8px 11px;
+    background-color: #fafbfc;
+    text-align: right;
+}
+#edit_datable_1{
+	margin: 0px 0px;
+}
+#edit_datable_1 thead th{
+	text-align: center;
+	border: none;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#edit_datable_1 tbody td{
+	text-align: center;
+}
+#edit_datable_1 thead tr:nth-child(4) th:first-child,
+#edit_datable_1 tbody th:first-child,
+#edit_datable_1 tbody td:first-child{
+	background-color: #ddd !important;
+	text-align: center;
+}
+#edit_datable_1 tbody tr:first-child td:last-child{
+	/* background-color: #00575d; */
+	/* color: #fff; */
+}

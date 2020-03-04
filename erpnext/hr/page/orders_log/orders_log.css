@@ -1,0 +1,22 @@
+.tab-struct.custom-tab-2{
+	padding: 10px;
+}
+.tab-struct.custom-tab-2 .nav-tabs {
+	border-bottom-color: #008089;
+}
+.tab-struct.custom-tab-2 .nav-tabs > li > a{
+	border-radius: 0;
+}
+.tab-struct.custom-tab-2 .nav-tabs > li > a:hover,
+.tab-struct.custom-tab-2 .nav-tabs > li > a:focus{
+	border-color: #c9c9c9;
+	background-color: #c9c9c9;
+	color: #555;
+}
+.tab-struct.custom-tab-2 .nav-tabs > li.active > a, 
+.tab-struct.custom-tab-2 .nav-tabs > li.active > a:hover, 
+.tab-struct.custom-tab-2 .nav-tabs > li.active > a:focus{
+	color: #fff;
+	border-color: transparent;
+	background-color: #008089;
+}

@@ -1,0 +1,28 @@
+{
+ "content": null, 
+ "creation": "2018-07-25 08:53:38.220765", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-07-25 08:53:44.680907", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "training", 
+ "owner": "Administrator", 
+ "page_name": "Training", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0
+}

@@ -1,0 +1,135 @@
+<!-- Row -->
+
+<INPUT type="button" value="{{__(Add Row)}}" onclick="addRow("edit_datable_1")" />
+<div class="table-wrap">
+
+	<div class="table-responsive">
+		<table id="edit_datable_1" class="table  table-bordered table-striped m-b-0 manpower-planning table-condensed">
+			<thead>
+				<tr>
+				  <th>{{__("Employee Name")}}</th>
+				  <th class="date_of_joining">{{__("Joining Date")}}</th>
+				  <th class="designation">{{__("Designation")}}</th>
+				  <th class="grade_category">{{__("Category")}}</th>
+				  <th class="grade">{{__("Grade")}}</th>
+				  <th class="experience_years">{{__("Experience")}}</th>
+				  <th class="basic_salary">{{__("Basic Salary")}}</th>
+				  <th class="hour_cost">{{__("Hour Cost")}}</th>
+				  <th class="work_hour">{{__("Work Hour")}}</th>
+			{% for comp in ecomponent %}
+				  <th colspan="2" class="padding-0">
+				  	<table class="table table-bordered">
+			  			<tr>
+			  				<th colspan="2">{{__(comp)}}</th>
+			  			</tr>
+			  			<tr>
+			  				<th>{{__("Ratio")}}</th>
+			  				<th>{{__("Vaue")}}</th>
+			  			</tr>
+				  	</table>				  	
+				  </th>
+			{% endfor%}
+
+			{% for dcomp in dcomponent %}
+				  <th class="discounts">{{__(dcomp)}}</th>
+			{% endfor%}
+				  <th class="savings">{{__("Savings")}}</th>
+				  <th class="total">{{__("Total")}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for dep in departments %}
+					<tr class="dept_head">
+						<th colspan="25">{{__(dep.name)}}</th>
+					</tr>
+					{% for emp in data %}
+						{% if dep.name == emp.department %}
+							<tr>
+								<th class="emp">
+									<table>
+										<tr>
+											<th class="emp_img">
+												{% if (emp.image) { %}
+													<img src="{{ emp.image }}">
+												{% } %}
+											</th>
+											<th class="emp_name">
+												{{ emp.ar_fname }} {{ emp.ar_family_name }} 
+											</th>
+										</tr>
+									</table>
+								</th>
+								<th>{{ emp.date_of_joining }}</th>
+								<th>{{ emp.designation }}</th>
+	<td tabindex="1">
+		<select class="category">
+                	<option value="{{  __(emp.grade_category) }}">{{ __(emp.grade_category) }}</option>
+	{% for cat in category %}
+		{% if ( __(cat) !=  __(emp.grade_category)) { %}
+                	<option value="{%=  __(cat) %}">{%= __(cat) %}</option>
+		{% } %}
+	{% endfor%}
+            	</select>
+	</td>
+		
+
+	<td tabindex="1">
+		<select class="grade">
+                	<option id="op1" value="{{ emp.grade }}">{{ emp.grade }}</option>
+	{% for g in grade %}
+		{% if ( g != emp.grade) { %}
+                	<option value="{%= g %}">{%= g %}</option>
+		{% } %}
+	{% endfor%}
+            	</select>
+	</td>
+
+	<td tabindex="1">
+		<select class="experience">
+                	<option value="{{ emp.experience_years }}">{{ emp.experience_years }}</option>
+	{% for (var i=1; i<= 30; i++) { %}
+		{% if ( i != emp.experience_years) { %}
+                	<option value="{%= i %}">{%= i %}</option>
+		{% } %}
+	{% endfor%}
+            	</select>
+	</td>
+								<th tabindex="1" class="sal">{{ emp.basic_salary }}</th>
+								<th tabindex="1">{{ emp.hour_cost }}</th>
+								<th tabindex="1">{{ emp.work_hrs }}</th>
+
+							{% for (var i=0; i < e_comp.length; i++) { %}
+								{% if e_comp[i].parent == emp.salary_struc %}
+								<td tabindex="1">{{ e_comp[i].formula }}</td>
+								<th tabindex="1">{{ e_comp[i].amount  }}</th>
+								{% endif %}
+							{% endfor%}
+
+
+							{% for (var i=0; i < d_comp.length; i++) { %}
+								{% if d_comp[i].parent == emp.salary_struc %}
+								<td tabindex="1">{{ d_comp[i].amount }}</td>
+								{% endif %}
+							{% endfor%}
+
+								<td tabindex="1">{{ "" }}</td>
+								<td tabindex="1" class="total">{{ "" }}</td>
+								
+							</tr>
+						{% endif %}
+					{% endfor%}
+				<tr>
+					<th colspan="25" class="dept_separator">
+					</th>
+				</tr>
+				{% endfor%}
+			</tbody>				
+		</table>
+	</div>
+</div>
+
+
+
+<!-- /Row -->
+
+

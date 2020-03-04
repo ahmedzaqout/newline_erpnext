@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  	<meta charset="utf-8">
+  	<title>Organization Chart</title>
+  	<link rel="icon" href="img/logo.png">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/font-awesome.min.css">
+  	<link rel="stylesheet" href="/assets/erpnext/css/orgchart/jquery.orgchart.css">
+  	<!-- <link rel="stylesheet" href="/assets/erpnext/css/orgchart/style.css"> -->
+  	
+  
+	<style type="text/css">
+		
+	</style>
+</head>
+<body>
+  	<div id="chart-container"></div>
+	<div id="edit-panel">
+		<div class="control-group">
+		    <span id="chart-state-panel" class="radio-panel"></span>
+		    <!-- <label class="selected-node-group">التصنيف:</label> -->
+		    <input type="text" id="selected-node" class="selected-node-group" placeholder="التصنيف">
+		</div>
+		<div class="control-group">
+		    <!-- <label>الفرع:</label> -->
+		    <ul id="new-nodelist">
+		     	<li><input type="text" class="new-node" placeholder="التصنيف الفرع"></li>
+		    </ul>
+		    <div class="new-nodelist-actions">
+			    <i class="fa fa-minus-circle btn-inputs text-danger" id="btn-remove-input"></i>		    	
+			    <i class="fa fa-plus-circle btn-inputs text-success" id="btn-add-input"></i>
+		    </div>
+		    <span id="node-type-panel" class="radio-panel"></span>
+		</div>
+		<div class="text-center" style="margin-top: 20px;">
+	    	<button type="button" id="btn-delete-nodes">حذف</button>
+		    <button type="button" id="btn-add-nodes">إضافة</button>
+		</div>
+	    <!-- <button type="button" id="btn-reset">Reset</button> -->
+  	</div>
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/lib/summernote/summernote.js"></script>
+	<script type="text/javascript" src="/assets/frappe/js/frappe/format.js"></script>
+
+
+
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/jquery.orgchart.js"></script>
+	<script type="text/javascript" src="/assets/erpnext/js/orgchart/html2canvas.min.js"></script>
+
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+</body>
+</html>

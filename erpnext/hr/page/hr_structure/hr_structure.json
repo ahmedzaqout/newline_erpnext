@@ -1,0 +1,29 @@
+{
+ "content": null, 
+ "creation": "2018-02-06 15:24:49.331239", 
+ "docstatus": 0, 
+ "doctype": "Page", 
+ "idx": 0, 
+ "modified": "2018-02-06 15:25:50.058977", 
+ "modified_by": "Administrator", 
+ "module": "HR", 
+ "name": "hr-structure", 
+ "owner": "Administrator", 
+ "page_name": "HR Structure", 
+ "roles": [
+  {
+   "role": "HR Manager"
+  }, 
+  {
+   "role": "HR User"
+  }, 
+  {
+   "role": "Administrator"
+  }
+ ], 
+ "script": null, 
+ "standard": "Yes", 
+ "style": null, 
+ "system_page": 0, 
+ "title": "HR Structure"
+}

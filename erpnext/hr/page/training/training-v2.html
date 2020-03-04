@@ -1,0 +1,78 @@
+<div class="module-body " style="display: none;">
+
+{% for (var i=0; i < data.length; i++) { var section = data[i]; %}
+
+	{% if ( section.label == __("Training") ) { %}
+		<div class="col-sm-6 module-section-column">
+			<div class="h4 section-head">{{ section.label }}</div>
+			<div class="section-body">
+			{% for(var j=0; j<section.items.length; j++) { %} 
+
+			<div style="min-height: 22px; margin-top: 8px;">
+				<a class="module-section-link small" data-type="{{ section.items[j].type }}"
+							href="#{{ section.items[j].route }}" style="{{ section.items[j].style }}">
+							{{ section.items[j].label || __(section.items[j].name) }}
+				</a>
+			</div>
+			{% } %}
+			</div>
+		</div>
+	{% } %}
+{% } %}
+</div>
+<div class="clearfix"></div>
+{% for (var i=0; i < data.length; i++) { var section = data[i]; %}
+	{% if ( section.label == __("Training") ) { %}
+	<div class="panel panel-default card-view">
+		<div class="panel-heading">
+			<div class="pull-left">
+				<h6 class="panel-title txt-dark">{{ section.label }}</h6>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="panel-wrapper collapse in">
+			<div  class="panel-body">
+				<!-- <p class="text-muted">Default version of tab add <code>tab-struct vertical-tab custom-tab-1</code> class.</p> -->
+				<div  class="tab-struct vertical-tab custom-tab-1 mt-40">
+					<ul role="tablist" class="nav nav-tabs ver-nav-tab" id="myTabs_8">
+						{% for(var j=0; j< section.items.length; j++) { %}
+							{% if ( j == 0 ) { %}
+							<!-- href="#{{ section.items[j].route }}" -->
+							<li class="active" role="presentation">
+								<a aria-expanded="true"  data-toggle="tab" role="tab" id="head_tab_{{ j }}" href="#content_tab_{{ j }}" data-type="{{ section.items[j].type }}" style="{{ section.items[j].style }}">
+									{{ section.items[j].label || __(section.items[j].name) }}
+								</a>
+							</li>
+							{% }else{ %}
+							<!-- href="#{{ section.items[j].route }}" -->
+							<li role="presentation" class="">
+								<a  data-toggle="tab" id="head_tab_{{ j }}" role="tab" href="#content_tab_{{ j }}" aria-expanded="false" data-type="{{ section.items[j].type }}" style="{{ section.items[j].style }}">
+									{{ section.items[j].label || __(section.items[j].name) }}
+								</a>
+							</li>
+							{% } %}
+						{% } %}
+						
+					</ul>
+					<div class="tab-content" id="myTabContent_8">
+						{% for(var j=0; j< section.items.length; j++) { %}
+							{% if ( j == 0 ) { %}
+							<div  id="content_tab_{{ j }}" class="tab-pane fade active in" role="tabpanel">
+								<p>active Lorem ipsum dolor sit amet, et pertinax ocurreret scribentur sit, eum euripidis assentior ei. In qui quodsi maiorum, dicta clita duo ut. Fugit sonet quo te. Ad vel quando causae signiferumque. Aperiam luptatum senserit eu vis, eu ius purto torquatos vituperatoribus.An nec fastidii eligendi molestiae.</p>
+								<p>active Lorem ipsum dolor sit amet, et pertinax ocurreret scribentur sit, eum euripidis assentior ei. In qui quodsi maiorum, dicta clita duo ut. Fugit sonet quo te. Ad vel quando causae signiferumque. Aperiam luptatum senserit eu vis, eu ius purto torquatos vituperatoribus.An nec fastidii eligendi molestiae.</p>
+								<p>active Lorem ipsum dolor sit amet, et pertinax ocurreret scribentur sit, eum euripidis assentior ei. In qui quodsi maiorum, dicta clita duo ut. Fugit sonet quo te. Ad vel quando causae signiferumque. Aperiam luptatum senserit eu vis, eu ius purto torquatos vituperatoribus.An nec fastidii eligendi molestiae.</p>
+							</div>
+							{% }else{ %}
+							<div  id="content_tab_{{ j }}" class="tab-pane fade" role="tabpanel">
+								<p>not active Lorem ipsum dolor sit amet, et pertinax ocurreret scribentur sit, eum euripidis assentior ei. In qui quodsi maiorum, dicta clita duo ut. Fugit sonet quo te. Ad vel quando causae signiferumque. Aperiam luptatum senserit eu vis, eu ius purto torquatos vituperatoribus.An nec fastidii eligendi molestiae.</p>
+							</div>
+							{% } %}
+						{% } %}
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% } %}
+{% } %}
