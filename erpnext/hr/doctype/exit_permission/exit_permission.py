@@ -57,11 +57,8 @@ class Exitpermission(Document):
 
 			per_type = frappe.db.sql("select type, from_date,name from `tabExit permission` where employee = %s and permission_date = %s and name != %s and permission_type='Exit with return' and docstatus<2 order by name desc limit 1",(self.employee, self.permission_date, self.name))
 
-<<<<<<< HEAD
 			if  per_type :
-=======
-			if  per_type and self.company != 'Nawa':
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
+
 				if  per_type[0][0] !='Exit' and self.type == 'Return':
 					frappe.throw(_("Not allowed! Can not return with no exit order"))
 				if  per_type[0][0] !='Return' and self.type == 'Exit':
@@ -113,13 +110,7 @@ class Exitpermission(Document):
 
 
 
-<<<<<<< HEAD
-=======
-		if self.company == 'Nawa':
-			self.validate_duplicate_record()
-			self.nawa_exit_perm()
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
-		
+
 		
 			
 	def sms_for_morning_delay(self):
@@ -141,62 +132,7 @@ class Exitpermission(Document):
             				send_sms(number,messages)
         		else:
             			frappe.msgprint(_("No mobile number to send SMS, PLZ check it from HR Settings"))
-					
-<<<<<<< HEAD
-	
-
-
-	
-=======
-		
-	def validate_duplicate_record(self):
-		if self.permission_type == 'Morning Late':
-			pass
-
-		ext_name = frappe.db.sql("select name from `tabExit permission` where employee = %s and permission_date = %s and name != %s and docstatus != 2 and from_date <= %s and to_date >= %s and permission_type != 'Morning Late' and (permission_type = %s or permission_type_nawa=%s) order by name desc limit 1",(self.employee, self.permission_date, self.name,self.from_date,self.to_date,self.permission_type, self.permission_type_nawa))
-		if ext_name:
-			frappe.throw(_("Exit Permission for employee {0} is already marked").format(self.employee))
-
-		#ext_name = frappe.db.sql("select name from `tabExit permission` where employee = %s and permission_date = %s and name != %s and permission_type='Exit with return' and type='Exit' and docstatus!= 2 order by name desc limit 1",(self.employee, self.permission_date, self.name))
-		#if ext_name and frappe.local.session.data.device=="mobile" and self.type== 'Return':
-		#	frappe.db.sql("update `tabExit permission` set to_date=%s where name = %s",(time.strftime("%X"),ext_name))
-		#	self.docstatus = 2
-
-	def nawa_exit_perm(self):
-		diff = frappe.db.sql("select format(((TIME_TO_SEC('%s')-TIME_TO_SEC('%s'))/60),0)" %(str(self.to_date), str(self.from_date) ))[0][0]
-		number= round(float(diff)/60,1)
-		diff_time = str(datetime.timedelta(seconds=number*3600))
-		if self.permission_type_nawa == 'Private':
-			self.update_leave_balance(diff_time, _('Annual Leave'))
-		if self.permission_type_nawa == 'Sick':
-			self.update_leave_balance(diff_time, _('Sick Leave'))
-
-
-	def update_leave_balance(self, diff_time, leave_type):
-		if  not frappe.db.get_value("Leave Type",leave_type, "name") :
-			frappe.throw(_("{0} not found, you should add it to complete the process").format(leave_type) )
-
-		doc = frappe.db.get_value('Leave Application',{'leave_type':leave_type,'docstatus':1,'employee':self.employee,'status':'Approved','from_date':(">=",self.permission_date ),'to_date':("<=",self.permission_date ),'description': _('Auto Entry: Discount form Leaves')})
-		from erpnext.hr.doctype.leave_application.leave_application import get_number_of_leave_days, get_leave_balance_on
-		if not doc and diff_time >0:
-			leave = frappe.new_doc('Leave Application')
-			leave.employee= self.employee
-			leave.employee_name= self.employee_name
-			leave.leave_type= leave_type
-			leave.from_date = self.permission_date
-			leave.to_date = self.permission_date
-			leave.total_leave_days = get_number_of_leave_days(self.employee, leave_type,self.permission_date,self.permission_date)
-			leave.status = 'Approved'
-			leave.hours = diff_time
-			leave.balance_hrs = diff_time
-			leave.leave_balance = get_leave_balance_on(self.employee,leave_type, self.permission_date, consider_all_leaves_in_the_allocation_period=True)
-			leave.description = _('Auto Entry: Discount form Leaves')
-			leave.docstatus= 1
-			leave.discount_salary_from_leaves= 1
-			leave.flags.ignore_validate = True
-			leave.insert(ignore_permissions=True)
-			leave.submit()
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
+				
 
 
 
