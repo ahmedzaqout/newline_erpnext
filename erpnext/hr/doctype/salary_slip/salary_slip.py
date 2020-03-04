@@ -916,13 +916,20 @@ from tabAttendance as att left join  tabDeparture as dept on att.employee=dept.e
 
 	total_work_hrss = total_work_hrss
 	disc=0
+<<<<<<< HEAD
 	total_all = total_all + compensatory_total_hours - permission_total_hours
+=======
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
 	if  float(total_all) < float(total_l):
 		disc = float(total_l)- float(total_all) 
 
 	if total_all <= 0: 
 		total_all = 0.0
 
+<<<<<<< HEAD
+=======
+	total_all = total_all + compensatory_total_hours - permission_total_hours
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
 
 	if disc < 0.0 : disc = 0.0
 	return total_l , disc ,total_all, compensatory_total_hours, permission_total_hours

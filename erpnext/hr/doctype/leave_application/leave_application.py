@@ -445,6 +445,7 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 		allocation_records = get_leave_allocation_records(date, employee).get(employee, frappe._dict())
 	com = frappe.defaults.get_user_default("Company")
 	remain,leave_hrs_balance = 0, 0.0
+<<<<<<< HEAD
 	discout_from_leaves = frappe.db.get_value("Employee Employment Detail", self.employee, "discount_hours_from_leaves")
 
 	date2 = datetime.datetime.strptime(str(date), "%Y-%m-%d")
@@ -458,6 +459,18 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 			remain = 0.5*(flt(allocation_prev.total_leaves_allocated))
 		else:
 			remain =  flt(allocation_prev.total_leaves_allocated) - flt(leaves_taken_prev) 
+=======
+	if com == "Nawa" or frappe.session.user == "Administrator" :
+		date2 = datetime.datetime.strptime(str(date), "%Y-%m-%d")
+		if date2:
+			pre_year_date = date2.replace(year=date2.year-1)
+			allocation_records_last_year = get_leave_allocation_records(pre_year_date, employee).get(employee, frappe._dict())
+			allocation_prev = allocation_records_last_year.get(leave_type, frappe._dict())
+			leaves_taken_prev = get_approved_leaves_for_period(employee, leave_type, allocation_prev.from_date,  allocation_prev.to_date)
+			remain = flt(allocation_prev.total_leaves_allocated) - flt(leaves_taken_prev) 
+			if ( flt(allocation_prev.total_leaves_allocated) - flt(leaves_taken_prev)  >  0.5*(flt(allocation_prev.total_leaves_allocated))):
+				remain = 0.5*(flt(allocation_prev.total_leaves_allocated))
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
 
 
 	allocation = allocation_records.get(leave_type, frappe._dict())
@@ -480,6 +493,7 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 	annual_ex_total_hours= 0.0
 	sick_ex_total_hours= 0.0
 
+<<<<<<< HEAD
 	disc_hours =disc_hours - permission_total_hours
 		
 
@@ -510,6 +524,38 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 				leave_hrs_balance = (leave_days_balance * shift_hrs) - sick_ex_total_hours
 			
 				 
+=======
+	if com == "Nawa":
+		disc_hours =disc_hours - permission_total_hours
+		
+
+		perm = frappe.db.sql("select employee,docstatus ,permission_date ,ifnull(diff_exit,0) as diff from `tabExit permission` where type='Return' and permission_type='Exit with return' and employee = %(employee)s and date(permission_date) BETWEEN %(start_date)s AND DATE_ADD(%(end_date)s,INTERVAL 1 day) and docstatus = 1 and exit_type = 'Special' ", {'employee': employee, 'start_date': allocation.from_date, 'end_date': date}, as_dict=1)
+		if perm:
+			for p in perm:
+				exit_hrs = frappe.db.sql("select format(((TIME_TO_SEC('%s'))/3600),0)" %p.diff)[0][0]
+				annual_ex_total_hours += float(exit_hrs)
+
+		sickk = frappe.db.sql("select employee,docstatus ,permission_date ,ifnull(diff_exit,0) as diff from `tabExit permission` where type='Return' and permission_type='Exit with return' and employee = %(employee)s and date(permission_date) BETWEEN %(start_date)s AND DATE_ADD(%(end_date)s,INTERVAL 1 day) and docstatus = 1 and exit_type = 'Sick' ", {'employee': employee, 'start_date':allocation.from_date, 'end_date': date}, as_dict=1)
+		if sickk:
+			for p in sickk:
+				exit_hrs = frappe.db.sql("select format(((TIME_TO_SEC('%s'))/3600),0)" %p.diff)[0][0]
+				sick_ex_total_hours += float(exit_hrs)
+
+		if leave_type == _('Annual Leave'):
+			disc_hours =disc_hours + annual_ex_total_hours
+
+		if leave_type == _('Sick Leave'):
+			sick_ex_total_hours  = sick_ex_total_hours
+
+	if shift_hrs: 
+		leave_hrs_balance=  (leave_days_balance * shift_hrs) 
+		if leave_type == _('Annual Leave'):
+			leave_hrs_balance = (leave_days_balance * shift_hrs) - disc_hours
+		if leave_type == _('Sick Leave'):
+			leave_hrs_balance = (leave_days_balance * shift_hrs) - sick_ex_total_hours
+		else:
+			leave_hrs_balance = (leave_days_balance * shift_hrs) 
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
 
 		leaves_dayss = int(leave_hrs_balance/shift_hrs)
 		leaves_hourss = leave_hrs_balance % shift_hrs
