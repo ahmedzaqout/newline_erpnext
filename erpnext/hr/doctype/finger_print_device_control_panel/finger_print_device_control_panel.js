@@ -72,10 +72,8 @@ frappe.ui.form.on('Finger Print Device Control Panel', {
 						method: "upload_attendance",
 						args:{'month':values.month},
 						callback: function(r) {
-								console.log(r.message.success);
 							if (r.message){
 							if (r.message.success >= 0){
-								console.log(r.message);
 								frappe.msgprint(__('Successfully Stored '+r.message.success+' Attendance Records on db'))
 							}
 							}else {
@@ -111,8 +109,8 @@ frappe.ui.form.on('Finger Print Device Control Panel', {
 		//);
 
 
-		//frm.add_custom_button(__('Backup'),
-		//		function () {
+		frm.add_custom_button(__('Backup'),
+				function () {
 					//return cur_frm.call({
 					//	method: "backup_attendance",
 					//	callback: function(r) {
@@ -123,8 +121,8 @@ frappe.ui.form.on('Finger Print Device Control Panel', {
 					//		}
 					//	  }
 					//});
-		//		}
-		//);
+				}
+		);
 
 
 

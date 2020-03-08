@@ -9,8 +9,8 @@ from erpnext.hr.doctype.leave_application.leave_application \
 
 
 def execute(filters=None):
-	com = frappe.defaults.get_user_default("Company")
-	leave_types = frappe.db.sql_list("select name from `tabLeave Type` where company = '{0}' order by name asc".format(com))
+	company = frappe.defaults.get_user_default("Company")
+	leave_types = frappe.db.sql_list("select name from `tabLeave Type` where company = '{0}' order by name asc".format(company))
 	conditions=""
 	
 	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
@@ -18,43 +18,46 @@ def execute(filters=None):
 	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
 
 	columns = get_columns(leave_types)
-	data = get_data(filters, leave_types,conditions)
+	data = get_data(filters, leave_types,conditions,company)
 	
 	return columns, data
 	
+
+
 def get_columns(leave_types):
 	columns = [
-		_("Employee") + ":Link/Employee:150", 
-		_("Employee Name") + "::200", 
-		_("Department") +"::150",
-		_("Designation") + "::150",
+		#_("Employee") + ":Link/Employee:150", 
+		_("Employee Name") + "::140", 
+		_("Department") +"::100",
+		_("Designation") + "::100",
 	]
 
 	for leave_type in leave_types:
-		columns.append(_(leave_type) + " " + _("Taken") + ":Float:160")
-		columns.append(_(leave_type) + " " + _("Balance") + ":Float:160")
+		columns.append(_(leave_type) + " " + _("Taken") + ":Float:100")
+		columns.append(_(leave_type) + " " + _("Balance") + ":Float:100")
 	
 	return columns
 	
-def get_data(filters, leave_types,conditions):
+
+
+def get_data(filters, leave_types,conditions,company):
+	data = []
 	user = frappe.session.user
 	allocation_records_based_on_to_date = get_leave_allocation_records(filters.to_date)
-	com = frappe.defaults.get_user_default("Company")
-	active_employees = frappe.get_all("Employee", 
-		filters = { "status": "Active", "company": com}, 
-		fields = ["name", "employee_name", "department", "user_id"])
+	#active_employees = frappe.get_all("Employee", 
+	#	filters = { "status": "Active", "company": company}, 
+	#	fields = ["name", "employee_name", "department", "user_id"])
 
-	active_employees=frappe.db.sql("""select  emp.employee_name, ed.* from `tabEmployee`  as emp 
-		join `tabEmployee Employment Detail` as ed on emp.name=ed.employee where emp.docstatus <2 %s order by employee """ %
+	active_employees = frappe.db.sql("""select  emp.employee_name, ed.* from `tabEmployee`  as emp 
+		right join `tabEmployee Employment Detail` as ed on emp.name=ed.employee where emp.docstatus <2 %s order by employee """ %
 		conditions, filters, as_dict=1)
-
 	
-	data = []
 	for employee in active_employees:
-		leave_approvers = [l.leave_approver for l in frappe.db.sql("""select leave_approver from `tabEmployee Leave Approver` where parent = %s""",
-							(employee.name),as_dict=True)]
-		if (len(leave_approvers) and user in leave_approvers) or (user in ["Administrator", employee.user_id]) or ("HR Manager" in frappe.get_roles(user)):
-			row = [employee.name, employee.employee_name, employee.management,employee.designation]
+		if employee.employee_name:
+			#leave_approvers = [ l.leave_approver for l in frappe.db.sql("""select leave_approver from `tabEmployee Leave Approver` where parent = %s""",
+			#					(employee.name),as_dict=True)]
+			#if (len(leave_approvers) and user in leave_approvers) or (user in ["Administrator", employee.user_id]) or ("HR Manager" in frappe.get_roles(user)):
+			row = [employee.employee_name, employee.management,employee.designation]
 
 			for leave_type in leave_types:
 				# leaves taken

@@ -534,7 +534,7 @@ def zk_upload_attendance(month=None):
 			if (att.timestamp).month == month: 
 				update_att(att.user_id,att.punch, att.timestamp)
               			i += 1
-				print ("ATT {:>6}: uid:{:>3}, user_id:{:>8} t: {}, s:{} p:{}".format(i, att.uid, att.user_id, att.timestamp, att.status, att.punch))
+				print ("ATT {:>6}: uid:{:>3}, user_id:{:>8} t: {}, s:{} p:{}".format(i, att, att.user_id, att.timestamp, att.status, att.punch))
 
 		except Exception as e:
 			print ('Attendance script error')
@@ -568,7 +568,7 @@ def zk_upload_attendance(month=None):
 
 
 @frappe.whitelist()
-def upload_attendance(month=None):
+def upload_attendance(month=None,toClear=False):
     	now = datetime.datetime.today().replace(microsecond=0)
 
 	now_hour = now.strftime('%H')
@@ -598,10 +598,10 @@ def upload_attendance(month=None):
 			    conn = zk.connect()
 			    print ('Disabling device ...')
 			    conn.disable_device()
-			    newtime = datetime.datetime.today()+ datetime.timedelta(hours=2)
-
-			    conn.set_time(newtime)
 			    zk_time = conn.get_time()
+			    newtime = datetime.datetime.today() +datetime.timedelta(hours = 2) 
+			    conn.set_time(newtime)
+			    print newtime
 			    dif = abs(zk_time - now).total_seconds()
 			    print ('Time             : {}'.format(zk_time))
 			    if dif > 120:
@@ -641,14 +641,16 @@ def upload_attendance(month=None):
 
 			       # print ("user_id:{:>8} t: {}, p:{}".format(att.user_id, att.timestamp, att.punch))
 				try:
-					#print att.timestamp
 
 					#if str(getdate(att.timestamp)) == '2019-02-12': 
 					if (att.timestamp).month == month: 
-						print ("ATT {:>6}: uid:{:>3}, user_id:{:>8} t: {}, s:{} p:{}".format(i, att.uid, att.user_id, att.timestamp, att.status, att.punch))
 						update_att(att.user_id,att.punch, att.timestamp)
-					#	print "port"
-					#	print device.ip
+						print ("ATT {:>6}: uid:{:>3}, user_id:{:>8} t: {}, s:{} p:{}".format(i, att.uid, att.user_id, att.timestamp, att.status, att.punch))
+						if toClear == False:
+							send_device_data_to_database(str(att.uid),att.user_id ,att.timestamp ,att.status,att.punch)
+
+						print "port"
+						print device.ip
 
 				except  Exception as e:
 					print ('Attendance script error')
@@ -877,7 +879,7 @@ def test():
 
 @frappe.whitelist()
 def clear_attendance():
-	upload_attendance()
+	upload_attendance(toClear=True)#Flage toClear is to avoid twice entering of data in update_attendane function and here
 	devices= get_devices()
 	for device in devices:
 		print device.ip
@@ -893,7 +895,6 @@ def clear_attendance():
 			try:
 		    	    	conn = zk.connect()
 			   	conn.disable_device()
-				conn.set_time(datetime.now())
 				attendances = conn.get_attendance()
 				i = 0
 				for att in attendances:
@@ -902,12 +903,7 @@ def clear_attendance():
 						if (att.timestamp): 
 							print ("ATT {:>6}: uid:{:>3}, user_id:{:>8} t: {}, s:{} p:{}".format(i, att.uid, att.user_id, att.timestamp, att.status, att.punch))
 							if att.uid:
-								frappe.get_doc({"doctype":"Finger Print Data",
-										"uid" : str(att.uid),
-										"user_id" :att.user_id , 
-										"time":att.timestamp ,
-										"status":att.status, 
-										"punch":att.punch}).insert(ignore_permissions=True)
+								send_device_data_to_database(str(att.uid),att.user_id ,att.timestamp ,att.status,att.punch)
 					except Exception, e:
 						print ('backaup error')
 						pass
@@ -918,3 +914,13 @@ def clear_attendance():
 				if conn:
 					conn.enable_device()
 					conn.disconnect()
+
+
+
+def send_device_data_to_database(uid,user_id ,timestamp ,status,punch):
+	frappe.get_doc({"doctype":"Finger Print Data",
+			"uid" : uid,
+			"user_id" :user_id , 
+			"time":timestamp ,
+			"status":status, 
+			"punch":punch}).insert(ignore_permissions=True)
