@@ -296,6 +296,16 @@ def get_leavs(company):
 def get_wsh_history(employee,ddate, total_work_hrs):
 	total_work_hrs = total_work_hrs
 	start_work, end_work ='', ''
+	day = calendar.day_name[getdate(ddate).weekday()];
+	#conditions = " employee = %s and %s <= shift_change_date",(filters.get("employee"), ddate)
+	emp_wshift = frappe.db.get_value("Employee Employment Detail",employee , "private_work_shift")
+
+	if emp_wshift:
+		doc = frappe.db.sql("select GREATEST(round((TIMESTAMPDIFF(MINUTE,start_work,end_work))/60,3),0) as total_work_hrs, start_work,end_work from `tabPrivate Work Shift Details`  where parent =  '{0}' and day = '{1}' and '{2}' between from_date and to_date ".format(emp_wshift, day,getdate(ddate)),as_dict=1)
+		if doc:
+			return doc[0].total_work_hrs ,doc[0].start_work,doc[0].end_work
+
+
 	#conditions = " employee = %s and %s <= shift_change_date",(filters.get("employee"), ddate)
 	work_shift = frappe.db.sql("""select work_shift from `tabWork Shift History` where  employee = %s and  %s >= shift_change_date  order by work_shift asc limit 1""",(employee, ddate), as_dict=1)
 	if work_shift:

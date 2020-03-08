@@ -466,8 +466,13 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
+<<<<<<< HEAD
+   "fieldname": "discount_hours_from_leaves", 
+   "fieldtype": "Check", 
+=======
    "fieldname": "column_break_10", 
    "fieldtype": "Column Break", 
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "hidden": 0, 
    "ignore_user_permissions": 0, 
    "ignore_xss_filter": 0, 
@@ -475,6 +480,10 @@
    "in_global_search": 0, 
    "in_list_view": 0, 
    "in_standard_filter": 0, 
+<<<<<<< HEAD
+   "label": "Discount Hours From Leaves", 
+=======
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "length": 0, 
    "no_copy": 0, 
    "permlevel": 0, 
@@ -1360,6 +1369,39 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
+<<<<<<< HEAD
+   "fieldname": "discount", 
+   "fieldtype": "Data", 
+   "hidden": 0, 
+   "ignore_user_permissions": 0, 
+   "ignore_xss_filter": 0, 
+   "in_filter": 0, 
+   "in_global_search": 0, 
+   "in_list_view": 0, 
+   "in_standard_filter": 0, 
+   "label": "Discount ", 
+   "length": 0, 
+   "no_copy": 0, 
+   "permlevel": 0, 
+   "precision": "", 
+   "print_hide": 0, 
+   "print_hide_if_no_value": 0, 
+   "read_only": 0, 
+   "remember_last_selected_value": 0, 
+   "report_hide": 0, 
+   "reqd": 0, 
+   "search_index": 0, 
+   "set_only_once": 0, 
+   "unique": 0
+  }, 
+  {
+   "allow_bulk_edit": 0, 
+   "allow_on_submit": 0, 
+   "bold": 0, 
+   "collapsible": 0, 
+   "columns": 0, 
+=======
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "fieldname": "col_3_3", 
    "fieldtype": "Column Break", 
    "hidden": 0, 
@@ -2601,7 +2643,11 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
+<<<<<<< HEAD
+ "modified": "2020-03-03 23:33:31.723525", 
+=======
  "modified": "2020-02-25 19:17:49.104214", 
+>>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
  "modified_by": "Administrator", 
  "module": "HR", 
  "name": "Employee Employment Detail", 
