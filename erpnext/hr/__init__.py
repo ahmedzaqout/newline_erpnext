@@ -326,7 +326,7 @@ def get_job_description_data(job_number, doctype='Job Description'):
 
 @frappe.whitelist()
 def get_job_applicant_data(job_applicant):
-	return frappe.db.get_value("Job Applicant", job_applicant, "job_title" ,as_dict=1)
+	return frappe.db.get_value("Job Applicant", job_applicant, ["name","job_title"] ,as_dict=1)
 
 @frappe.whitelist()
 def get_job_opening_data(job_applicant):

@@ -19,14 +19,14 @@ class JobOpening(WebsiteGenerator):
 	)
 
 	def autoname(self):
-		self.job_title = self.designation +"-" +self.job_number
+		self.job_title = (self.designation).replace(" ", "")+"-" +(self.job_number).replace(" ", "")
 		if self.job_title:
-			self.name = self.job_title 	
+			self.name = (self.job_title).replace(" ", "")	
 	
 	def validate(self):
-		self.job_title = self.designation +"-" +self.job_number
+		self.job_title = (self.designation).replace(" ", "")+"-" +(self.job_number).replace(" ", "")
 		if not self.route:
-			site_ip_address= 'http://5.9.141.189'
+			#site_ip_address= 'http://5.9.141.189'
 			port_number= frappe.local.conf.nginx_port
 			
 			

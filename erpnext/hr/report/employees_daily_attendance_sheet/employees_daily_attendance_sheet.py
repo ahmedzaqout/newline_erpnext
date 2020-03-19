@@ -7,6 +7,7 @@ from frappe.utils import cstr, cint, getdate
 from frappe import msgprint, _
 import datetime, calendar, time
 from calendar import monthrange
+from erpnext.hr.report.employee_monthly_attendance_sheet_prod.employee_monthly_attendance_sheet_prod import get_penalty_discount
 
 def execute(filters=None):
 	if not filters: filters = {}

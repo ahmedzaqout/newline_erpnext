@@ -448,8 +448,11 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 	discout_from_leaves = frappe.db.get_value("Employee", employee, "discount_salary_from_leaves")
 
 	date2 = datetime.datetime.strptime(str(date), "%Y-%m-%d")
+	date_of_joining = frappe.db.get_value("Employee", employee, "date_of_joining")
 	if date2:
 		pre_year_date = date2.replace(year=date2.year-1)
+		#if(date_diff(pre_year_date,date_of_joining) < 0 and date_diff(date_of_joining,date2)<0 ):
+		#	pre_year_date =date_of_joining
 		allocation_records_last_year = get_leave_allocation_records(pre_year_date, employee).get(employee, frappe._dict())
 		allocation_prev = allocation_records_last_year.get(leave_type, frappe._dict())
 		leaves_taken_prev = get_approved_leaves_for_period(employee, leave_type, allocation_prev.from_date,  allocation_prev.to_date)
@@ -463,7 +466,6 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 	allocation = allocation_records.get(leave_type, frappe._dict())
 
 
-	
 
 	from erpnext.hr.doctype.salary_slip.salary_slip import get_working_total_hours
 	from erpnext.hr import get_emp_work_shift
@@ -475,6 +477,9 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 		
 	shift_hrs = get_emp_work_shift(employee,calendar.day_name[getdate(allocation.from_date).weekday()] )
 	leave_days_balance = (flt(allocation.total_leaves_allocated) - flt(leaves_taken))+remain
+	if  leave_days_balance > 60:
+		leave_days_balance=60
+
 	leaves_dayss=leave_days_balance
 	leaves_hourss=0
 	annual_ex_total_hours= 0.0

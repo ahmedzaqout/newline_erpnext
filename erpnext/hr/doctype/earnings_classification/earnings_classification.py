@@ -21,9 +21,9 @@ class EarningsClassification(Document):
 	def update_pnw(self, designation, ratio, degree):
 		employees = frappe.get_all("Employee", fields=["name","employee_name","designation"],filters={'status':'Active'})
 		for emp in employees:
-			sal_det = frappe.db.get_value("Employee",{'employee':emp.name},["name","grade","grade_category"],as_dict=1)
+			sal_det = frappe.db.get_value("Employee",{'name':emp.name},["name","grade","grade_category"],as_dict=1)
 			if  sal_det and sal_det.grade == degree and emp.designation == designation: #if degree var:
-				sal_doc = frappe.get_doc("Employee",{'employee':emp.name})
+				sal_doc = frappe.get_doc("Employee",{'name':emp.name})
 				sal_doc.update({'earnings':[{
 						'salary_component': _('Premium nature work'),
 						'amount':ratio }] })
@@ -41,9 +41,9 @@ class EarningsClassification(Document):
 					stru_doc.flags.ignore_validate = True
 					stru_doc.save(ignore_permissions=True)
 			# update salary slip
-			mmonth= today.month
-			yyear= today.year
-			sal_slip = frappe.db.sql("select name from `tabSalary Slip` where employee= %s and docstatus!=2 and month(start_date)=%s and year(start_date)= %s",(emp.name,mmonth,yyear),as_dict=1)
+			curmonth= getdate(today()).month
+			curyear = getdate(today()).year
+			sal_slip = frappe.db.sql("select name from `tabSalary Slip` where employee= %s and docstatus!=2 and month(start_date)=%s and year(start_date)= %s",(emp.name,curmonth,curyear),as_dict=1)
 			if  sal_det and sal_slip and sal_det.grade == degree and emp.designation == designation: #if degree var:
 				slip_doc = frappe.get_doc("Salary Slip",{'employee':emp.name})
 				slip_doc.update({'earnings':[{

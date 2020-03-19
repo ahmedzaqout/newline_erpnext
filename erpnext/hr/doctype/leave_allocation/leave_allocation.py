@@ -22,6 +22,7 @@ class LeaveAllocation(Document):
 		self.validate_allocation_overlap()
 		self.validate_back_dated_allocation()
 		self.set_total_leaves_allocated()
+		self.validate_date_of_joining()
 		self.validate_total_leaves_allocated()
 		self.validate_lwp()
 		set_employee_name(self)
@@ -42,6 +43,16 @@ class LeaveAllocation(Document):
 	def validate_lwp(self):
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
 			frappe.throw(_("Leave Type {0} cannot be allocated since it is leave without pay").format(self.leave_type))
+
+	def validate_date_of_joining(self):
+		if not frappe.db.get_value("Employee", self.employee, "date_of_joining"):
+			frappe.throw(_("Please set joining date for employee {0}").format(self.employee))
+		date_of_joining=frappe.db.get_value("Employee", self.employee, "date_of_joining")
+
+
+		if date_diff(self.from_date,date_of_joining) < 0:
+			frappe.throw(_("From date cannot be before Date Of Joining."))
+
 
 	def validate_new_leaves_allocated_value(self):
 		"""validate that leave allocation is in multiples of 0.5"""

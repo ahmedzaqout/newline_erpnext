@@ -14,8 +14,9 @@ from frappe.core.doctype.sms_settings.sms_settings import send_sms
 class OfferLetter(Document):
 	def autoname(self):
 		#keys = filter(None, ((self.job_applicant).strip(), (self.job_opening).strip()))
-		keys = filter(None, ( (self.job_number).strip()))
-		self.name = make_autoname('OfferLetter_'+keys + '/.#####')
+		if self.job_number:
+			keys = filter(None, ( (self.job_number).strip()))
+			self.name = make_autoname('OfferLetter_'+keys + '/.#####')
 		#self.name = make_autoname('Offer Letter/' +self.job_opening+'/'+self.job_applicant + '/.#####')
 
 	def validate(self):
@@ -80,11 +81,12 @@ class OfferLetter(Document):
 			"date_of_joining":  self.offer_date,
 			"designation": self.designation
 		})
+		emp.flags.ignore_mandatory = True
 		emp.save(ignore_permissions=True)
 		#employee_number = frappe.db.get_value("Employee", {'employee_name':self.applicant_name}, "name")
-		frappe.db.set_value("Employee", emp.name, "employee_number", emp.name)
-		from erpnext.hr.doctype.employee.employee import make_employee_docs	
-		make_employee_docs(''.join(emp.name) )
+		#frappe.db.set_value("Employee", emp.name, "employee_number", emp.name)
+		#from erpnext.hr.doctype.employee.employee import make_employee_docs	
+		#make_employee_docs(''.join(emp.name) )
 		frappe.msgprint(_("Employee Added"))
 
 
@@ -95,7 +97,7 @@ def make_employee(source_name, target_doc=None):
 		global applicant_name, date_of_joining
 		applicant_name = source.applicant_name
 		date_of_joining = source.offer_date
-		pass #target.personal_email = frappe.db.get_value("Job Applicant", source.job_applicant, "email_id")
+		#pass #target.personal_email = frappe.db.get_value("Job Applicant", source.job_applicant, "email_id")
 	doc = get_mapped_doc("Offer Letter", source_name, {
 			"Offer Letter": {
 				"doctype": "Employee",
@@ -107,10 +109,10 @@ def make_employee(source_name, target_doc=None):
 				}}
 		}, target_doc, set_missing_values)
 
-	employee_number = frappe.db.get_value("Employee", {'employee_name':applicant_name,'date_of_joining':date_of_joining}, "employee_number")
+	#employee_number = frappe.db.get_value("Employee", {'employee_name':applicant_name,'date_of_joining':date_of_joining}, "employee_number")
 	#frappe.db.set_value("Employee", { "employee_name": applicant_name } ,"employee_number", applicant_name)
-	from erpnext.hr.doctype.employee.employee import make_employee_docs	
-	make_employee_docs(employee_number )
+	#from erpnext.hr.doctype.employee.employee import make_employee_docs	
+	#make_employee_docs(employee_number )
 	frappe.msgprint(_("Employee Added"))
 	return doc
 
