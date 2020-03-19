@@ -24,7 +24,7 @@ def get_gender():
 	values=[]
 	for g in gnd:
 		genderList.append(g.name)
-		em=frappe.get_list("Employee Personal Detail",['name'],filters={"gender":g.name})
+		em=frappe.get_list("Employee",['name'],filters={"gender":g.name})
 		if em:
 			values.append(len(em))
 		else:

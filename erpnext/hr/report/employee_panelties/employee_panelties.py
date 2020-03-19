@@ -35,12 +35,12 @@ def get_columns(filters):
 def penalties(conditions, filters):
 	data=[]
 	hours={}
-	penalties  = frappe.db.sql("""select we.* , p.penalty_type,p.discount_day,p.discount_period,p.warning_type,pd.designation , pd.management from `tabWarning Information` as we left Join `tabEmployee Employment Detail` as pd on we.employee=pd.employee join tabPenalty as p on we.penalty=p.name where we.docstatus <2 %s 
-		order by employee """ %
+	penalties  = frappe.db.sql("""select we.* , p.penalty_type,p.discount_day,p.discount_period,p.warning_type,pd.designation ,pd.employee_name, pd.management from `tabWarning Information` as we left Join `tabEmployee` as pd on we.employee=pd.name join tabPenalty as p on we.penalty=p.name where we.docstatus <2 %s 
+		order by we.employee """ %
 		conditions, filters, as_dict=1)
 	for m in penalties:
-		employee_name = frappe.db.get_value("Employee",m.employee,"employee_name")
-		data.append([employee_name ,m.designation,m.management,m.warning_date,m.employee_violation,m.penalty,m.penalty_type,m.warning_type,m.discount_day,m.discount_period])
+		#employee_name = frappe.db.get_value("Employee",m.employee,"employee_name")
+		data.append([m.employee_name ,m.designation,m.management,m.warning_date,m.employee_violation,m.penalty,m.penalty_type,m.warning_type,m.discount_day,m.discount_period])
 		#if m.penalty_type=="Discount":
 		#	data.append(["",m.discount_day,m.discount_period])
 

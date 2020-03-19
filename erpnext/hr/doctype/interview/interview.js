@@ -25,9 +25,9 @@ frappe.ui.form.on('Interview', {
 		frm.set_value("average", average);
 		frm.refresh_field('average');
 
-		    if (frm.is_new()){
+		    if (frm.is_new()){ //plz don't write arabic alphabits!
 		var technical=['ملائمة المؤهلات العلمية','خبرة متعلقة بهذا المجال','مدى الملائمة للوظيفة','التدريب','مدى المعرفة بالجمعية','مؤهلات أخرى'];
-		var skills=['اللغات','مدى المعرفة بالكمبيوتر'];
+		var skills=['اللغات','مدى المعرفة بالكمبيوتر']; 
 		var others=['الشخصية','المظهر','الجاهزية'];
 		frm.set_value("technical", []);
 		frm.set_value("skills", []);

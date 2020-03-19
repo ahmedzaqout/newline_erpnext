@@ -7,8 +7,8 @@ frappe.ui.form.on('Employment Type', {
 	},
 	status:function(frm) {
 		if (frm.doc.status == 'Not Active'){
-			frappe.model.get_value('Employee Employment Detail', {'employment_type': frm.doc.employment_type},'name',function(r) {
-				if (r.name) console.log(r);
+			frappe.model.get_value('Employee', {'employment_type': frm.doc.employment_type},'name',function(r) {
+				if (r.name) 
 					frappe.throw(__("Can not disactivated! There is an employee connected with this"));
 			
 			});

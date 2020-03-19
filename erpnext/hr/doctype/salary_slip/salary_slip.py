@@ -58,12 +58,12 @@ class SalarySlip(TransactionBase):
 		if emp_edu:
 			#frappe.msgprint(ed[0].employee)
 			self.specialization=emp_edu[0].specialization
-		emp_pers=frappe.get_all("Employee Personal Detail",['identity_no','marital_status'],filters={"employee":self.employee})
+		emp_pers=frappe.get_all("Employee",['identity_no','marital_status'],filters={"employee":self.employee})
 		if emp_pers:
 			self.identity= emp_pers[0].identity_no
 			self.marital_status= emp_pers[0].marital_status 
 
-		emp_det=frappe.get_all("Employee Employment Detail",['department','branch','circle','designation','employment_type','date_of_joining'],filters={"employee":self.employee})
+		emp_det=frappe.get_all("Employee",['department','branch','circle','designation','employment_type','date_of_joining'],filters={"employee":self.employee})
 		if emp_det:
 			self.circle=emp_det[0].circle
 			self.branch=emp_det[0].branch
@@ -73,7 +73,7 @@ class SalarySlip(TransactionBase):
 			self.date_of_joining=emp_det[0].date_of_joining
 
 
-		emp_sal=frappe.get_all("Employee Salary Detail",['grade','grade_category','experience_years'],filters={"employee":self.employee})
+		emp_sal=frappe.get_all("Employee",['grade','grade_category','experience_years'],filters={"employee":self.employee})
 		if emp_sal:
 			self.grade=emp_sal[0].grade
 			self.grade_category=emp_sal[0].grade_category
@@ -106,7 +106,7 @@ class SalarySlip(TransactionBase):
 			for struct_row in self.get("deductions"):
 				if struct_row.salary_component =="Savings":
 					exist=True
-			s_deta =frappe.get_doc("Employee Salary Detail",self.employee)			
+			s_deta =frappe.get_doc("Employee",self.employee)			
 			if s_deta.has_saving and s_deta.has_saving  == 1:
 				if frappe.db.get_single_value("HR Settings", "employee_ratio_employee_saving"):
 					employee_ratio_employee_saving = frappe.db.get_single_value("HR Settings", "employee_ratio_employee_saving")
@@ -128,7 +128,7 @@ class SalarySlip(TransactionBase):
 			for struct_row in self.get("deductions"):
 				if struct_row.salary_component =="Insurance":
 					existt=True
-				s_deta =frappe.get_doc("Employee Salary Detail",self.employee)			
+				s_deta =frappe.get_doc("Employee",self.employee)			
 			if s_deta.has_insurance and s_deta.has_insurance  == 1:
 				if frappe.db.get_single_value("HR Settings", "the_percentage_of_the_employee_insurance"):
 					employee_ratio_employee_insurance = frappe.db.get_single_value("HR Settings", "the_percentage_of_the_employee_insurance")
@@ -156,6 +156,9 @@ class SalarySlip(TransactionBase):
 				frappe.get_doc({"doctype" : "Salary Component","salary_component":"Income Tax","type":"Deduction","salary_component_abbr":"TX"}).insert(ignore_permissions=True)
 
 		if not exista:
+			if not self.get_ils_exchange_rate():
+				frappe.throw(_("Please add exchange rate in HR Settings Page"))
+
 			sal_ils = self.basic_salary * flt(self.get_ils_exchange_rate())
 			if sal_ils <= 75000:
 				amout_tax = 5 * sal_ils/100
@@ -254,7 +257,7 @@ class SalarySlip(TransactionBase):
 			if not self.salary_slip_based_on_timesheet:
 				self.get_date_details()
 			self.validate_dates()
-			joining_date = frappe.db.get_value("Employee Employment Detail", self.employee,
+			joining_date = frappe.db.get_value("Employee", self.employee,
 				["date_of_joining"])
 			relieving_date =''
 			self.get_leave_details(joining_date, relieving_date)
@@ -380,7 +383,7 @@ class SalarySlip(TransactionBase):
 			doc.append('earnings', wages_row)
 
 	def pull_emp_details(self):
-		emp = frappe.db.get_value("Employee Salary Detail", self.employee, ["bank_name", "bank_ac_no"], as_dict=1)
+		emp = frappe.db.get_value("Employee", self.employee, ["bank_name", "bank_ac_no"], as_dict=1)
 		if emp:
 			self.bank_name = emp.bank_name
 			self.bank_account_no = emp.bank_ac_no
@@ -388,7 +391,7 @@ class SalarySlip(TransactionBase):
 
 	def get_leave_details(self, joining_date=None, relieving_date=None, lwp=None):
 		if not joining_date:
-			joining_date = frappe.db.get_value("Employee Employment Detail", self.employee,
+			joining_date = frappe.db.get_value("Employee", self.employee,
 				["date_of_joining"])
 		#####
 		#job_number = frappe.db.get_value("job_description", self.employee, "job_number")
@@ -515,7 +518,7 @@ class SalarySlip(TransactionBase):
 					frappe.throw(_("Salary Slip of employee {0} already created for time sheet {1}").format(self.employee, data.time_sheet))
 
 	def sum_components(self, component_type, total_field):
-		joining_date = frappe.db.get_value("Employee Employment Detail", self.employee,
+		joining_date = frappe.db.get_value("Employee", self.employee,
 			["date_of_joining"])
 		
 		#if not relieving_date:
@@ -564,7 +567,7 @@ class SalarySlip(TransactionBase):
 
 
 		disable_rounded_total = cint(frappe.db.get_value("Global Defaults", None, "disable_rounded_total"))
-		job_number = frappe.db.get_value("Employee Salary Detail", self.employee, 'job_number')
+		job_number = frappe.db.get_value("Employee", self.employee, 'job_number')
 		overtime_type = frappe.db.get_value("Job Description", job_number, "overtime_type")
 			
 		self.total_deduction = 0.0001
@@ -651,7 +654,7 @@ class SalarySlip(TransactionBase):
 		#leave_balance= get_leave_balance_on(self.employee,_('Annual Leave'), self.start_date,consider_all_leaves_in_the_allocation_period=True)
 		self.update_leave_balance()
 		if self.company == "Nawa":	
-			s_deta =frappe.get_doc("Employee Salary Detail",self.employee)			
+			s_deta =frappe.get_doc("Employee",self.employee)			
 			if s_deta.has_saving and s_deta.has_saving  == 1:
 				self.update_savings()
 			if s_deta.has_insurance and s_deta.has_insurance  == 1:
@@ -662,7 +665,7 @@ class SalarySlip(TransactionBase):
 		#self.update_status()
 
 	def email_salary_slip(self):
-		receiver = frappe.db.get_value("Employee Personal Detail", self.employee, "user_id")
+		receiver = frappe.db.get_value("Employee", self.employee, "user_id")
 
 		if receiver:
 			email_args = {
@@ -687,7 +690,7 @@ class SalarySlip(TransactionBase):
 		
 		employee_savings = float(employee_ratio_employee_saving) * float(self.basic_salary) /100.0
 		company_savings = float(company_ratio_employee_saving) * float(self.basic_salary) /100.0
-		s_d =frappe.get_doc("Employee Salary Detail",self.employee)
+		s_d =frappe.get_doc("Employee",self.employee)
 		if s_d:
 			s_d.employee_savings= s_d.employee_savings + employee_savings + company_savings
 			s_d.flags.ignore_permissions=True
@@ -703,7 +706,7 @@ class SalarySlip(TransactionBase):
 		
 		employee_in = float(employee_ratio_employee_ins) * float(self.basic_salary) /100.0
 		company_in = float(company_ratio_employee_ins) * float(self.basic_salary) /100.0
-		s_d =frappe.get_doc("Employee Salary Detail",self.employee)
+		s_d =frappe.get_doc("Employee",self.employee)
 		if s_d:
 			s_d.employee_insurrance= s_d.employee_insurrance + employee_in + company_in
 			s_d.flags.ignore_permissions=True
@@ -774,17 +777,17 @@ class SalarySlip(TransactionBase):
 				leave.submit()
 
 	def fill_attendance(self):
-		emp_map  = frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, att.name as attname,dept.name as deptname, emp.name,emp.employee ,dept.departure_date, DAYNAME(att.attendance_date) as day,att.attendance_time, dept.departure_time,GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) as total_hours ,GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) as total_work_hrs,ifnull(overtime_hours,0) as overtime_hours,ifnull(tsh.holiday_overtime_hours,0) as holiday_overtime_hours,compensatory,tsh.type, tsh.from_time ,att.status,shd.start_work, ifnull(ext.early_diff,0) as early_departure,ifnull(ext.ext_diff,0) as ext_diff, work_shift, emp.holiday_list,ifnull(GREATEST(round(TIMESTAMPDIFF(MINUTE,shd.start_work,att.attendance_time)/60,2),0),0) as late_hrs from `tabEmployee Employment Detail` as emp   
-join  tabAttendance as att on att.employee=emp.employee and discount_salary_from_leaves=0 and att.docstatus = 1
-left join  tabDeparture as dept on dept.employee=emp.employee and att.attendance_date=dept.departure_date and dept.docstatus = 1
+		emp_map  = frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, att.name as attname,dept.name as deptname, emp.name ,dept.departure_date, DAYNAME(att.attendance_date) as day,att.attendance_time, dept.departure_time,GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) as total_hours ,GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) as total_work_hrs,ifnull(overtime_hours,0) as overtime_hours,ifnull(tsh.holiday_overtime_hours,0) as holiday_overtime_hours,compensatory,tsh.type, tsh.from_time ,att.status,shd.start_work, ifnull(ext.early_diff,0) as early_departure,ifnull(ext.ext_diff,0) as ext_diff, work_shift, emp.holiday_list,ifnull(GREATEST(round(TIMESTAMPDIFF(MINUTE,shd.start_work,att.attendance_time)/60,2),0),0) as late_hrs from `tabEmployee` as emp   
+join  tabAttendance as att on att.employee=emp.name and att.discount_salary_from_leaves=0 and att.docstatus = 1
+left join  tabDeparture as dept on dept.employee=emp.name and att.attendance_date=dept.departure_date and dept.docstatus = 1
 left join `tabWork Shift Details` as shd on shd.parent =  work_shift and shd.day = DAYNAME(att.attendance_date)
-left join (select t.docstatus,employee,from_time,ifnull(sum(CASE WHEN type='compensatory' THEN hours END),0) as compensatory, ifnull(sum(CASE WHEN type='Normal' THEN hours END),0) as overtime_hours, ifnull(sum(CASE WHEN type='With Leave' THEN hours END),0) as holiday_overtime_hours,type from tabTimesheet as t join `tabTimesheet Detail` as td on t.name=td.parent and t.docstatus=1 group by date(from_time),employee) as tsh on emp.employee=tsh.employee and att.attendance_date=date(tsh.from_time) and tsh.docstatus = 1 
+left join (select t.docstatus,employee,from_time,ifnull(sum(CASE WHEN type='compensatory' THEN hours END),0) as compensatory, ifnull(sum(CASE WHEN type='Normal' THEN hours END),0) as overtime_hours, ifnull(sum(CASE WHEN type='With Leave' THEN hours END),0) as holiday_overtime_hours,type from tabTimesheet as t join `tabTimesheet Detail` as td on t.name=td.parent and t.docstatus=1 group by date(from_time),employee) as tsh on emp.name=tsh.employee and att.attendance_date=date(tsh.from_time) and tsh.docstatus = 1 
 left join (select employee,depstat,exitstat, permission_date,sum(early_diff)/60 as early_diff, sum(diff) as ext_diff from (
 select employee,docstatus as depstat,0 as exitstat, permission_date,early_diff, 0 as diff from `tabExit permission` where permission_type='Early Departure' and docstatus = 1
 union all 
 select employee,0 as depstat,docstatus as exitstat, permission_date,0 as early_diff ,TIME_TO_SEC(diff_exit)/3600 as diff from `tabExit permission` where type='Return' and permission_type='Exit with return' and docstatus = 1) as d group by permission_date,employee) as ext 
-on emp.employee=ext.employee and att.attendance_date=ext.permission_date 
-where  emp.employee = %s and  att.attendance_date >= %s and att.attendance_date <= %s order by emp.employee, attendance_date""" 
+on emp.name=ext.employee and att.attendance_date=ext.permission_date 
+where  emp.name = %s and  att.attendance_date >= %s and att.attendance_date <= %s order by emp.name, attendance_date""" 
 ,(self.employee,self.start_date, self.end_date,), as_dict=1)
 		
 		att=[]

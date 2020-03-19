@@ -21,12 +21,9 @@ frappe.ui.form.on('Employee Evaluation Result', {
 	},
 	
 	employee: function(frm){
-		frappe.model.get_value('Employee Personal Detail', frm.doc.employee, ['employee_name'],function(r) {
-				if (r) frm.set_value('employee_name', r.employee_name);
-			});
-
-		frappe.model.get_value('Employee Employment Detail', frm.doc.employee, ['designation','department','employment_type'],function(r) {
-				if (r){
+		frappe.model.get_value('Employee', frm.doc.employee, ['employee_name','designation','department','employment_type'],function(r) {
+				if (r){ 
+					 frm.set_value('employee_name', r.employee_name);
 					 frm.set_value('department', r.department);
 					 frm.set_value('designation', r.designation);
 					}

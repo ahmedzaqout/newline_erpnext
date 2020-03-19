@@ -100,17 +100,15 @@ frappe.ui.form.on("Salary Slip", {
 	},
 
 	employee: function(frm){
-		frappe.model.get_value('Employee', frm.doc.employee, ['employee_name'],function(r) {
-				if (r) frm.set_value('employee_name', r.employee_name);
-			});
-
-		frappe.model.get_value('Employee Employment Detail', frm.doc.employee, ['designation','department','employment_type'],function(r) {
-				if (r){
+		frappe.model.get_value('Employee', frm.doc.employee, ['employee_name','designation','department','employment_type'],function(r) {
+				if (r) {
+					 frm.set_value('employee_name', r.employee_name);
 					 frm.set_value('department', r.department);
 					 frm.set_value('designation', r.designation);
 					 frm.set_value('employment_type', r.employment_type);
 					}
 			});
+
 		//frm.set_value('start_date', '');
 		if(frm.doc.start_date) frm.trigger("set_end_date");
 		update_employee_data(frm);
@@ -162,7 +160,7 @@ frappe.ui.form.on('Salary Slip Timesheet', {
 
 
 var update_employee_data = function(frm,dt, dn) {
-		frappe.model.get_value('Employee Salary Detail', frm.doc.employee, ['day_salary','hour_cost','over_hrs','bank_name','bank_ac_no','basic_salary','payroll_frequency'],function(r) {
+		frappe.model.get_value('Employee', frm.doc.employee, ['day_salary','hour_cost','over_hrs','bank_name','bank_ac_no','basic_salary','payroll_frequency'],function(r) {
 				if (r) {
 					frm.set_value('basic_salary', r.basic_salary);
 					//frm.set_value('day_salary', r.basic_salary/doc.total_working_days);

@@ -42,16 +42,16 @@ def salaries(conditions, filters):
 	con = ""
 	if filters.get("start_date"): con += " where att.attendance_date >= %(start_date)s"
 	if filters.get("end_date"): con += " and att.attendance_date <= %(end_date)s"
-	if filters.get("employee"): con += " and emp.employee = %(employee)s"
+	if filters.get("employee"): con += " and emp.name= %(employee)s"
 
 
 
 	hours = {}
-	rr="""select emp.employee ,sum(GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0)) as total_hours 
-		,ed.work_hrs from tabEmployee as emp join `tabEmployee Employment Detail` as ed on emp.employee = ed.employee
-		join  tabAttendance as att on att.employee=emp.employee  and att.docstatus = 1 
-		left join  tabDeparture as dept on dept.employee=emp.employee and 
-		att.attendance_date=dept.departure_date and dept.docstatus = 1 """+con+""" group by emp.employee"""
+	rr="""select emp.name as employee ,sum(GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0)) as total_hours 
+		,emp.work_hrs from tabEmployee as emp 
+		join  tabAttendance as att on att.employee=emp.name  and att.docstatus = 1 
+		left join  tabDeparture as dept on dept.employee=emp.name and 
+		att.attendance_date=dept.departure_date and dept.docstatus = 1 """+con+""" group by emp.name"""
 	emp_hours=frappe.db.sql(rr, filters, as_dict=1)
 	
 	

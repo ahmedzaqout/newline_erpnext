@@ -67,7 +67,7 @@ class Attendance(Document):
 		#		frappe.throw(_("Attendance Time can not be equal Departure time"))
 
 		attendance_day = calendar.day_name[getdate(self.attendance_date).weekday()]
-		emp_details = frappe.db.get_value("Employee Employment Detail", self.employee,["work_shift","morning_delay_in_minutes"], as_dict=1)
+		emp_details = frappe.db.get_value("Employee", self.employee,["work_shift","morning_delay_in_minutes"], as_dict=1)
 		morning_delay_minutes= emp_details.morning_delay_in_minutes
 		if not emp_details.work_shift:
 			frappe.throw(_("Work shift does not Exist"))
@@ -281,7 +281,7 @@ def onholiday(doc, method):
 def update_att_holiday(emp,employee_name,day,holiday):
 	print str(day)
 	att_time, att_status, dep_time, dep_status= None, None, None, None
-	employee_work_shift = frappe.db.get_value("Employee Employment Detail", emp, "work_shift")
+	employee_work_shift = frappe.db.get_value("Employee", emp, "work_shift")
 	employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":day}, "start_work")
 	if not employee_start_time:
 		frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":"Saturday"}, "start_work")
@@ -360,7 +360,7 @@ def update_att_holiday(emp,employee_name,day,holiday):
 @frappe.whitelist()
 def attendance_hrs():
 	user= frappe.local.session.user
-	employee = frappe.db.get_value("Employee Personal Detail", {'user_id':user}, "name")
+	employee = frappe.db.get_value("Employee", {'user_id':user}, "name")
 	return frappe.db.sql("select round(TIMESTAMPDIFF(MINUTE,attendance_time,CURRENT_TIME())/60,2) as total_hours from `tabAttendance` where attendance_date =CURDATE() and docstatus!=2 and employee=%s",user)
 
 #Test Email
@@ -410,7 +410,7 @@ def check_attendance(ddate=nowdate(),hour=20, nowF=False):
 	#send_aler_email("Absent Script Running")
 	#frappe.msgprint(str(nowF)+str(now_datetime()))
 	#frappe.msgprint ("dd "+str(ddate))
-	employees = frappe.get_all("Employee Employment Detail", fields=["name","work_shift","employee_name","scheduled_confirmation_date","date_of_joining"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["name","work_shift","employee_name","scheduled_confirmation_date","date_of_joining"],filters={'status':'Active'})
 	today = calendar.day_name[getdate(ddate).weekday()];
 	#today= day #getdate(nowdate()) #'2018-08-13' 
 	cur_time = get_time(now_datetime())
@@ -527,7 +527,7 @@ def employment_type_percentage():
 	arr=[]
 	employment_type = frappe.db.sql("select name from `tabEmployment Type`",as_dict=1)
 	for i in range(len(employment_type)):
-		percentage = frappe.db.sql("""select round((count(*)*100),2) as percentage from `tabEmployee Employment Detail` where employment_type=%s""" ,employment_type[i].name, as_dict=1)
+		percentage = frappe.db.sql("""select round((count(*)*100),2) as percentage from `tabEmployee` where employment_type=%s""" ,employment_type[i].name, as_dict=1)
 		arr.append([employment_type[i].name, percentage[0].percentage])
 	return arr
 
@@ -565,7 +565,7 @@ def employee_total():
 
 	years = [cur_year, cur_year+1, cur_year+2, cur_year+3, cur_year+4, cur_year+5, cur_year+6]
 	for i in range(len(years)):
-		total = frappe.db.sql("""select count(*) as total  from `tabEmployee Employment Detail` where year(date_of_joining)=%s""" ,years[i], as_dict=1)
+		total = frappe.db.sql("""select count(*) as total  from `tabEmployee` where year(date_of_joining)=%s""" ,years[i], as_dict=1)
 		arr.append(total[0].total)
 	return arr
 		

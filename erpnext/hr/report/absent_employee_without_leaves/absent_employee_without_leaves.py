@@ -38,11 +38,11 @@ def get_columns(filters):
 
 
 def get_attendance_list(conditions, filters, data):
-	attList= frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, emp.employee ,dept.departure_date, DAYNAME(att.attendance_date) as day,
-		att.status, emp.designation,emp.department from `tabEmployee Employment Detail` as emp   
-		join  tabAttendance as att on att.employee=emp.employee and discount_salary_from_leaves=0 and att.docstatus = 1
-		join  tabDeparture as dept on dept.employee=emp.employee and att.attendance_date=dept.departure_date and dept.docstatus = 1
-		where att.status ='Absent' %s order by emp.employee, attendance_date""" %conditions, filters, as_dict=1)
+	attList= frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, emp.name as employee ,dept.departure_date, DAYNAME(att.attendance_date) as day,
+		att.status, emp.designation,emp.department from `tabEmployee` as emp   
+		join  tabAttendance as att on att.employee=emp.name and att.discount_salary_from_leaves=0 and att.docstatus = 1
+		join  tabDeparture as dept on dept.employee=emp.name and att.attendance_date=dept.departure_date and dept.docstatus = 1
+		where att.status ='Absent' %s order by emp.name, attendance_date""" %conditions, filters, as_dict=1)
 	for att in attList:
 		if att.employee_name and  not is_inleave_list(att.employee,att.attendance_date):
 			row = [att.employee_name, att.department,att.designation,att.day, att.attendance_date, att.status]
@@ -62,7 +62,7 @@ def is_inleave_list(employee,attendance_date):
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += " emp.employee = %(employee)s"
+	if filters.get("employee"): conditions += " emp.name = %(employee)s"
 	if filters.get("designation"): conditions += " and emp.designation >= %(designation)s"
 	if filters.get("department"): conditions += " and emp.department <= %(department)s"
 	if filters.get("from_date"): conditions += " and att.attendance_date >= %(from_date)s"

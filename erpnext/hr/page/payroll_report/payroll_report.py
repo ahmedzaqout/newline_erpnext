@@ -64,11 +64,11 @@ def get_grades(grade):
 def ann_inc_experience_years():
 	employees = frappe.get_all("Employee", fields=["name","employee_name"],filters={'status':'Active'})
 	for emp in employees:
-		experience_years = frappe.db.get_value("Employee Salary Detail", emp.name, "experience_years")
+		experience_years = frappe.db.get_value("Employee", emp.name, "experience_years")
 		if experience_years:
 			exp_years = int(experience_years) + 1
 			print str(exp_years)
-			frappe.db.sql("""update `tabEmployee Salary Detail` set experience_years = %s where employee=%s""", (exp_years,emp) )
+			frappe.db.sql("""update `tabEmployee` set experience_years = %s where employee=%s""", (exp_years,emp) )
 		
 
 
@@ -81,14 +81,14 @@ def annually_increase_payroll():
 	now = getdate(now_datetime())
 	employees = frappe.get_all("Employee", fields=["name","employee_name"],filters={'status':'Active'})
 	for emp in employees:
-		date_of_joining = frappe.db.get_value("Employee Employment Detail", emp.name, "date_of_joining")
+		date_of_joining = frappe.db.get_value("Employee", emp.name, "date_of_joining")
 		if date_of_joining:
 			date1 = datetime.strptime(str(now), '%Y-%m-%d')
 			date2 = datetime.strptime(str(getdate(date_of_joining)), '%Y-%m-%d')
 			r = relativedelta.relativedelta(date2, date1)	
 			years= r.years
 			if years >= 5:
-				frappe.db.sql("""update `tabEmployee Employment Detail` set grade = %s where employee=%s""", (grade,emp) )
+				frappe.db.sql("""update `tabEmployee` set grade = %s where employee=%s""", (grade,emp) )
 		
 		
 

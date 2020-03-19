@@ -97,8 +97,8 @@ frappe.query_reports["Employee Monthly Attendance Sheet"] = {
 			employee.df.read_only = 0;
 		employee.refresh();
 
-		frappe.db.get_value("Employee Personal Detail", {'user_id':frappe.session.user}, "employee", function(value) {
-			frappe.query_report_filters_by_name.employee.set_value(value['employee'])
+		frappe.db.get_value("Employee", {'user_id':frappe.session.user}, "name", function(value) {
+			frappe.query_report_filters_by_name.employee.set_value(value['name'])
 				});
 
 		return  frappe.call({

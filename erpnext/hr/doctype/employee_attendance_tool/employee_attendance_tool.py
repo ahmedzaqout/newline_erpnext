@@ -64,7 +64,7 @@ def mark_employee_attendance(employee_list, status, date, leave_type=None, compa
 		if company:
 			attendance.company = company
 		else:
-			attendance.company = frappe.db.get_value("Employee", employee['employee'], "Company")
+			attendance.company = frappe.db.get_value("Employee", employee['employee'], "company")
 		attendance.submit()
 
 

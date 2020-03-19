@@ -13,9 +13,9 @@ def execute(filters=None):
 	leave_types = frappe.db.sql_list("select name from `tabLeave Type` where company = '{0}' order by name asc".format(company))
 	conditions=""
 	
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.management = %(department)s"
-	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
+	if filters.get("employee"): conditions += " and name = %(employee)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("designation"): conditions += " and designation = %(designation)s"
 
 	columns = get_columns(leave_types)
 	data = get_data(filters, leave_types,conditions,company)
@@ -48,8 +48,7 @@ def get_data(filters, leave_types,conditions,company):
 	#	filters = { "status": "Active", "company": company}, 
 	#	fields = ["name", "employee_name", "department", "user_id"])
 
-	active_employees = frappe.db.sql("""select  emp.employee_name, ed.* from `tabEmployee`  as emp 
-		right join `tabEmployee Employment Detail` as ed on emp.name=ed.employee where emp.docstatus <2 %s order by employee """ %
+	active_employees = frappe.db.sql("""select * from `tabEmployee` where docstatus <2 %s order by name """ %
 		conditions, filters, as_dict=1)
 	
 	for employee in active_employees:
@@ -57,7 +56,7 @@ def get_data(filters, leave_types,conditions,company):
 			#leave_approvers = [ l.leave_approver for l in frappe.db.sql("""select leave_approver from `tabEmployee Leave Approver` where parent = %s""",
 			#					(employee.name),as_dict=True)]
 			#if (len(leave_approvers) and user in leave_approvers) or (user in ["Administrator", employee.user_id]) or ("HR Manager" in frappe.get_roles(user)):
-			row = [employee.employee_name, employee.management,employee.designation]
+			row = [employee.employee_name, employee.department,employee.designation]
 
 			for leave_type in leave_types:
 				# leaves taken

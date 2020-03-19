@@ -56,7 +56,7 @@ def month_days(employee=None,cur_date=None):
 
 	#get working_hours_day	
 	total_time, count ,hr_per_day = 0, 0, 0.0
-	wshift = frappe.db.get_value("Employee Employment Detail", employee, "work_shift")
+	wshift = frappe.db.get_value("Employee", employee, "work_shift")
 	total_time = frappe.db.sql("select ifnull(sum(round(TIMESTAMPDIFF(MINUTE,start_work,end_work)/60,2)),0) as total_hours, count(start_work)  from `tabWork Shift Details` where parent=%s", wshift)
 	if total_time and total_time[0][1] !=0:
 		hr_per_day =float(total_time[0][0])/float(total_time[0][1])

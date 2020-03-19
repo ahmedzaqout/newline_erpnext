@@ -96,18 +96,18 @@ def get_conditions(filters):
 	if filters.get("basic_salary_to") and filters.get("basic_salary_to"): conditions += " and emp.basic_salary IN (select name from tabEmployee where basic_salary >= %(basic_salary)s and emp.basic_salary <= %(basic_salary_to)s)"
 
 	if filters.get("employee") and not filters.get("employee"): conditions += " and sal.employee = %(employee)s"
-	if filters.get("branch"): conditions += " and branch = %(branch)s"
+	if filters.get("branch"): conditions += " and emp.branch = %(branch)s"
 	if filters.get("bank"): conditions += " and emp.bank_name = %(bank)s"
 	if filters.get("bank_account_no"): conditions += " and bank_account_no = %(bank_account_no)s"
 	#if filters.get("management"): conditions += " and management = %(management)s"
 	#if filters.get("circle"): conditions += " and circle = %(circle)s"
-	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("department"): conditions += " and emp.department = %(department)s"
 	#if filters.get("work_shift"): conditions += " and work_shift = %(work_shift)s"
 	#if filters.get("city"): conditions += " and emp.city = %(city)s"
 	#if filters.get("status"): conditions += " and emp.status = %(status)s"
 	#if filters.get("governorate"): conditions += " and emp.governorate = %(governorate)s"
 	#if filters.get("qualification"): conditions += " and edu.qualification = %(qualification)s"
-	if filters.get("designation"): conditions += " and designation = %(designation)s"
+	if filters.get("designation"): conditions += " and emp.designation = %(designation)s"
 	if filters.get("from_date"): conditions += " and start_date >= %(from_date)s"
 	if filters.get("to_date"): conditions += " and end_date <= %(to_date)s"
 	if filters.get("company"): conditions += " and emp.company = %(company)s"
@@ -115,7 +115,7 @@ def get_conditions(filters):
 	return conditions, filters
 
 def get_salary_slips(conditions, filters):
-	salary_slips  = frappe.db.sql("""select sal.employee,sal.employee_name,designation,emp.company,start_date,end_date,payment_days,salary_structure, emp.basic_salary,emp.bank_name,bank_account_no,gross_pay,total_deduction,total_working_days, net_pay,emp.day_salary,emp.hour_cost,total_working_hours,emp.over_hrs,total_overtime,branch,department from `tabEmployee Salary Detail` as emp left join `tabSalary Slip` as sal on emp.employee=sal.employee where sal.docstatus = 1 %s  order by emp.employee,start_date""" %
+	salary_slips  = frappe.db.sql("""select sal.employee,sal.employee_name,emp.designation,emp.company,start_date,end_date,payment_days,salary_structure, emp.basic_salary,emp.bank_name,bank_account_no,gross_pay,total_deduction,total_working_days, net_pay,emp.day_salary,emp.hour_cost,total_working_hours,emp.over_hrs,total_overtime,emp.branch,emp.department from `tabEmployee` as emp left join `tabSalary Slip` as sal on emp.name=sal.employee where sal.docstatus = 1 %s  order by emp.name,start_date""" %
 		conditions, filters, as_dict=1)
 
 	if not salary_slips:

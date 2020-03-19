@@ -22,7 +22,7 @@ class Exitpermission(Document):
 			frappe.throw(_("Exit permission can not be marked for future dates"))
 
 		attendance_day = calendar.day_name[getdate(self.permission_date).weekday()];
-		employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 		employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "start_work")
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "end_work")
 		if not employee_end_time:

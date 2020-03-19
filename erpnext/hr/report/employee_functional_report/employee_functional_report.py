@@ -26,7 +26,7 @@ def get_columns(filters):
 	columns = [
 		 {"label":_("Employee Number") ,"width":90,"fieldtype": "Link","options":"Employee"},
 		 {"label":_("Employee Name") ,"width":150,"fieldtype": "Data"},
-		 {"label":_("Date Of Birth") ,"width":90,"fieldtype": "Date"},
+		 {"label":_("Date Of Birth") ,"width":90,"fieldtype": "Data"},
 		 {"label":_("Grade") ,"width":90,"fieldtype": "Data"},
 		 {"label":_("Qualification") ,"width":90,"fieldtype": "Data"},
 		 {"label":_("Specialization") ,"width":90,"fieldtype": "Data"},
@@ -46,14 +46,14 @@ def get_conditions(filters):
 
 	conditions = ""
 	
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("branch"): conditions += " and ed.branch = %(branch)s"
-	if filters.get("management"): conditions += " and ed.management = %(management)s"
-	if filters.get("circle"): conditions += " and  ed.circle = %(circle)s"
-	if filters.get("work_shift"): conditions += " and ed.work_shift = %(work_shift)s"
-	if filters.get("date_of_birth"): conditions += " and pd.date_of_birth = %(date_of_birth)s"
-	if filters.get("gender"): conditions += " and pd.gender = %(gender)s"
-	if filters.get("city"): conditions += " and pd.city = %(city)s"
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s"
+	if filters.get("branch"): conditions += " and emp.branch = %(branch)s"
+	if filters.get("management"): conditions += " and emp.management = %(management)s"
+	if filters.get("circle"): conditions += " and  emp.circle = %(circle)s"
+	if filters.get("work_shift"): conditions += " and emp.work_shift = %(work_shift)s"
+	if filters.get("date_of_birth"): conditions += " and emp.date_of_birth = %(date_of_birth)s"
+	if filters.get("gender"): conditions += " and emp.gender = %(gender)s"
+	if filters.get("city"): conditions += " and emp.city = %(city)s"
 	if filters.get("qualification"): conditions += " and edu.qualification = %(qualification)s"
 	if filters.get("specialization"): conditions += " and edu.specialization = %(specialization)s"
 
@@ -62,7 +62,9 @@ def get_conditions(filters):
 	return conditions, filters
 
 def get_employee_details(conditions, filters):
-	emp_map  = frappe.db.sql("""select emp.name as employee_number, emp.employee_name,emp.status as emp_status, ed.branch,ed.management,ed.circle,ed.work_shift,ifnull(pd.date_of_birth,'') , pd.gender ,pd.city as emp_city,edu.qualification,edu.specialization,final_confirmation_date, edu.name from tabEmployee as emp left join `tabEmployee Employment Detail` as ed on emp.employee=ed.employee  left join `tabEmployee Personal Detail` as pd on emp.employee=pd.employee  left join `tabEmployee Education` as edu on emp.name=edu.employee left join `tabEmployee Contact Details` as cd on emp.name=cd.employee where emp.docstatus < 2 %s  order by emp.name""" %
+	emp_map  = frappe.db.sql("""select emp.name as employee_number, emp.employee_name,emp.status as emp_status,\
+	 emp.branch,emp.management,emp.circle,emp.work_shift,ifnull(emp.date_of_birth,'') , \
+	 emp.gender ,emp.city as emp_city,edu.qualification,edu.specialization, edu.name from tabEmployee as emp  left join `tabEmployee Education` as edu on emp.name=edu.employee where emp.docstatus < 2 %s  order by emp.name""" %
 		conditions, filters, as_dict=1)
 
 	return emp_map

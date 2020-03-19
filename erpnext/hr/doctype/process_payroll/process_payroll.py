@@ -87,7 +87,7 @@ class ProcessPayroll(Document):
 						end_date <= %s and
 						company = %s
 						""", (emp[0], self.start_date, self.end_date, self.company)):
-					r=frappe.get_doc('Employee Salary Detail', emp[0])
+					r=frappe.get_doc('Employee', emp[0])
 					if r:
 						ss = frappe.get_doc({
 							"doctype": "Salary Slip",

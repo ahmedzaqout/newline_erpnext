@@ -20,7 +20,7 @@ class TrainingResult(Document):
 
 	def on_submit(self):
 		prog= frappe.get_doc("Training Program",self.training_event)
-		emp_data = frappe.get_doc("Employee Data",self.employee)
+		emp_data = frappe.get_doc("Employee",self.employee)
 		tra = emp_data.get("employee_training_courses")
 		tra.append({"course_name" : prog.training_program,
 				"start_date" : prog.get('from'),
@@ -30,6 +30,7 @@ class TrainingResult(Document):
 				"total_hours" : prog.traning_period
 				})
 		emp_data.set("employee_training_courses",tra)
+		emp_data.flags.ignore_validate = True
 		emp_data.save(ignore_permissions=True)
 #		training_event = frappe.get_doc("Training Event", self.training_event)
 #		training_event.status = 'Completed'

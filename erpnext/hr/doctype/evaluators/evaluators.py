@@ -14,7 +14,7 @@ class Evaluators(Document):
 		performance = frappe.get_all("Evaluation Section" ,["evaluation_item"],filters={'parent' : form.name ,"parentfield" : 'performance',"parenttype": "Evaluation Form"} )
 		technical = frappe.get_all("Evaluation Section" ,["evaluation_item"],filters={'parent' : form.name ,"parentfield" : 'technical',"parenttype": "Evaluation Form"} )
 
-		em_de = frappe.get_doc('Employee Employment Detail', self.employee)
+		em_de = frappe.get_doc('Employee', self.employee)
 
 		for m in self.get("evaluators"):
 			em = frappe.get_doc("Employee", m.employee)

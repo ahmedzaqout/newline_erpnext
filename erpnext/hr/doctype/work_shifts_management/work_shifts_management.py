@@ -55,7 +55,7 @@ def update_shifts(name=None,start=None,end=None):
 			})
 		sh_doc.flags.ignore_links = True
 		sh_doc.insert(ignore_permissions=True)
-		frappe.db.sql("update `tabEmployee Employment Detail` set private_work_shift=%s ",name)
+		frappe.db.sql("update `tabEmployee` set private_work_shift=%s ",name)
 
 	#emp_doc = frappe.get_doc('Employee Employment Detail',self.employee)
 	#emp_doc.append({'private_work_shift':self.name})
@@ -77,7 +77,7 @@ def get_shifts():
 
 
 	today = calendar.day_name[getdate(frappe.utils.today()).weekday()];
-	data= frappe.db.sql('select emp.employee,e.employee_name,ifnull(emp.department,"") as department,ifnull(emp.designation,"") as designation,ifnull(emp.work_shift,"") as work_shift,cast(concat(CURDATE(), " ", dsh.start_work) as datetime) as start,cast(concat(CURDATE(), " ", dsh.end_work) as datetime) as end,dsh.day,GREATEST(round(TIMESTAMPDIFF(MINUTE,dsh.start_work,dsh.end_work)/60,2),0) as total_hrs from `tabEmployee` as e join  `tabEmployee Employment Detail` as emp on e.name=emp.employee join `tabWork Shift Details` as dsh on emp.work_shift=dsh.parent where day=%s',today,as_dict=1)
+	data= frappe.db.sql('select emp.employee_name,ifnull(emp.department,"") as department,ifnull(emp.designation,"") as designation,ifnull(emp.work_shift,"") as work_shift,cast(concat(CURDATE(), " ", dsh.start_work) as datetime) as start,cast(concat(CURDATE(), " ", dsh.end_work) as datetime) as end,dsh.day,GREATEST(round(TIMESTAMPDIFF(MINUTE,dsh.start_work,dsh.end_work)/60,2),0) as total_hrs from `tabEmployee` as emp join `tabWork Shift Details` as dsh on emp.work_shift=dsh.parent where day=%s',today,as_dict=1)
 	for emp in data:
 		hrs_diff= time_diff_in_hours(emp.end,emp.start)
 
@@ -120,7 +120,7 @@ def get_totals_hrs(department):
 @frappe.whitelist()
 def get_absent_employee(doctype, txt, searchfield, start, page_len, filters):
 	conditions = []
-	return frappe.db.sql("""select att.employee, att.employee_name, emp.designation from `tabAttendance` as att join `tabEmployee Employment Detail` as emp
+	return frappe.db.sql("""select att.employee, att.employee_name, emp.designation from `tabAttendance` as att join `tabEmployee` as emp
 		where att.status = 'Absent'
 			and att.docstatus < 2
 			and ({key} like %(txt)s

@@ -40,7 +40,7 @@ class LeaveApplication(Document):
 		self.show_block_day_warning()
 		self.validate_block_days()
 		self.validate_salary_processed_days()
-		self.validate_leave_approver()
+		#self.validate_leave_approver()
 		self.validate_attendance()
 
 	def on_update(self):
@@ -59,7 +59,7 @@ class LeaveApplication(Document):
 		else: 
 			self.status == "Approved"
 			attendance_day = calendar.day_name[getdate(self.from_date).weekday()];
-			employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+			employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 			if employee_work_shift:
 				employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "start_work")
 				employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "end_work")
@@ -445,7 +445,7 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 		allocation_records = get_leave_allocation_records(date, employee).get(employee, frappe._dict())
 	com = frappe.defaults.get_user_default("Company")
 	remain,leave_hrs_balance = 0, 0.0
-	discout_from_leaves = frappe.db.get_value("Employee Employment Detail", self.employee, "discount_hours_from_leaves")
+	discout_from_leaves = frappe.db.get_value("Employee", employee, "discount_salary_from_leaves")
 
 	date2 = datetime.datetime.strptime(str(date), "%Y-%m-%d")
 	if date2:

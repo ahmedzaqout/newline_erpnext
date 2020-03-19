@@ -21,7 +21,7 @@ def notify_manpower_planning_date():
 
 		company =frappe.db.get_value("Global Defaults", None, "default_company")
 		manager = frappe.db.get_value("Headquarter", company+' - HEQ', "director")
-		manager_email = frappe.db.get_value("Employee Personal Detail", manager, "user_id")
+		manager_email = frappe.db.get_value("Employee", manager, "user_id")
 		contact = manager_email #'maysaaelsafadi@gmail.com'
 		if not isinstance(contact, list):
 			#contact = frappe.get_doc('User', contact).email or contact

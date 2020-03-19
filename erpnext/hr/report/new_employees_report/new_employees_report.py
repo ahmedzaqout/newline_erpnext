@@ -32,20 +32,20 @@ def get_columns(filters):
 def salaries(conditions, filters):
 	data=[]
 	hours={}
-	ss  = frappe.db.sql("""select emp.name,emp.employee_name , ed.* from `tabEmployee` as emp join `tabEmployee Employment Detail` as ed on emp.name=ed.employee left Join `tabEmployee Contact Details` as cd on emp.name=cd.employee left join `tabEmployee Personal Detail` as pd on  emp.name=pd.employee where emp.docstatus <2 %s order by employee """ % conditions, filters, as_dict=1)
+	ss  = frappe.db.sql("""select * from `tabEmployee` where docstatus <2 %s order by name """ % conditions, filters, as_dict=1)
 
 	for add in ss:
-		data.append([add.employee,add.employee_name,add.designation,add.management, add.date_of_joining,add.employment_type])
+		data.append([add.name,add.employee_name,add.designation,add.department, add.date_of_joining,add.employment_type])
 	
 	return data
 
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("start_date"): conditions += " and ed.date_of_joining >= %(start_date)s"
-	if filters.get("end_date"): conditions += " and ed.date_of_joining <= %(end_date)s"
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.management = %(department)s"
-	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
+	if filters.get("start_date"): conditions += " and date_of_joining >= %(start_date)s"
+	if filters.get("end_date"): conditions += " and date_of_joining <= %(end_date)s"
+	if filters.get("employee"): conditions += " and name = %(employee)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("designation"): conditions += " and designation = %(designation)s"
 
 	return conditions, filters

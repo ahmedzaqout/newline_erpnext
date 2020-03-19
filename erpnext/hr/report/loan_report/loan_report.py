@@ -41,7 +41,7 @@ def get_columns(filters):
 
 def salaries(conditions, filters):
 	data=[]
-	ss  = frappe.db.sql("""select em.employee_name,ed.*,l.* from `tabEmployee Loan` as l left  join `tabEmployee` as em  on em.employee = l.employee left Join `tabEmployee Employment Detail` as ed on em.employee=ed.employee  where l.docstatus <2 %s 
+	ss  = frappe.db.sql("""select em.name as employee, em.*,l.* from `tabEmployee Loan` as l left  join `tabEmployee` as em  on em.name = l.employee  where l.docstatus <2 %s 
 		order by l.employee """ %
 		conditions, filters, as_dict=1)
 
@@ -57,8 +57,8 @@ emp.mode_of_payment,emp.total_payment,emp.total_interest_payable]
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += " and ed.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.management = %(department)s"
+	if filters.get("employee"): conditions += " and em.name = %(employee)s"
+	if filters.get("department"): conditions += " and em.department = %(department)s"
 
 
 	return conditions, filters

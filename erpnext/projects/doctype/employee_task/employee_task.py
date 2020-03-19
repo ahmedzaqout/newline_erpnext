@@ -68,7 +68,7 @@ class EmployeeTask(Document):
 						emp=None
 						employee_name=None
 						if employee:
-							emp=frappe.get_doc("Employee Personal Detail", {"employee_number":user.employee} ,"employee_name") 
+							emp=frappe.get_doc("Employee", {"employee_number":user.employee} ,"employee_name") 
 							employee_name=emp.employee_name
 						r=frappe.get_doc({"doctype":"Task",
 							"subject":m.task_not_in_the_system,

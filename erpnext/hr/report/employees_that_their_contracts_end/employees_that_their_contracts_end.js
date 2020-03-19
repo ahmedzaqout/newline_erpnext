@@ -12,9 +12,9 @@ frappe.query_reports["Employees that their contracts end"] = {
 		},
 		{
 			"fieldname":"department",
-			"label": __("Management"),
+			"label": __("Department"),
 			"fieldtype": "Link",
-			"options": "Management"
+			"options": "Department"
 		}
 		
 		

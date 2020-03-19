@@ -21,16 +21,7 @@ frappe.query_reports["Exit permissions"] = {
 			"fieldname":"employee",
 			"label": __("Employee"),
 			"fieldtype": "Link",
-			"options": "Employee",
-			on_change: function() {
-				var employee = frappe.query_report_filters_by_name.employee.get_value();
-				frappe.db.get_value("Employee", employee, "employee_name", function(value) {
-					frappe.query_report_filters_by_name.employee_name.set_value(value["employee_name"]);
-				});
-
-			}
-
-
+			"options": "Employee"
 		}, 
 		{
 			"fieldname":"department",

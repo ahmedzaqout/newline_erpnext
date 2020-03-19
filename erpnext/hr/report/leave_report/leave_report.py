@@ -49,7 +49,7 @@ def get_columns(conditions,filters):
 	return columns
 
 def get_employees(conditions, filters):
-	return frappe.db.sql("""select em.name,em.employee_name from `tabEmployee` as em left Join `tabEmployee Employment Detail` as ed on em.employee=ed.employee  where em.docstatus <2 %s order by em.name """% conditions, filters, as_dict=1)
+	return frappe.db.sql("""select * from `tabEmployee` docstatus <2 %s order by name """% conditions, filters, as_dict=1)
 
 def getdata(conditions, filters):
 	data=[]
@@ -99,9 +99,9 @@ def get_wsh_history(employee,ddate):
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("circle"): conditions += " and ed.circle = %(circle)s"
-	if filters.get("department"): conditions += " and ed.department = %(department)s"
-	if filters.get("employee"): conditions += " and ed.employee = %(employee)s"
+	if filters.get("circle"): conditions += " and circle = %(circle)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("employee"): conditions += " and name = %(employee)s"
 
 
 	return conditions, filters

@@ -57,7 +57,7 @@ class EmployeeEditTime(Document):
 
 	def validat_morninig_late(self):
 		attendance_day = calendar.day_name[getdate(self.attendance_date).weekday()];
-		employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "end_work")
 		if not employee_end_time:
@@ -140,7 +140,7 @@ class EmployeeEditTime(Document):
 		for rec in recivers:
 			frappe.get_doc({"Doctype":"Notification",
 					"tilte" : "طلب تعديل دوام جديد",
-					"message" : "قام الموظف {0} بإنشاء طلب تعديل دوام".format(self.employee),
+					"message" : "قام الموظف {0} بإنشاء طلب تعديل دوام".format(self.employee), #Plz don't write in arabic words!!
 					"reciver" : rec[0],
 					"seen" : 0,
 					"doctype":"Notification",
@@ -195,7 +195,7 @@ class EmployeeEditTime(Document):
 
 
 		day = calendar.day_name[getdate(self.attendance_date).weekday()];
-		employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 		employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":day}, "start_work")
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":day}, "end_work")
 

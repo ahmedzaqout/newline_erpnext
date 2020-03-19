@@ -3,12 +3,7 @@
 
 frappe.ui.form.on('Training Result', {
 	refresh: function(frm) {
-		frm.fields_dict['employee'].get_query = function(doc, cdt, cdn) {
-			return {
-				query: "erpnext.hr.doctype.training_result.training_result.get_employees",
-				filters:{'training_event': frm.doc.training_event}
-			}
-		}
+
 	},
 
 	onload: function(frm) {
@@ -29,11 +24,18 @@ frappe.ui.form.on('Training Result', {
 				}
 			}
 
+
 	},
 
 	training_event: function(frm) {
 
 		frm.trigger("get_questions");
+		/*frm.fields_dict['employee'].get_query = function(doc, cdt, cdn) {
+			return {
+				query: "erpnext.hr.doctype.training_result.training_result.get_employees",
+				filters:{'training_event': frm.doc.training_event}
+			}
+		}*/
 	},
 	get_questions: function(frm) { 
 		frm.set_value("training_evaluation_employee" ,"");

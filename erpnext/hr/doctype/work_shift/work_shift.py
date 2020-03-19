@@ -26,8 +26,8 @@ class WorkShift(Document):
 
 	def allocate_shift(self):
 		def add_shift(employee):
-			if frappe.db.get_value('Employee Employment Detail',{'employee':employee}):
-				sh = frappe.get_doc('Employee Employment Detail',{'employee':employee})
+			if frappe.db.get_value('Employee',{'employee':employee}):
+				sh = frappe.get_doc('Employee',{'employee':employee})
 				if sh:
 					sh.update({
 						'work_shift': self.work_shift,

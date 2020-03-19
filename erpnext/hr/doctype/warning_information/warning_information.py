@@ -18,7 +18,7 @@ class WarningInformation(Document):
 		elif self.penalty_type == 'Stop working with no salary':
 			end_service_type = 'Separation'
 
-			doc = frappe.get_doc('Employee Ending Service  Details',{"employee":self.employee})
+			doc = frappe.get_doc('Employee',{"employee":self.employee})
 			if doc:
 				doc.update({
 					'type':end_service_type,
@@ -59,7 +59,7 @@ def get_emp_penalty(employee,employee_violation,warning_date):
 
 @frappe.whitelist()
 def check_employee_task():
-	employees = frappe.get_all("Employee Personal Detail", fields=["employee_name","employee_number"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["employee_name","employee_number"],filters={'status':'Active'})
 	date = add_days(nowdate(), days=-1)
 	now = now_datetime()
 	for emp in employees:
@@ -117,7 +117,7 @@ def get_penalty_name(times):
 
 
 def send_email(emp,email_text, subject):
-	recipient_email = frappe.db.get_value("Employee Personal Detail", emp , "user_id")
+	recipient_email = frappe.db.get_value("Employee", emp , "user_id")
 	if not isinstance(recipient_email, list):
 		#contact = frappe.get_doc('User', contact).email or contact
 		sender      	    = dict()

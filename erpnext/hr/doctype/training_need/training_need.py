@@ -18,7 +18,7 @@ class TrainingNeed(Document):
 
 def employee_qry(doctype, txt, searchfield, start, page_len, filters):
 	conditions = []
-	return frappe.db.sql("""select employee_name as name from tabEmployee as emp join `tabEmployee Employment Detail` as e on emp.employee_number= e.name where status = 'Active' and emp.docstatus < 2 {fcond} order by emp.name""".format(**{
+	return frappe.db.sql("""select employee_name as name, status , docstatus from tabEmployee   where status = 'Active' and docstatus < 2 {fcond} order by name""".format(**{
 			'fcond': get_filters_cond(doctype, filters, conditions)
 		}) )
 

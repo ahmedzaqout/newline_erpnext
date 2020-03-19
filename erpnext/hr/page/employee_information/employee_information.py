@@ -17,10 +17,10 @@ import time
 @frappe.whitelist(allow_guest=True)
 def get_details():
 	result={}
-	ss  = frappe.db.sql("""select emp.name ,emp.image,emp.employee_name, ed.* from `tabEmployee` as emp join `tabEmployee Employment Detail` as ed  on emp.name=ed.employee left Join `tabEmployee Contact Details` as cd on 					emp.name=cd.employee left join `tabEmployee Personal Detail` as pd on  					emp.name=pd.employee where emp.docstatus <2  order by emp.employee """ , as_dict=1)
+	ss  = frappe.db.sql("""select emp.name ,emp.image,emp.employee_name, emp.* from `tabEmployee` as emp where emp.docstatus <2  order by emp.name """ , as_dict=1)
 	values=[]
 	for i in ss:
-		row={"image":i.image,"employee":i.employee,"employee_name":i.employee_name,"department":i.department,"designation":i.designation,"company":i.company}
+		row={"image":i.image,"employee":i.name,"employee_name":i.employee_name,"department":i.department,"designation":i.designation,"company":i.company}
 		values.append(row);
 
 	return {

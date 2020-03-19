@@ -13,5 +13,5 @@ class EmploymentType(Document):
 
 	def validate_status(self):
 		if self.status == 'Not Active':
-			if frappe.db.get_value('Employee Employment Detail', {'employment_type': self.name},'name'):	
+			if frappe.db.get_value('Employee', {'employment_type': self.name},'name'):	
 				frappe.throw(_("Can not disactivated! There is an employee connected with this"));

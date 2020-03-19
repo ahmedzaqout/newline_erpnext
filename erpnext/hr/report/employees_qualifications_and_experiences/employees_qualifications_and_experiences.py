@@ -59,7 +59,7 @@ def get_columns(filters):
 def salaries(conditions, filters):
 	data=[]
 	hours={}
-	ss  = frappe.db.sql("""select emp.employee as eeemployee ,emp.employee_name ,iwh.employee as iwhemployee,ewh.employee as employee ,ed.designation as des ,ed.management as manag ,ee.*, ewh.* ,iwh.branch ,iwh.from_date as ifrom_date,iwh.to_date as ito_date,iwh.designation as idesignation ,iwh.department as idepartment from `tabEmployee` as emp  join `tabEmployee Employment Detail` as ed on emp.name=ed.employee left Join `tabEmployee Education` as ee on emp.name=ee.parent  left join `tabEmployee External Work History` as ewh on emp.name=ewh.parent left join `tabEmployee Internal Work History` as iwh on emp.name=iwh.parent left join `tabEmployee Personal Detail` as pd on  emp.name=pd.employee where emp.docstatus <2 %s 
+	ss  = frappe.db.sql("""select emp.name as eeemployee ,emp.employee_name ,iwh.employee as iwhemployee,ewh.employee as employee ,emp.designation as des ,emp.management as manag ,ee.*, ewh.* ,iwh.branch ,iwh.from_date as ifrom_date,iwh.to_date as ito_date,iwh.designation as idesignation ,iwh.department as idepartment from `tabEmployee` as emp left Join `tabEmployee Education` as ee on emp.name=ee.parent  left join `tabEmployee External Work History` as ewh on emp.name=ewh.parent left join `tabEmployee Internal Work History` as iwh on emp.name=iwh.parent where emp.docstatus <2 %s 
 						order by eeemployee """ %
 		conditions, filters, as_dict=1)
 
@@ -73,8 +73,8 @@ def salaries(conditions, filters):
 def get_conditions(filters):
 	conditions = ""
 
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.management = %(department)s"
-	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s"
+	if filters.get("department"): conditions += " and emp.management = %(department)s"
+	if filters.get("designation"): conditions += " and emp.designation = %(designation)s"
 
 	return conditions, filters

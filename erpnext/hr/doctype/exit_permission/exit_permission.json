@@ -82,11 +82,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-<<<<<<< HEAD
-   "depends_on": "", 
-=======
    "depends_on": "eval:doc.company == \"Nawa\"", 
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "fieldname": "exit_type", 
    "fieldtype": "Select", 
    "hidden": 1, 
@@ -96,11 +92,7 @@
    "in_global_search": 0, 
    "in_list_view": 0, 
    "in_standard_filter": 0, 
-<<<<<<< HEAD
-   "label": "Exit Reson", 
-=======
    "label": "Exit Type", 
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "length": 0, 
    "no_copy": 0, 
    "options": "\nSpecial\nWork\nSick", 
@@ -369,8 +361,6 @@
    "bold": 1, 
    "collapsible": 0, 
    "columns": 0, 
-<<<<<<< HEAD
-=======
    "default": "Special", 
    "depends_on": "eval:doc.company == 'Nawa'", 
    "fieldname": "permission_type_nawa", 
@@ -404,7 +394,6 @@
    "bold": 1, 
    "collapsible": 0, 
    "columns": 0, 
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
    "fieldname": "column_break_10", 
    "fieldtype": "Column Break", 
    "hidden": 0, 
@@ -839,11 +828,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 3, 
-<<<<<<< HEAD
- "modified": "2020-03-03 23:15:20.581820", 
-=======
  "modified": "2019-12-15 07:55:34.184515", 
->>>>>>> 613e4c88ad6aff71e5df4b474315cf3c6c52a9fe
  "modified_by": "Administrator", 
  "module": "HR", 
  "name": "Exit permission", 

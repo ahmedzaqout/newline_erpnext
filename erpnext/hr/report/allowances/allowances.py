@@ -30,7 +30,7 @@ def get_columns(filters,allawances):
 def salaries(conditions, filters,allawances):
 	data=[]
 	hours={}
-	ss  = frappe.db.sql("""select ss.* ,ed.designation as des ,ed.management as mang from `tabSalary Slip` as ss left join `tabEmployee Employment Detail` as ed on ss.employee= ed.employee where ss.docstatus <2 %s 
+	ss  = frappe.db.sql("""select ss.* ,ed.designation as des ,ed.management as mang from `tabSalary Slip` as ss left join `tabEmployee` as ed on ss.employee= ed.name where ss.docstatus <2 %s 
 		order by ss.employee """ %
 		conditions, filters, as_dict=1)
 

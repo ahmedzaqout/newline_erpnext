@@ -17,5 +17,5 @@ class EmployeeOrientationProgram(Document):
 		return  frappe.get_list("Effective Communication", fields=["effective_communication"], filters={"company":self.company})
 
 	def get_emp_designation(self):
-		return frappe.db.get_value('Employee Employment Detail',self.employee,'designation',as_dict=1)
+		return frappe.db.get_value('Employee',self.employee,'designation',as_dict=1)
 

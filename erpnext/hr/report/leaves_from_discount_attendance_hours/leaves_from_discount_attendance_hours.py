@@ -34,13 +34,13 @@ def get_conditions(filters):
 			"Dec"].index(filters["month"]) + 1
 		conditions += " and month(att.attendance_date) = '%s'" % month
 	if filters.get("year"): conditions += " and  year(att.attendance_date) = %(year)s"
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s" 
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s" 
 	if filters.get("company"): conditions += " and emp.company = %(company)s"
 	if filters.get("department"): conditions += " and emp.department = %(department)s"
 	return conditions, filters
 
 
 def get_data(conditions, filters): 
-	return frappe.db.sql("""select distinct att.attendance_date, emp.employee_name,emp.employee, att.attendance_time, dept.departure_time,GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) as disc_leavs from `tabEmployee Employment Detail` as emp join  tabAttendance as att on att.employee=emp.employee and discount_salary_from_leaves=1 and att.docstatus = 1 join  tabDeparture as dept on dept.employee=emp.employee and att.attendance_date=dept.departure_date and dept.docstatus = 1 %s order by att.attendance_date asc""" %conditions, filters, as_dict=1)
+	return frappe.db.sql("""select distinct att.attendance_date, emp.employee_name,emp.name as employee, att.attendance_time, dept.departure_time,GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) as disc_leavs from `tabEmployee` as emp join  tabAttendance as att on att.employee=emp.name and att.discount_salary_from_leaves=1 and att.docstatus = 1 join  tabDeparture as dept on dept.employee=emp.name and att.attendance_date=dept.departure_date and dept.docstatus = 1 %s order by att.attendance_date asc""" %conditions, filters, as_dict=1)
 
 

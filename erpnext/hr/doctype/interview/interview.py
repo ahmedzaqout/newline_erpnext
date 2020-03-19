@@ -22,7 +22,7 @@ class Interview(Document):
 			job_app.status= self.status
 			job_app.flags.ignore_permissions=True
 			job_app.save()		
-
+			#plz don't write arabic world!
 		technical=['ملائمة المؤهلات العلمية','خبرة متعلقة بهذا المجال','مدى الملائمة للوظيفة','التدريب','مدى المعرفة بالجمعية','مؤهلات أخرى','اللغات','مدى المعرفة بالكمبيوتر','الشخصية','المظهر','الجاهزية']
 		result=frappe.get_list('Interviewer Result','name',filters={"job_opening":self.job_opening,"docstatus":["<",2]})
 		rec=[]			

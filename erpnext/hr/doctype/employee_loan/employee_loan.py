@@ -86,7 +86,7 @@ class EmployeeLoan(AccountsController):
 				balance_amount = 0.0
 
 			total_payment = principal_amount + interest_amount
-			if total_payment > frappe.db.get_value("Employee Salary Detail", self.employee, "basic_salary") :
+			if total_payment > frappe.db.get_value("Employee", self.employee, "basic_salary") :
 				frappe.throw(_("Loan amount cannot be greater than basic salary"))
 			self.append("repayment_schedule", {
 				"payment_date": payment_date,

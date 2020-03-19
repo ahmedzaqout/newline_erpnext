@@ -22,7 +22,7 @@ def get_material():
 	lab=["Single","Married","Divorced","Widowed"]
 	values=[]
 	for i  in range(len(lab)):
-		em=frappe.get_list("Employee Personal Detail",['name'],filters={"marital_status":lab[i]})
+		em=frappe.get_list("Employee",['name'],filters={"marital_status":lab[i]})
 		if em:
 			values.append(len(em))
 		else:

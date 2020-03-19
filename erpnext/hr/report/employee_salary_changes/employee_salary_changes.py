@@ -34,7 +34,7 @@ def get_conditions(filters):
 	conditions = ""
 	if filters.get("modified_date"): conditions += " and basic_salary_modified_date = %(modified_date)s"
 	if filters.get("year"): conditions += " and  year(basic_salary_modified_date) = %(year)s"
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s" 
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s" 
 	if filters.get("company"): conditions += " and emp.company = %(company)s"
 	#if filters.get("department"): conditions += " company = %(company)s"
 	if filters.get("designation"): conditions += " and emp.designation = %(designation)s"
@@ -42,7 +42,7 @@ def get_conditions(filters):
 
 
 def get_query(conditions, filters): 
-	doc=frappe.db.sql("""select emp.basic_salary_modified_date, emp.basic_salary,emp.employee,det.designation,emp.company, last_salary, (basic_salary-last_salary) as diff from `tabEmployee Salary Detail` as emp left join `tabEmployee Employment Detail` as det on emp.employee= det.employee where det.status='Active' and basic_salary_modified_date IS NOT NULL and (basic_salary-last_salary) !=0 %s order by emp.basic_salary_modified_date """ %
+	doc=frappe.db.sql("""select emp.basic_salary_modified_date, emp.basic_salary,emp.name as employee ,emp.designation,emp.company, last_salary, (basic_salary-last_salary) as diff from `tabEmployee` as emp  where emp.status='Active' and basic_salary_modified_date IS NOT NULL and (basic_salary-last_salary) !=0 %s order by emp.basic_salary_modified_date """ %
 		conditions, filters, as_dict=1)
 	return doc
 
@@ -50,7 +50,7 @@ def get_query(conditions, filters):
 
 @frappe.whitelist()
 def get_years():
-	year_list = frappe.db.sql_list("""select distinct YEAR(basic_salary_modified_date) from `tabEmployee Salary Detail` ORDER BY YEAR(basic_salary_modified_date) DESC""")
+	year_list = frappe.db.sql_list("""select distinct YEAR(basic_salary_modified_date) from `tabEmployee` ORDER BY YEAR(basic_salary_modified_date) DESC""")
 	if not year_list:
 		year_list = [getdate().year]
 

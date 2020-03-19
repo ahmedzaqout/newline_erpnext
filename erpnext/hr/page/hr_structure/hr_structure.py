@@ -269,7 +269,7 @@ def save_tree_nodes(parent,nodeid,nodename,level,director):
 		doc.flags.ignore_mandatory = True
 		doc.save(ignore_permissions=True)
 
-		doc_emp = frappe.new_doc('Employee Employment Detail')
+		doc_emp = frappe.new_doc('Employee')
 		doc_emp.update({
 			"employee_name":nodename,
 			"name":doc.employee,
@@ -284,7 +284,7 @@ def save_tree_nodes(parent,nodeid,nodename,level,director):
 		doc_emp.save(ignore_permissions=True)
 
 		if supervisor:
-			supervisor_doc = frappe.get_doc('Employee Employment Detail',supervisor)
+			supervisor_doc = frappe.get_doc('Employee',supervisor)
 			supervisor_doc.append('responsible_of_staff',{
 				'employee':doc.employee,
 				'employee_name':nodename
@@ -312,7 +312,7 @@ def drag_drop_node(dragged,dropped,level):
 	if frappe.db.get_value(sub_parent, {'name':dropped}, ["director","director_name"]):
 		supervisor, supervisor_name = frappe.db.get_value(sub_parent, {'name':dropped}, ["director","director_name"])
 
-	frappe.db.sql("""update `tabEmployee Employment Detail` set sub_dep=%s,supervisor=%s,supervisor_name=%s, department=%s where name=%s""",(supervisor,supervisor_name,sub_parent,dropped,dragged), as_dict=1)
+	frappe.db.sql("""update `tabEmployee` set sub_dep=%s,supervisor=%s,supervisor_name=%s, department=%s where name=%s""",(supervisor,supervisor_name,sub_parent,dropped,dragged), as_dict=1)
 	return "dropped"
 
 def extract_json(data,arr):
@@ -364,13 +364,13 @@ def delete_node(node,level):
 		frappe.db.sql("""delete from `tabSub Association` where name = %s""", node)
 
 	if levels=='5' and level == '6':
-		frappe.db.sql("""update `tabEmployee Employment Detail` set status='Left' where name = %s""", node)
+		#frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 		frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 	if levels=='6' and level == '7':
-		frappe.db.sql("""update `tabEmployee Employment Detail` set status='Left' where name = %s""", node)
+		#frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 		frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 	if levels=='7' and level == '8':
-		frappe.db.sql("""update `tabEmployee Employment Detail` set status='Left' where name = %s""", node)
+		#frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 		frappe.db.sql("""update `tabEmployee` set status='Left' where name = %s""", node)
 	return level
 
@@ -379,7 +379,7 @@ def delete_node(node,level):
 @frappe.whitelist(allow_guest=True)
 def get_emp_user(emp=None):
 	if emp:
-		return frappe.db.get_value("Employee Personal Detail", emp, "user_id")
+		return frappe.db.get_value("Employee", emp, "user_id")
 
 
 
@@ -391,7 +391,7 @@ def get_emp_user(emp=None):
 def get_emp_children(empqry):
 	childdata7= []
 	for e in range(len(empqry)):
-		emp=frappe.db.sql("""select e.employee_name as name , emp.name as title ,tree_id as id from tabEmployee as e join `tabEmployee Employment Detail` as emp on emp.name= e.name where emp.status='Active' and emp.docstatus < 2  and ifnull(emp.department,'') = %s""",(empqry[e].name), as_dict=1)
+		emp=frappe.db.sql("""select employee_name as name , name as title ,tree_id as id from tabEmployee where status='Active' and docstatus < 2  and ifnull(department,'') = %s""",(empqry[e].name), as_dict=1)
 		if emp:
 			data7={'name':empqry[e].name,'title':empqry[e].title,'id':empqry[e].id,'children':emp ,'className': 'emp'}
 			childdata7.append(data7)

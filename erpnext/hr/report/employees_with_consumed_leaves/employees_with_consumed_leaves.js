@@ -6,14 +6,12 @@ frappe.query_reports["Employees with Consumed Leaves"] = {
 		{
 			"fieldname":"from_date",
 			"label": __("From Date"),
-			"fieldtype": "Date",
-			"reqd": 1
+			"fieldtype": "Date"
 		},
 		{
 			"fieldname":"to_date",
 			"label": __("To Date"),
-			"fieldtype": "Date",
-			"reqd": 1
+			"fieldtype": "Date"
 		},
 		{
 			"fieldname":"employee",

@@ -34,7 +34,7 @@ def salaries(conditions, filters):
 	from erpnext.hr import get_compensatory, get_permissions
 	data=[]
 	hours={}
-	employees  = frappe.db.sql("""select emp.name, emp.employee_name,ed.* from `tabEmployee` as emp join `tabEmployee Employment Detail` as ed on emp.name=ed.employee where emp.docstatus <2 %s order by employee""" % conditions, filters, as_dict=1)
+	employees  = frappe.db.sql("""select emp.name, emp.employee_name,emp.* from `tabEmployee` as emp  where emp.docstatus <2 %s order by name""" % conditions, filters, as_dict=1)
 
 	delta = (datetime.datetime.strptime(filters.to_date, '%Y-%m-%d')).date() - (datetime.datetime.strptime(filters.from_date, '%Y-%m-%d')).date()   
 	for emp in employees:
@@ -92,9 +92,9 @@ def salaries(conditions, filters):
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.management = %(department)s"
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s"
+	if filters.get("department"): conditions += " and emp.management = %(department)s"
 
-	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
+	if filters.get("designation"): conditions += " and emp.designation = %(designation)s"
 
 	return conditions, filters

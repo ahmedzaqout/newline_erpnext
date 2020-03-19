@@ -43,7 +43,7 @@ def get_columns():
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += "  and emp.employee = %(employee)s"
+	if filters.get("employee"): conditions += "  and emp.name = %(employee)s"
 	#if filters.get("company"): conditions += " and emp.company >= %(company)s"
 	#if filters.get("month"): conditions+= "  and DATE_FORMAT(fpd.time, '%%d') = %(month)s" 
 	if filters.get("year"): conditions+= "  and year(fpd.time) = %(year)s"
@@ -57,10 +57,10 @@ def get_data(conditions, filters):
 		conditions+= "  and month(fpd.time) = %s"%(month )
 
 	return frappe.db.sql("""select employee_name,fp_id, max(att) as att, max(dep) as dep, max(exitt) as exitt, max(ret) as ret,date,day from 
-	 (select employee_name,fp_id,employee, if(punch=1,Time(fpd.time),Time(0)) as att,if(punch=2,Time(fpd.time),Time(0)) as dep,
+	 (select employee_name,fp_id,emp.name, if(punch=1,Time(fpd.time),Time(0)) as att,if(punch=2,Time(fpd.time),Time(0)) as dep,
 	 if(punch=3,Time(fpd.time),Time(0)) as exitt, if(punch=4,Time(fpd.time),Time(0)) as ret, Date(fpd.time) as date,
-	 DAYNAME(Date(fpd.time)) as day, punch from `tabEmployee Personal Detail` as emp join `tabFinger Print Data` as fpd 
-	 on emp.fp_id = fpd.user_id  %s order by emp.employee ) as s group by employee_name,fp_id,date """% conditions, filters, as_dict=1)
+	 DAYNAME(Date(fpd.time)) as day, punch from `tabEmployee` as emp join `tabFinger Print Data` as fpd 
+	 on emp.fp_id = fpd.user_id  %s order by emp.name ) as s group by employee_name,fp_id,date """% conditions, filters, as_dict=1)
 
 
 

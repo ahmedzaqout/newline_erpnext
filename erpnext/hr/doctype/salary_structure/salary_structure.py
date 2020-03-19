@@ -32,7 +32,7 @@ class SalaryStructure(Document):
 
 	def validate_date(self):
 		for employee in self.get('employees'):
-			joining_date = frappe.db.get_value("Employee Employment Detail", employee.employee,
+			joining_date = frappe.db.get_value("Employee", employee.employee,
 				["date_of_joining"])
 
 			if employee.from_date and joining_date and getdate(employee.from_date) < joining_date:
@@ -79,7 +79,7 @@ def make_salary_slip(source_name, target_doc = None, employee = None, as_print =
 		if employee:
 			employee_name = frappe.db.get_value("Employee", employee, ["employee_name"], as_dict=1)
 
-			employee_details = frappe.db.get_value("Employee Employment Detail", employee, 
+			employee_details = frappe.db.get_value("Employee", employee, 
 							["branch", "designation", "department"], as_dict=1)
 			target.employee = employee
 			target.employee_name = employee_name.employee_name
@@ -107,21 +107,21 @@ def make_salary_slip(source_name, target_doc = None, employee = None, as_print =
 
 @frappe.whitelist()
 def get_employees(**args):
-	return frappe.get_list('Employee Salary Detail',filters=args['filters'], fields=['name', 'employee_name',"basic_salary","day_salary","hour_cost","over_hrs"])
+	return frappe.get_list('Employee',filters=args['filters'], fields=['name', 'employee_name',"basic_salary","day_salary","hour_cost","over_hrs"])
 
 
 
 @frappe.whitelist()
 def get_earnings(employee=None, job_number=None):
 	if not job_number:
-		job_number = frappe.db.get_value("Employee Salary Detail", employee, 'job_number')
+		job_number = frappe.db.get_value("Employee", employee, 'job_number')
 	return frappe.get_list('Salary Detail',{'parenttype':'Job Description','type': "earning",'parent':job_number}, ['name','parent', 'salary_component',"abbr","formula","amount"])
 
 
 @frappe.whitelist()
 def get_deductions(employee=None, job_number=None):
 	if not job_number:
-		job_number = frappe.db.get_value("Employee Salary Detail", employee, 'job_number')
+		job_number = frappe.db.get_value("Employee", employee, 'job_number')
 	return frappe.get_list('Salary Detail',{'parenttype':'Job Description','type': "deduction",'parent':job_number}, ['name','parent', 'salary_component',"abbr","formula","amount"])
 
 

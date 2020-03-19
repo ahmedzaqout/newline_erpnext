@@ -17,13 +17,14 @@ def get_job_description(designation):
 @frappe.whitelist(allow_guest=True)
 def get_dep(department= None):
 	if department: 
-		conditions= " where det.department=%s"
+		conditions= " where emp.department=%s"
 	else: 
 		conditions= " where 1=%s"
 		department = "1"
 
-	return frappe.db.sql("select emp.employee_number, emp.image,sal.basic_salary,sal.grade,sal.experience_years,sal.grade_category,sal.hour_cost,det.department,det.work_hrs,per.ar_fname,\
-per.ar_family_name,det.date_of_joining,det.designation,ss.parent as salary_struc from tabEmployee as emp  left join `tabEmployee Salary Detail` as sal on emp.employee_number = sal.employee  join `tabEmployee Employment Detail` as det on emp.employee_number = det.employee join `tabEmployee Personal Detail` as per on emp.employee_number = per.employee left join `tabSalary Structure Employee` as ss on ss.employee=emp.employee_number and  ss.parent in (select name from `tabSalary Structure` where is_active='Yes') %s"% conditions,department,as_dict=1)  
+	return frappe.db.sql("select emp.employee_number, emp.image,emp.basic_salary,emp.grade,emp.experience_years,emp.grade_category,emp.hour_cost,emp.department,\
+		emp.work_hrs,emp.ar_fname,emp.ar_family_name,emp.date_of_joining,emp.designation,ss.parent as salary_struc from tabEmployee as emp  left join `tabSalary Structure Employee` as ss on ss.employee=emp.employee_number and  ss.parent in (select name from `tabSalary Structure` where is_active='Yes') %s"% conditions,department,as_dict=1)  
+
 
 
 @frappe.whitelist(allow_guest=True)

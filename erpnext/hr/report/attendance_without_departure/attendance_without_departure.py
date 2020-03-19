@@ -37,12 +37,12 @@ def get_columns():
 def get_attendance_list(conditions, filters):
 	data= []
 	att_list= frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, att.name as attname,emp.name,
-		emp.employee , DAYNAME(att.attendance_date) as day,att.attendance_time,
-		att.status ,emp.designation,emp.department from `tabEmployee Employment Detail` as emp 
-		join tabAttendance as att on att.employee=emp.employee and discount_salary_from_leaves=0 and att.docstatus = 1 
-		where 1 %s order by emp.employee, att.attendance_date""" %conditions, filters, as_dict=1)
+		emp.name , DAYNAME(att.attendance_date) as day,att.attendance_time,
+		att.status ,emp.designation,emp.department from `tabEmployee` as emp 
+		join tabAttendance as att on att.employee=emp.name and discount_salary_from_leaves=0 and att.docstatus = 1 
+		where 1 %s order by emp.name, att.attendance_date""" %conditions, filters, as_dict=1)
 	for att in att_list:
-		if att.employee_name and  not is_indeparture_list(att.employee,att.attendance_date):
+		if att.employee_name and  not is_indeparture_list(att.name,att.attendance_date):
 			row = [att.employee_name, att.department,att.designation,_(att.day), att.attendance_date, att.attendance_time]
 			data.append(row)
 	return data
@@ -59,7 +59,7 @@ def is_indeparture_list(employee,attendance_date):
 
 def get_conditions(filters):
 	conditions = ""
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s"
 	if filters.get("designation"): conditions += " and emp.designation >= %(designation)s"
 	if filters.get("department"): conditions += " and emp.department <= %(department)s"
 	if filters.get("from_date"): conditions += " and att.attendance_date >= %(from_date)s"

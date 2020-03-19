@@ -24,18 +24,18 @@ def get_columns(filters):
 		 {"label":_("Employee Name") ,"width":150,"fieldtype": "Data"},
 		 {"label":_("Supervisor") ,"width":140,"fieldtype": "Data"},
 		 {"label":_("Department") ,"width":140,"fieldtype": "Data"},
- 		 {"label":_("Total Work Hours") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Morning Late Count") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Morning Late") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Early Count") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Eearly Departure Hours") ,"width":80,"fieldtype": "Int"},
- 		 {"label":_("Overtime Count") ,"width":70,"fieldtype": "Data"},
- 		 {"label":_("Overtime Hours") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Discount") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Exit Permission Count") ,"width":80,"fieldtype": "Data"},
-		 {"label":_("Exit Permission") ,"width":80,"fieldtype": "Data"},
-		 {"label":_("On Leave") ,"width":70,"fieldtype": "Data"},
-		 {"label":_("Absence") ,"width":70,"fieldtype": "Int"}
+ 		 {"label":_("Total Work Hours") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Morning Late Count") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Morning Late") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Early Count") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Eearly Departure Hours") ,"width":90,"fieldtype": "Int"},
+ 		 {"label":_("Overtime Count") ,"width":90,"fieldtype": "Data"},
+ 		 {"label":_("Overtime Hours") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Discount Hours") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Exit Permission Count") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Exit Permission") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("On Leave") ,"width":90,"fieldtype": "Data"},
+		 {"label":_("Absence") ,"width":90,"fieldtype": "Int"}
 		 		 ]		
 	return columns
 
@@ -47,10 +47,10 @@ def get_data(conditions, filters):
 	to_date = filters.get('to_date')
 	if filters.get("supervisor"): condition += " and ed.supervisor = %(supervisor)s"
 	if filters.get("department"): condition += " and ed.department = %(department)s"
-	if filters.get("employee"): condition += " and emp.employee = %(employee)s"
+	if filters.get("employee"): condition += " and emp.name = %(employee)s"
 
-	employees  = frappe.db.sql("""select emp.employee as employee ,ed.employee_name as employee_name,ed.supervisor,ed.department, ed.status from `tabEmployee` as emp left join `tabEmployee Employment Detail` as ed on emp.name=ed.employee
-	 					 where emp.docstatus <2 and ed.status = "Active" %s order by emp.employee """% (condition),filters, as_list=1)
+	employees  = frappe.db.sql("""select name as employee ,employee_name ,supervisor,department, status from `tabEmployee`  
+	 					 where docstatus <2 and status = "Active" %s order by employee """% (condition),filters, as_list=1)
 
 	for emp_data in employees:
 		emp_details = get_employee_details (conditions, filters,emp_data[0])
@@ -121,19 +121,19 @@ def get_conditions(filters):
 
 
 def get_employee_details(conditions, filters,employee): 
-	emp_map  = frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, att.name as attname,dept.name as deptname, emp.name,emp.employee ,dept.departure_date, DAYNAME(att.attendance_date) as day,att.attendance_time, dept.departure_time,
+	emp_map  = frappe.db.sql("""select distinct att.attendance_date, emp.employee_name, att.name as attname,dept.name as deptname, emp.name ,dept.departure_date, DAYNAME(att.attendance_date) as day,att.attendance_time, dept.departure_time,
 		GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) as total_hours ,
-		GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) as total_work_hrs,ifnull((GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) - GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) ),0) as discount,ifnull(overtime_hours,0) as overtime_hours,ifnull(tsh.holiday_overtime_hours,0) as holiday_overtime_hours,compensatory,tsh.type, tsh.from_time ,att.status,shd.start_work, ifnull(ext.early_diff,0) as early_departure,ifnull(ext.ext_diff,0) as ext_diff, work_shift, emp.holiday_list,ifnull(GREATEST(round(TIMESTAMPDIFF(MINUTE,shd.start_work,att.attendance_time)/60,2),0),0) as late_hrs from `tabEmployee Employment Detail` as emp   
-	join  tabAttendance as att on att.employee=emp.employee and discount_salary_from_leaves=0 and att.docstatus = 1
-	left join  tabDeparture as dept on dept.employee=emp.employee and att.attendance_date=dept.departure_date and dept.docstatus = 1
+		GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) as total_work_hrs,ifnull((GREATEST(round((TIMESTAMPDIFF(MINUTE,shd.start_work,shd.end_work))/60,3),0) - GREATEST(round(TIMESTAMPDIFF(MINUTE,att.attendance_time,dept.departure_time)/60,2),0) ),0) as discount,ifnull(overtime_hours,0) as overtime_hours,ifnull(tsh.holiday_overtime_hours,0) as holiday_overtime_hours,compensatory,tsh.type, tsh.from_time ,att.status,shd.start_work, ifnull(ext.early_diff,0) as early_departure,ifnull(ext.ext_diff,0) as ext_diff, work_shift, emp.holiday_list,ifnull(GREATEST(round(TIMESTAMPDIFF(MINUTE,shd.start_work,att.attendance_time)/60,2),0),0) as late_hrs from `tabEmployee` as emp   
+	join  tabAttendance as att on att.employee=emp.name and att.discount_salary_from_leaves=0 and att.docstatus = 1
+	left join  tabDeparture as dept on dept.employee=emp.name and att.attendance_date=dept.departure_date and dept.docstatus = 1
 	left join `tabWork Shift Details` as shd on shd.parent =  work_shift and shd.day = DAYNAME(att.attendance_date)
-	left join (select t.docstatus,employee,from_time,ifnull(sum(CASE WHEN type='compensatory' THEN hours END),0) as compensatory, ifnull(sum(CASE WHEN type='Normal' THEN hours END),0) as overtime_hours, ifnull(sum(CASE WHEN type='With Leave' THEN hours END),0) as holiday_overtime_hours,type from tabTimesheet as t join `tabTimesheet Detail` as td on t.name=td.parent and t.docstatus=1 group by date(from_time),employee) as tsh on emp.employee=tsh.employee and att.attendance_date=date(tsh.from_time) and tsh.docstatus = 1 
+	left join (select t.docstatus,employee,from_time,ifnull(sum(CASE WHEN type='compensatory' THEN hours END),0) as compensatory, ifnull(sum(CASE WHEN type='Normal' THEN hours END),0) as overtime_hours, ifnull(sum(CASE WHEN type='With Leave' THEN hours END),0) as holiday_overtime_hours,type from tabTimesheet as t join `tabTimesheet Detail` as td on t.name=td.parent and t.docstatus=1 group by date(from_time),employee) as tsh on emp.name=tsh.employee and att.attendance_date=date(tsh.from_time) and tsh.docstatus = 1 
 	left join (select employee,depstat,exitstat, permission_date,sum(early_diff)/60 as early_diff, sum(diff) as ext_diff from (
 	select employee,docstatus as depstat,0 as exitstat, permission_date,early_diff, 0 as diff from `tabExit permission` where permission_type='Early Departure' and docstatus = 1
 	union all 
 	select employee,0 as depstat,docstatus as exitstat, permission_date,0 as early_diff ,TIME_TO_SEC(diff_exit)/3600 as diff from `tabExit permission` where type='Return' and permission_type='Exit with return' and docstatus = 1) as d group by permission_date,employee) as ext 
-	on emp.employee=ext.employee and att.attendance_date=ext.permission_date 
-	where 1 %s and att.employee = '%s' order by emp.employee, attendance_date"""% (conditions,employee), filters, as_dict=1)
+	on emp.name=ext.employee and att.attendance_date=ext.permission_date 
+	where 1 %s and att.employee = '%s' order by emp.name, attendance_date"""% (conditions,employee), filters, as_dict=1)
 	return emp_map
 
 

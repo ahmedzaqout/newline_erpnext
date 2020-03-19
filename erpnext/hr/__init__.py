@@ -19,7 +19,7 @@ def is_overtime_exceeded(employee, date):
 		for t in timesheets:
 			total += t.total_hours
 	
-	ovr_max_hrs = frappe.db.get_value("Employee Salary Detail", employee, "overtime_max_hours")
+	ovr_max_hrs = frappe.db.get_value("Employee", employee, "overtime_max_hours")
 
 	if total >= float(ovr_max_hrs):
 		return True
@@ -108,10 +108,10 @@ def hide_expired_job_opening():
 def notify_retirement_employee():
 	from erpnext.hr.doctype.employee.employee import get_retirement_date
 	today =datetime.today()
-	employees = frappe.get_all("Employee Employment Detail", fields=["name","supervisor"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["name","supervisor"],filters={'status':'Active'})
 	for emp in employees:
-		doc = frappe.db.get_value("Employee Personal Detail", emp.name, ["user_id" ,"date_of_birth"],as_dict=1)
-		supervisor = frappe.db.get_value("Employee Personal Detail", emp.supervisor, ["user_id"],as_dict=1)
+		doc = frappe.db.get_value("Employee", emp.name, ["user_id" ,"date_of_birth"],as_dict=1)
+		supervisor = frappe.db.get_value("Employee", emp.supervisor, ["user_id"],as_dict=1)
 		if doc and supervisor:
 			date_of_retirement = get_retirement_date(doc.date_of_birth)
 			print date_of_retirement['date_of_retirement']
@@ -121,7 +121,7 @@ def notify_retirement_employee():
 					email_args = {
 						"recipients": [doc.user_id , supervisor.user_id],
 						"subject": 'Employee Retirement- {0}'.format(today),
-						"reference_doctype": 'Employee Employment Detail',
+						"reference_doctype": 'Employee',
 						"reference_name": emp.name
 						}
 					enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args)
@@ -134,9 +134,9 @@ def notify_trial_employee():
 		print str(False)
 		return False
 
-	employees = frappe.get_all("Employee Employment Detail", fields=["date_of_joining","employment_type","name","supervisor"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["date_of_joining","employment_type","name","supervisor"],filters={'status':'Active'})
 	for emp in employees:
-		supervisor = frappe.db.get_value("Employee Personal Detail", emp.supervisor, ["user_id"],as_dict=1)
+		supervisor = frappe.db.get_value("Employee", emp.supervisor, ["user_id"],as_dict=1)
 		duration = frappe.db.get_value("Employment Type", emp.employment_type, "duration",as_dict=1)	
 		if duration and duration.duration >0:
 			print str(duration.duration)
@@ -146,13 +146,13 @@ def notify_trial_employee():
 			#today_period = add_months(today,duration)
 			print str(trial_period)
 			if trial_period <= getdate(today()):
-				doc = frappe.db.get_value("Employee Personal Detail", emp.name, ["user_id" ,"date_of_birth"],as_dict=1)
+				doc = frappe.db.get_value("Employee", emp.name, ["user_id" ,"date_of_birth"],as_dict=1)
 				if doc.user_id:
 					print doc.user_id
 					email_args = {
 						"recipients": [doc.user_id,supervisor.user_id ],
 						"subject": 'Employee Trial Ended- {0}'.format(today()),
-						"reference_doctype": 'Employee Employment Detail',
+						"reference_doctype": 'Employee',
 						"reference_name": emp.name
 						}
 					enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args)
@@ -166,9 +166,9 @@ def notify_6month_employee():
 		print str(False)
 		return False
 
-	employees = frappe.get_all("Employee Employment Detail", fields=["date_of_joining","employment_type","name","supervisor"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["date_of_joining","employment_type","name","supervisor"],filters={'status':'Active'})
 	for emp in employees:
-		supervisor = frappe.db.get_value("Employee Personal Detail", emp.supervisor, ["user_id"],as_dict=1)
+		supervisor = frappe.db.get_value("Employee", emp.supervisor, ["user_id"],as_dict=1)
 		trial_period = add_months(emp.date_of_joining,6)
 		if trial_period == getdate(today()):
 			print str(trial_period)
@@ -176,7 +176,7 @@ def notify_6month_employee():
 				email_args = {
 					"recipients": [supervisor.user_id ],
 					"subject": 'Employee Trial Ended- {0}'.format(today()),
-					"reference_doctype": 'Employee Employment Detail',
+					"reference_doctype": 'Employee',
 					"reference_name": emp.name
 					}
 				enqueue(method=frappe.sendmail, queue='short', timeout=300, async=True, **email_args)
@@ -227,7 +227,7 @@ def delete_cancled_records():
 @frappe.whitelist()
 def employee_shift(work_shift):
 	count = 0
-	employees = frappe.get_all("Employee Employment Detail", fields=["name","work_shift"],filters={'status':'Active'})
+	employees = frappe.get_all("Employee", fields=["name","work_shift"],filters={'status':'Active'})
 	for emp in employees:
 		ws = emp.work_shift
 		if ws and frappe.as_unicode(work_shift.strip()) == frappe.as_unicode(emp.work_shift.strip()):
@@ -289,7 +289,7 @@ def clear_employee_holidays(employee,shift_change_date):
 
 @frappe.whitelist()
 def get_emp_work_shift(employee, day):
-	emp_wshift = frappe.db.get_value("Employee Employment Detail", employee , "work_shift")
+	emp_wshift = frappe.db.get_value("Employee", employee , "work_shift")
 	if emp_wshift:
 		employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":emp_wshift,"day":day}, "start_work")
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":emp_wshift,"day":day}, "end_work")

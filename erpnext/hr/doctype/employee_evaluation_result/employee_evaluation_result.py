@@ -10,7 +10,7 @@ from frappe.model.document import Document
 class EmployeeEvaluationResult(Document):
 	def on_submit(self):
 		if self.employee:
-			s_d =frappe.get_doc("Employee Salary Detail",self.employee)
+			s_d =frappe.get_doc("Employee",self.employee)
 		if s_d:
 			if float(self.total) >= 95: 
 				s_d.basic_salary = s_d.basic_salary + (s_d.basic_salary * 0.03)

@@ -303,7 +303,7 @@ def add_attendances():
 				#print str(d) + ': ' + str(dic[d])
 
 
-			emp = frappe.db.get_value("Employee Personal Detail",{"fp_id": user_id}, ["name","employee_name"],as_dict=1)
+			emp = frappe.db.get_value("Employee",{"fp_id": user_id}, ["name","employee_name"],as_dict=1)
 			if emp:
 				#check_duplicat(user_id,time,atype)
 				if atype == 0: #att
@@ -685,7 +685,7 @@ def upload_attendance(month=None,toClear=False):
 
 def update_att(user_id,atype,time):
 	#print "user_id:"+str(user_id)+" ,atype: "+str(atype)+" ,time: "+str(time)
-	emp = frappe.db.get_value("Employee Personal Detail",{"fp_id": user_id}, ["name","employee_name"],as_dict=1)
+	emp = frappe.db.get_value("Employee",{"fp_id": user_id}, ["name","employee_name"],as_dict=1)
 	if emp:
 		if atype == 0: #att
 			attendance = frappe.get_value('Attendance',{'employee':emp.name,'attendance_date':getdate(time),'status':'Absent'},"name")

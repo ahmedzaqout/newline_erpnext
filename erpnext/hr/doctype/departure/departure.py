@@ -73,7 +73,7 @@ class Departure(Document):
 
 		attendance_day = calendar.day_name[getdate(self.departure_date).weekday()];
 		attendance_day_next = calendar.day_name[getdate(self.departure_date).weekday()-1];
-		employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day}, "end_work")
 		
 		employee_end_time_next = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":attendance_day_next,"next_day":1}, "end_work")
@@ -98,7 +98,7 @@ class Departure(Document):
 
 		day = calendar.day_name[getdate(self.departure_date).weekday()];
 		day_next = calendar.day_name[getdate(self.departure_date).weekday()-1];
-		employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+		employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 
 		employee_start_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":day}, "start_work")
 		employee_end_time = frappe.db.get_value("Work Shift Details", {"parent":employee_work_shift,"day":day}, "end_work")
@@ -123,7 +123,7 @@ class Departure(Document):
 
 			
 		#### In Holiday >>overtime ###
-		holiday_list = frappe.db.get_value("Employee Employment Detail", self.employee, "holiday_list")
+		holiday_list = frappe.db.get_value("Employee", self.employee, "holiday_list")
 		att_over = frappe.db.get_value("Timesheet",{ "employee":self.employee, "start_date":self.departure_date,"docstatus":("<",2)}, "name")
 		over_diff = str(time_diff_in_hours(to_time,from_time))
 		is_holiday= False

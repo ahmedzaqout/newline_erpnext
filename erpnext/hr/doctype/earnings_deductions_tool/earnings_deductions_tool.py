@@ -68,7 +68,7 @@ class EarningsDeductionsTool(Document):
 							earn_doc.save(ignore_permissions=True)
 
 		elif all_employee == 0 and department:
-			employees = frappe.get_all("Employee Employment Detail", fields=["name","department"],filters={'status':'Active','department':department })
+			employees = frappe.get_all("Employee", fields=["name","department"],filters={'status':'Active','department':department })
 			for emp in employees:
 				doc= frappe.get_all('Salary Slip',fields=["start_date","end_date","name"],filters={'employee':emp,'docstatus':("<",2)})
 				for emp_slip in doc:

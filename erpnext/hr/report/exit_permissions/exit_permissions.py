@@ -17,7 +17,7 @@ def execute(filters=None):
 
 	data = []
 	for perm in sorted(perm_map):
-		row =[perm.employee_name,perm.supervisor,perm.department,perm.permission_type,perm.permission_date,perm.from_date,perm.to_date,perm.total,perm.reason]
+		row =[perm.employee_name,perm.supervisor,perm.department,_(perm.permission_type),perm.permission_date,perm.from_date,perm.to_date,perm.total,_(perm.status),_(perm.reason)]
 		data.append(row)
 
 	return columns, data
@@ -57,7 +57,11 @@ def get_conditions(filters):
 	return conditions, filters
 
 def get_exit_permission_details(conditions, filters):
-	perm_map  = frappe.db.sql("""select emp.supervisor,emp.supervisor_name,emp.department, ex.employee, ex.employee_name,ex.permission_type,ex.permission_date,ex.from_date,ex.to_date,ex.reason,ex.status, GREATEST(round(TIMESTAMPDIFF(MINUTE,ex.from_date,ex.to_date)/60,2),0) as total from `tabExit permission` as ex left join `tabEmployee Employment Detail` as emp on ex.employee= emp.employee where ex.docstatus <2 %s order by ex.employee,ex.permission_date """ %
+	perm_map  = frappe.db.sql("""select emp.supervisor,emp.supervisor_num,emp.department, ex.employee,\
+	 ex.employee_name,ex.permission_type,ex.permission_date,ex.from_date,ex.to_date,ex.reason,ex.status, \
+	 GREATEST(round(TIMESTAMPDIFF(MINUTE,ex.from_date,ex.to_date)/60,2),0) as total from `tabExit permission` as ex \
+	 left join `tabEmployee` as emp on ex.employee= emp.name where ex.docstatus <2 %s order by ex.employee,\
+	 ex.permission_date """ %
 		conditions, filters, as_dict=1)
 	
 	return perm_map

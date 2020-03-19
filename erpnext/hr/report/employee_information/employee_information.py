@@ -44,15 +44,13 @@ def get_columns(filters):
 def salaries(conditions, filters):
 	data=[]
 	hours={}
-	ss  = frappe.db.sql("""select emp.employee_name ,pd.*, ed.* ,cd.* ,ed.employee as emm from `tabEmployee` as emp join `tabEmployee Employment Detail` as ed on emp.name=ed.employee
-	 					left Join `tabEmployee Contact Details` as cd on emp.name=cd.employee 
-	 					left join `tabEmployee Personal Detail` as pd on  emp.name=pd.employee where emp.docstatus <2 %s 
-						order by emp.employee """ %
+	ss  = frappe.db.sql("""select * from `tabEmployee` as emp where emp.docstatus <2 %s 
+						order by emp.name """ %
 		conditions, filters, as_dict=1)
 
 
 	for add in ss:
-		data.append([add.emm,add.employee_name,add.identity_no ,add.gender,add.marital_status,add.nationality ,
+		data.append([add.name,add.employee_name,add.identity_no ,add.gender,add.marital_status,add.nationality ,
 			add.governorate,add.city,add.religion ,
 			add.designation,add.branch,add.management,add.circle,add.sub_dep,add.department,add.employment_type,add.date_of_joining,add.contract_end_date])
 	
@@ -62,20 +60,20 @@ def salaries(conditions, filters):
 def get_conditions(filters):
 	conditions = ""
 
-	if filters.get("employee"): conditions += " and emp.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.department_list = %(department)s"
-	if filters.get("designation"): conditions += " and ed.designation = %(designation)s"
-	if filters.get("branch"): conditions += " and ed.branch = %(branch)s"
-	if filters.get("management"): conditions += " and ed.management = %(management)s"
-	if filters.get("circle"): conditions += " and ed.circle = %(circle)s"
-	if filters.get("sub_departement"): conditions += " and ed.sub_departement = %(sub_departement)s"
-	if filters.get("employment_type"): conditions += " and ed.employment_type = %(employment_type)s"
+	if filters.get("employee"): conditions += " and emp.name = %(employee)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("designation"): conditions += " and designation = %(designation)s"
+	if filters.get("branch"): conditions += " and branch = %(branch)s"
+	if filters.get("management"): conditions += " and management = %(management)s"
+	if filters.get("circle"): conditions += " and circle = %(circle)s"
+	if filters.get("sub_departement"): conditions += " and sub_departement = %(sub_departement)s"
+	if filters.get("employment_type"): conditions += " and employment_type = %(employment_type)s"
 
-	if filters.get("gender"): conditions += " and pd.gender = %(gender)s"
-	if filters.get("marital_status"): conditions += " and pd.marital_status = %(marital_status)s"
-	if filters.get("nationality"): conditions += " and pd.nationality = %(nationality)s"
-	if filters.get("governorate"): conditions += " and pd.governorate = %(governorate)s"
-	if filters.get("city"): conditions += " and pd.city = %(city)s"
+	if filters.get("gender"): conditions += " and gender = %(gender)s"
+	if filters.get("marital_status"): conditions += " and marital_status = %(marital_status)s"
+	if filters.get("nationality"): conditions += " and nationality = %(nationality)s"
+	if filters.get("governorate"): conditions += " and governorate = %(governorate)s"
+	if filters.get("city"): conditions += " and city = %(city)s"
 
 
 

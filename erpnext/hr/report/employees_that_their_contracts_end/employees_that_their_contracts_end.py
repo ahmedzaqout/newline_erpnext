@@ -22,7 +22,7 @@ def get_columns(filters):
 	columns = [
 		 {"label":_("Employee Name") ,"width":100,"fieldtype": "link","options":"Employee"},
 		 {"label":_("Designation") ,"width":100,"fieldtype": "Data"},
-		 {"label":_("Managemnt") ,"width":100,"fieldtype": "Data"},
+		 {"label":_("Department") ,"width":100,"fieldtype": "Data"},
 		 {"label":_("Circle") ,"width":100,"fieldtype": "Data"},
 		 {"label":_("Employment Type") ,"width":100,"fieldtype": "Data"},
 		 {"label":_("Contract End Date") ,"width":100,"fieldtype": "Date"},
@@ -36,12 +36,11 @@ def get_columns(filters):
 def salaries(conditions, filters):
 	data=[]
 	tod=datetime.datetime.today().strftime('%Y-%m-%d')
-	ss  = frappe.db.sql("""select em.employee_name,ed.* from `tabEmployee` as em left join `tabEmployee Employment Detail` as ed on em.employee=ed.employee  where ed.docstatus <2  %s 
-		order by em.employee """ %
+	ss  = frappe.db.sql("""select * from `tabEmployee`  where docstatus <2 %s order by name """ %
 		conditions, filters, as_dict=1)
 
 	for emp in ss:
-		row=[emp.employee,emp.designation,emp.management,emp.circle,emp.employment_type,emp.contract_end_date,emp.date_of_retirement]
+		row=[emp.employee_name,emp.designation,emp.department,emp.circle,emp.employment_type,emp.contract_end_date,emp.date_of_retirement]
 		data.append(row)
 
 	return data
@@ -52,9 +51,7 @@ def salaries(conditions, filters):
 def get_conditions(filters):
 	conditions = ""
 	tod=datetime.date.today().strftime('%Y-%m-%d')
-	conditions += " and ed.contract_end_date <= '{0}'".format(tod)
-	if filters.get("employee"): conditions += " and ed.employee = %(employee)s"
-	if filters.get("department"): conditions += " and ed.managemnt = %(department)s"
-
-
+	conditions += " and contract_end_date <= '{0}'".format(tod)
+	if filters.get("employee"): conditions += " and name = %(employee)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
 	return conditions, filters

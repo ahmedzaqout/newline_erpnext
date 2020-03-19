@@ -182,7 +182,7 @@ class Timesheet(Document):
 
 	
 			attendance_day = calendar.day_name[getdate(self.start_date).weekday()];
-			employee_work_shift = frappe.db.get_value("Employee Employment Detail", self.employee, "work_shift")
+			employee_work_shift = frappe.db.get_value("Employee", self.employee, "work_shift")
 
 
 			employee_start_time =frappe.db.get_value("Work Shift Details",{"parent":employee_work_shift,"day":attendance_day}, "start_work")
@@ -201,7 +201,7 @@ class Timesheet(Document):
 			#if get_time(data.to_time) < get_time(employee_end_time) and get_time(data.to_time) > get_time(employee_start_time):
 			#	frappe.msgprint(str(diff_time)+" f "+str(diff_time2))
 			hold_f= False			
-			holiday_list = frappe.db.get_value("Employee Employment Detail", self.employee, "holiday_list")
+			holiday_list = frappe.db.get_value("Employee", self.employee, "holiday_list")
 			if holiday_list:
 				holidays = frappe.get_all("Holiday", fields=["holiday_date"],filters={'parent':holiday_list})
 				for holiday in holidays:
