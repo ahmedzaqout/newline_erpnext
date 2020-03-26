@@ -111,10 +111,10 @@ def login(**kwards):
 	        "email" : email}
 	
 	emp = frappe.get_doc("Employee",user_doc.employee)
-	if frappe.get_all("Employee Personal Detail",['name'],filters={"employee":emp.name}):
-		de = frappe.get_all("Employee Personal Detail",['name'],filters={"employee":emp.name})
-		dettt = frappe.get_doc("Employee Personal Detail" , de[0].name)
-		dettt = frappe.get_all("Employee Personal Detail" ,["creation", "identity_no","ar_tname","user_id",    "employee_number","en_family_name","ar_sname","religion", "date_of_birth","en_fname","nationality","employee_name","ar_family_name", "en_sname","marital_status","place_of_birth","ar_fname","en_tname","gender","current_address","phone_number","facebook_account","twitter_account"], filters={"name":de[0].name})[0]
+	if frappe.get_all("Employee",['name'],filters={"employee":emp.name}):
+		de = frappe.get_all("Employee",['name'],filters={"employee":emp.name})
+		dettt = frappe.get_doc("Employee" , de[0].name)
+		dettt = frappe.get_all("Employee" ,["creation", "identity_no","ar_tname","user_id", "employee_number","en_family_name","ar_sname","religion", "date_of_birth","en_fname","nationality","employee_name","ar_family_name", "en_sname","marital_status","place_of_birth","ar_fname","en_tname","gender","current_address","phone_number","facebook_account","twitter_account"], filters={"name":de[0].name})[0]
 
 	dettt['access_token']=token
 	leaves_typ=[]

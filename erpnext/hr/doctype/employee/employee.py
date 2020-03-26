@@ -82,15 +82,15 @@ class Employee(NestedSet):
 		except:
 			pass	
 
-		if self.basic_salary and  not self.validate_salary_structure():
-			frappe.msgprint(_("Press Make Salary Structure Button"))
+		#if self.basic_salary and  self.validate_salary_structure():
+		#	pass#frappe.msgprint(_("Press Make Salary Structure Button"))
 
-		if self.employee_dependent: 
+		if not self.get(self.employee_dependent):# not [] or self.employee_dependent not None: 
 			child_num =0
 			for d in self.get("employee_dependent"): #('Employee Dependent')
 				if d.relation =='Son' or d.relation =='Daughter':
 					child_num += 1
-			add_depenents_bonus(self.employee, 'Bonus Children', child_num)
+			add_depenents_bonus(self.name, 'Bonus Children', child_num)
 
 		if not self.name:
 			frappe.msgprint(__("Data Required!"))
@@ -142,6 +142,8 @@ class Employee(NestedSet):
 
 ########################################
 	def create_user(self):
+		if frappe.db.get_value("User",self.email):
+			return ""
 		user = frappe.new_doc("User")
 		user.update({
 			"name": self.employee_name,
@@ -155,6 +157,7 @@ class Employee(NestedSet):
 		user.insert()
 		if user.name:
 			self.user_id= self.email
+			self.create_user_permission=1
 		return user.name
 
 	def update_nsm_model(self):
@@ -439,7 +442,6 @@ class Employee(NestedSet):
 	def validate_duplicate_supervisor(self):
 		supervisor = frappe.get_all("Responsible Of Staff",{ "parent":self.supervisor_num,"employee": self.name}, "employee")
 		for s in supervisor:
-			frappe.msgprint(s.employee)
 			if self.name == s.employee:
 				isExisted= True
 			else:
@@ -498,14 +500,15 @@ class Employee(NestedSet):
 			
 
 	def validate_salary_structure(self):
+		isExisted= False
 		employee_name = self.employee_name
 		if not self.employee_name:
 			employee_name = self.name
-
+			
 		if frappe.db.get_value('Salary Structure', _('Salary Structure')+'_'+ employee_name ):
-			return True
-		else:
-			return False
+			isExisted= True
+
+		return isExisted
 
 	def make_salary_structure(self, arg=None):
 		if self.validate_salary_structure():
@@ -629,6 +632,7 @@ class Employee(NestedSet):
 		return frappe.get_all("Warning Information", fields=["warning_date","penalty","penalty_type","warning_type","discount_hour","discount_period_type","employee_violation"],filters={'employee':self.name})
 			
 	def update_salary_history(self,last_salary,new_salary):
+		self.make_salary_structure()
 		doc = frappe.new_doc('Salary Change History')
 		doc.update({
 			'employee':self.name,

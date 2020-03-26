@@ -497,6 +497,25 @@ def get_data():
 			"label": _("Reports"),
 			"icon": "fa fa-list",
 			"items": [
+
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Employee Monthly Attendance Sheet",
+					"doctype": "Employee"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Employee Daily Attendance Sheet",
+					"doctype": "Employee"
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Attendance Summary Pal",
+					"doctype": "Attendance"
+				},
 				{
 					"type": "report",
 					"is_query_report": True,
@@ -509,19 +528,7 @@ def get_data():
 					"name": "Employee Financial Report",
 					"doctype": "Employee"
 				},
-				{
-					"type": "report",
-					"is_query_report": True,
-					"name": "Employee Monthly Attendance Sheet",
-					"doctype": "Employee"
-				},
-				
-				{
-					"type": "report",
-					"is_query_report": True,
-					"name": "Employees Qualifications and Experiences",
-					"doctype": "Employee"
-				},
+
 				#{
 				#	"type": "report",
 				#	"is_query_report": True,
@@ -534,6 +541,7 @@ def get_data():
 					"name": "Employee Leave Balance",
 					"doctype": "Leave Application"
 				},
+
 				
 				{
 					"type": "report",
@@ -541,6 +549,7 @@ def get_data():
 					"name": "Absent Employee Without Leaves",
 					"doctype": "Attendance"
 				},
+
 				{
 					"type": "report",
 					"is_query_report": True,
@@ -571,12 +580,7 @@ def get_data():
 				#	"doctype": "Attendance"
 				#},
 				
-				{
-					"type": "report",
-					"is_query_report": True,
-					"name": "Attendance Summary Pal",
-					"doctype": "Attendance"
-				},
+
 				{
 					"type": "report",
 					"is_query_report": True,
@@ -604,15 +608,22 @@ def get_data():
 				{
 					"type": "report",
 					"is_query_report": True,
-					"name": "employee_leave_balance",
-					"label": _("Employee Leave Balance")
+					"name": "Employees Qualifications and Experiences",
+					"doctype": "Employee"
 				},
+
 				{
 					"type": "report",
 					"is_query_report": True,
 					"name": "Employee Panelties",
 					"doctype": "Emplyee Warning",
 					"label": _("Employee Penalties")
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Employee Violation Discounts",
+					"label": _("Employee Violation Discounts")
 				},
 				{
 					"type": "report",

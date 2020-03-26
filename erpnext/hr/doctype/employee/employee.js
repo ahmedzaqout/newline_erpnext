@@ -2,7 +2,7 @@
 // License: GNU General Public License v3. See license.txt
 var ar_fname="";var ar_sname="";var ar_tname="";var ar_family_name="";
 var user_email="";
-var emp_num= cur_frm.doc.employee;
+var emp_num= cur_frm.doc.name;
 var last_salary =0.0;
 
 frappe.provide("erpnext.hr");
@@ -200,7 +200,7 @@ frappe.ui.form.on("Employee", {
 	    if(frm.doc.marital_status == 'Married')
 		cur_frm.call({
 			method: "add_depenents_bonus",
-			args: {"sal_comp": 'Bonus Wife', "employee": frm.doc.employee}
+			args: {"sal_comp": 'Bonus Wife', "employee": frm.doc.name}
 		});
 	},
 	ar_fname:function(frm){	
@@ -639,10 +639,10 @@ frappe.ui.form.on("Employee", {
 		}
 	},
 	type:function(frm){
-		//if (frm.doc.type == 'End of the decade')
-		//	frappe.model.get_value('Employee', cur_frm.doc.employee,'scheduled_confirmation_date',function(r) {
-		//		frm.set_value('date_of_joining',r.date_of_joining);
-		//	});
+		if (frm.doc.type == 'End of the decade')
+			frappe.model.get_value('Employee', cur_frm.doc.name,'scheduled_confirmation_date',function(r) {
+				frm.set_value('date_of_joining',r.date_of_joining);
+			});
 
 	},
 
@@ -779,7 +779,7 @@ frappe.ui.form.on("Salary Detail",  {
 			if (c.bonus_children_ratio){ 
 				frappe.call({
 					method: "erpnext.hr.doctype.employee_salary_detail.employee_salary_detail.employee_child",
-					args: {employee:cur_frm.doc.employee},
+					args: {employee:cur_frm.doc.name},
 					callback: function(r) {
 						if (!r.exc && r.message) { 
 							childs_num = r.message[0].count;

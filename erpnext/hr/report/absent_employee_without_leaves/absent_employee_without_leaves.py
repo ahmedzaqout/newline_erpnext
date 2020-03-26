@@ -63,8 +63,8 @@ def is_inleave_list(employee,attendance_date):
 def get_conditions(filters):
 	conditions = ""
 	if filters.get("employee"): conditions += " emp.name = %(employee)s"
-	if filters.get("designation"): conditions += " and emp.designation >= %(designation)s"
-	if filters.get("department"): conditions += " and emp.department <= %(department)s"
+	if filters.get("designation"): conditions += " and emp.designation = %(designation)s"
+	if filters.get("department"): conditions += " and emp.department = %(department)s"
 	if filters.get("from_date"): conditions += " and att.attendance_date >= %(from_date)s"
 	if filters.get("to_date"): conditions += " and att.attendance_date <= %(to_date)s"
 

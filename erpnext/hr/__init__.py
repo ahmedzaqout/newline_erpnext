@@ -99,11 +99,7 @@ def hide_expired_job_opening():
 				doc.publish =0
 				doc.save(ignore_permissions=True)
 
-		
-			
-
-
-
+	
 
 def notify_retirement_employee():
 	from erpnext.hr.doctype.employee.employee import get_retirement_date

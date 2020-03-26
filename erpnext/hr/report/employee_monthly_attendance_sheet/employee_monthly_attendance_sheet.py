@@ -107,7 +107,6 @@ def execute(filters=None):
 				comp_over = float(emp.compensatory) 
 				total += comp_over
 				#total_comp_over += comp_over
-				#frappe.msgprint(str(comp_over))
 
 			if emp.overtime_hours:
 				over = emp.overtime_hours * float(ovr_rate)
@@ -118,9 +117,11 @@ def execute(filters=None):
 				over = emp.holiday_overtime_hours * float(overtime_hour_price_in_holidays)
 				#total += 0.0
 				total_over += over
-
+				
 			sh_over =comp_over
-			if not  comp_over or comp_over == 0.0: sh_over =over
+			#if not  comp_over or comp_over == 0.0: sh_over =over
+			if  over or over != 0.0: sh_over =over
+
 			row+=[convert_hms_format(round(sh_over,2))]
 			total_row+=[round(total_over,2)]
 
@@ -214,6 +215,7 @@ def execute(filters=None):
 
 		#if emp.total_hours:
 		#	total= emp.total_hours  - total_ext - penalty +comp_over
+		frappe.msgprint(str(comp_over))
 		if  total > total_work_hrs and not comp_over: #and not is_holiday:
 			total= total - (total -total_work_hrs)
 
@@ -222,7 +224,7 @@ def execute(filters=None):
 
 		row+=[convert_hms_format(round(total,2))]
 		total_all+=total 
-		if total_all> total_work_hrs_row: total_all = total_work_hrs_row
+		#if total_all> total_work_hrs_row: total_all = total_work_hrs_row
 		total_row+=[round(total_all,2)]	
 
 
