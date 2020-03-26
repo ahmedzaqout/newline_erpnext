@@ -215,7 +215,6 @@ def execute(filters=None):
 
 		#if emp.total_hours:
 		#	total= emp.total_hours  - total_ext - penalty +comp_over
-		frappe.msgprint(str(comp_over))
 		if  total > total_work_hrs and not comp_over: #and not is_holiday:
 			total= total - (total -total_work_hrs)
 
