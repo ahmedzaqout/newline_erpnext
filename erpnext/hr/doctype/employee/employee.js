@@ -9,6 +9,8 @@ frappe.provide("erpnext.hr");
 
 erpnext.hr.EmployeeController = frappe.ui.form.Controller.extend({
     setup: function() {		
+    	cur_frm.set_df_property("employee_number", "hidden",0);
+
 		this.frm.fields_dict.user_id.get_query = function(doc, cdt, cdn) {
 			return {
 				query: "frappe.core.doctype.user.user.user_query",
@@ -639,10 +641,10 @@ frappe.ui.form.on("Employee", {
 		}
 	},
 	type:function(frm){
-		if (frm.doc.type == 'End of the decade')
-			frappe.model.get_value('Employee', cur_frm.doc.name,'scheduled_confirmation_date',function(r) {
-				frm.set_value('date_of_joining',r.date_of_joining);
-			});
+		//if (frm.doc.type == 'End of the decade')
+		//	frappe.model.get_value('Employee', cur_frm.doc.name,'scheduled_confirmation_date',function(r) {
+		//		frm.set_value('date_of_joining',r.date_of_joining);
+		//	});
 
 	},
 

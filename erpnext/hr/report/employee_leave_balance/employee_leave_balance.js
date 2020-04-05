@@ -1,5 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
+var d = new Date();
 
 frappe.query_reports["Employee Leave Balance"] = {
 	"filters": [
@@ -7,7 +8,7 @@ frappe.query_reports["Employee Leave Balance"] = {
 			"fieldname":"from_date",
 			"label": __("From Date"),
 			"fieldtype": "Date",
-			"default": frappe.datetime.get_today(),
+			"default": new Date(d.getFullYear(),d.getMonth(),1),
 			"reqd": 1,
 		},
 		{

@@ -46,8 +46,6 @@ def execute(filters=None):
 		if ho_state:
 			holidays_state +=1
 
-
-
 		holiday_list = frappe.db.get_value("Employee", emp.name, "holiday_list")
 		if holiday_list:
 			holidays = frappe.get_all("Holiday", fields=["holiday_date"],filters={'parent':holiday_list})
@@ -55,8 +53,6 @@ def execute(filters=None):
 				if holiday.holiday_date == getdate(emp.get("attendance_date")):
 					is_holiday = True
 					break
-
-
 		
 		###############
 		#if getdate(emp.attendance_date).day < 14  and getdate(emp.attendance_date).month== 6 : 
@@ -97,8 +93,6 @@ def execute(filters=None):
 			#if emp.type== "Normal":
 			#	emp.overtime_hours = emp.overtime_hours * float(ovr_rate)
 
-
-
 			if emp.compensatory and emp.compensatory != 0.0:
 				if total >  total_work_hrs:
 					total= total - (total -total_work_hrs)
@@ -132,11 +126,8 @@ def execute(filters=None):
 			#	if emp.type !='compensatory':	
 			#		total_over += over
 			#	else: total_over += 0.0
-	
-					
 				#total_over += emp.overtime_hours
 			
-
 
 		if  filters.get("early_dep"):
 			row+=[convert_hms_format(round(emp.early_departure,2))]
@@ -293,7 +284,7 @@ def get_leavs(company):
 	return frappe.db.sql_list("select name from `tabLeave Type` where company=%s order by name asc",company)
 
 
-
+@frappe.whitelist()
 def get_wsh_history(employee,ddate, total_work_hrs):
 	total_work_hrs = total_work_hrs
 	start_work, end_work ='', ''
@@ -337,7 +328,7 @@ def get_conditions(filters):
 
 	conditions = ""
 	if filters.get("employee"): conditions += " emp.name = %(employee)s"
-	#if filters.get("company"): conditions += " and att.company = %(company)s"
+	#if filters.get("company"): conditions += " and emp.company = %(company)s"
 	if filters.get("from_date"): conditions += " and att.attendance_date >= %(from_date)s"
 	if filters.get("to_date"): conditions += " and att.attendance_date <= %(to_date)s"
 

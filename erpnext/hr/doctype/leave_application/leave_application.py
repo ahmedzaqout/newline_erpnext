@@ -450,7 +450,14 @@ def get_leave_balance_on(employee, leave_type, date, allocation_records=None,
 	date2 = datetime.datetime.strptime(str(date), "%Y-%m-%d")
 	date_of_joining = frappe.db.get_value("Employee", employee, "date_of_joining")
 	if date2:
-		pre_year_date = date2.replace(year=date2.year-1)
+		try:
+			pre_year_date = date2.replace(year=date2.year-1)
+
+		except ValueError as e:
+			pre_year_date = date2.replace(day=date2.day-1)
+			pre_year_date = pre_year_date.replace(year=date2.year-1)
+
+		frappe.msgprint(str(pre_year_date))
 		#if(date_diff(pre_year_date,date_of_joining) < 0 and date_diff(date_of_joining,date2)<0 ):
 		#	pre_year_date =date_of_joining
 		allocation_records_last_year = get_leave_allocation_records(pre_year_date, employee).get(employee, frappe._dict())

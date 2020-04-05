@@ -9,22 +9,33 @@ from erpnext.hr.doctype.leave_application.leave_application \
 
 
 def execute(filters=None):
+	conditions=""
+	conditions, filters = get_conditions(filters)
+
 	company = frappe.defaults.get_user_default("Company")
 	leave_types = frappe.db.sql_list("select name from `tabLeave Type` where company = '{0}' order by name asc".format(company))
-	conditions=""
-	
-	if filters.get("employee"): conditions += " and name = %(employee)s"
-	if filters.get("department"): conditions += " and department = %(department)s"
-	if filters.get("designation"): conditions += " and designation = %(designation)s"
 
-	columns = get_columns(leave_types)
+	#if filters.get("employee"): conditions += " and name = %(employee)s"
+	#if filters.get("department"): conditions += " and department = %(department)s"
+	#if filters.get("designation"): conditions += " and designation = %(designation)s"
+
+	columns = get_columns(filters,leave_types)
 	data = get_data(filters, leave_types,conditions,company)
 	
 	return columns, data
 	
 
+def get_conditions(filters):
 
-def get_columns(leave_types):
+	conditions = ""
+	
+	if filters.get("employee"): conditions += " and name = %(employee)s"
+	if filters.get("department"): conditions += " and department = %(department)s"
+	if filters.get("designation"): conditions += " and designation = %(designation)s"
+
+	return conditions, filters 
+
+def get_columns(filters,leave_types):
 	columns = [
 		#_("Employee") + ":Link/Employee:150", 
 		_("Employee Name") + "::140", 
